@@ -27,8 +27,7 @@ entity i2c_master is
         -- Estado
         busy      : out std_logic;
         done      : out std_logic;
-        ack_error : out std_logic;
-        state_dbg : out std_logic_vector(3 downto 0)
+        ack_error : out std_logic
     );
 end entity;
 
@@ -39,7 +38,7 @@ architecture rtl of i2c_master is
         START_SDA_LOW,
         START_SCL_LOW,
 
-        SEND_BIT_LOW,
+        PREPARE_DATA_LOW,
         SEND_BIT_HIGH,
 
         ACK_LOW,
@@ -99,24 +98,6 @@ begin
     ack_error <= ack_error_reg;
     rx_data   <= rx_reg;
 
-    with state select
-        state_dbg <= "0000" when IDLE,
-                     "0001" when START_SDA_LOW,
-                     "0010" when START_SCL_LOW,
-                     "0011" when SEND_BIT_LOW,
-                     "0100" when SEND_BIT_HIGH,
-                     "0101" when ACK_LOW,
-                     "0110" when ACK_HIGH,
-                     "0111" when READ_BIT_LOW,
-                     "1000" when READ_BIT_HIGH,
-                     "1001" when READ_NACK_LOW,
-                     "1010" when READ_NACK_HIGH,
-                     "1011" when STOP_SCL_LOW,
-                     "1100" when STOP_SDA_LOW,
-                     "1101" when STOP_SCL_HIGH,
-                     "1110" when STOP_RELEASE,
-                     "1111" when WAIT_START_RELEASE;
-
     process(clk_i2c)
     begin
         if rising_edge(clk_i2c) then
@@ -143,6 +124,7 @@ begin
 
             else
 
+                -- done solo dura un ciclo
                 done_reg <= '0';
 
                 case state is
@@ -187,19 +169,19 @@ begin
 
                         scl_reg       <= '0';
                         sda_drive_low <= '1';
-                        state         <= SEND_BIT_LOW;
+                        state         <= PREPARE_DATA_LOW;
 
                     --------------------------------------------------
-                    -- Envío de bits
+                    -- Preparación y envío de bits
                     --------------------------------------------------
-                    when SEND_BIT_LOW =>
+                    when PREPARE_DATA_LOW =>
 
                         scl_reg <= '0';
 
                         if shift_reg(bit_index) = '0' then
-                            sda_drive_low <= '1'; -- enviar 0
+                            sda_drive_low <= '1'; -- preparar 0 en SDA
                         else
-                            sda_drive_low <= '0'; -- enviar 1
+                            sda_drive_low <= '0'; -- soltar SDA para representar 1
                         end if;
 
                         state <= SEND_BIT_HIGH;
@@ -212,7 +194,7 @@ begin
                             state <= ACK_LOW;
                         else
                             bit_index <= bit_index - 1;
-                            state <= SEND_BIT_LOW;
+                            state <= PREPARE_DATA_LOW;
                         end if;
 
                     --------------------------------------------------
@@ -253,7 +235,7 @@ begin
                                             shift_reg <= tx_byte0;
                                             bit_index <= 7;
                                             phase <= PHASE_TX0;
-                                            state <= SEND_BIT_LOW;
+                                            state <= PREPARE_DATA_LOW;
 
                                         else
                                             -- No hay bytes válidos para escribir
@@ -268,7 +250,7 @@ begin
                                         shift_reg <= tx_byte1;
                                         bit_index <= 7;
                                         phase <= PHASE_TX1;
-                                        state <= SEND_BIT_LOW;
+                                        state <= PREPARE_DATA_LOW;
                                     else
                                         state <= STOP_SCL_LOW;
                                     end if;
