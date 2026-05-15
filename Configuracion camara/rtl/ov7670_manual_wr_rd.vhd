@@ -124,7 +124,7 @@ begin
         );
 
     --------------------------------------------------------------------
-    -- FSM: escritura manual + lectura + verificaciÃ³n
+    -- FSM: escritura manual + lectura + verificación
     --------------------------------------------------------------------
     process(clk_i2c)
     begin
@@ -289,7 +289,7 @@ begin
                         state <= WAIT_RELEASE;
 
                     ----------------------------------------------------
-                    -- Espera soltar botÃ³n para no repetir
+                    -- Espera soltar botón para no repetir
                     ----------------------------------------------------
                     when WAIT_RELEASE =>
 
