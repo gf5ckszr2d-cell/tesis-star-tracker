@@ -38,17 +38,17 @@ architecture rtl of i2c_master is
     START_SDA_LOW,
     START_SCL_LOW,
 
-    PREPARE_DATA_LOW,
+    PREPARE_DATA_WRITE,
     SEND_BIT_HIGH,
 
-    ACK_LOW,
-    ACK_HIGH,
+    RELEASE_FOR_ACK,
+    CHECK_ACK,
 
-    READ_BIT_LOW,
+    RELEASE_FOR_READ,
     READ_BIT_HIGH,
 
-    READ_NACK_LOW,
-    READ_NACK_HIGH,
+    RELEASE_FOR_NACK,
+    CHECK_NACK,
 
     STOP_SCL_LOW,
     STOP_SDA_LOW,
@@ -170,12 +170,12 @@ begin
 
             scl_reg       <= '0';
             sda_drive_low <= '1';
-            state         <= PREPARE_DATA_LOW;
+            state         <= PREPARE_DATA_WRITE;
 
             --------------------------------------------------
             -- Preparación y envío de bits
             --------------------------------------------------
-          when PREPARE_DATA_LOW =>
+          when PREPARE_DATA_WRITE =>
 
             scl_reg <= '0';
 
@@ -192,22 +192,22 @@ begin
             scl_reg <= '1';
 
             if bit_index = 0 then
-              state <= ACK_LOW;
+              state <= RELEASE_FOR_ACK;
             else
               bit_index <= bit_index - 1;
-              state     <= PREPARE_DATA_LOW;
+              state     <= PREPARE_DATA_WRITE;
             end if;
 
             --------------------------------------------------
             -- Lectura del ACK del esclavo
             --------------------------------------------------
-          when ACK_LOW =>
+          when RELEASE_FOR_ACK =>
 
             scl_reg       <= '0';
             sda_drive_low <= '0'; -- soltar SDA para que responda el esclavo
-            state         <= ACK_HIGH;
+            state         <= CHECK_ACK;
 
-          when ACK_HIGH =>
+          when CHECK_ACK =>
 
             scl_reg <= '1';
 
@@ -226,7 +226,7 @@ begin
                     -- Lectura de un byte
                     phase     <= PHASE_READ;
                     bit_index <= 7;
-                    state     <= READ_BIT_LOW;
+                    state     <= RELEASE_FOR_READ;
 
                   else
                     -- Escritura
@@ -236,7 +236,7 @@ begin
                       shift_reg <= tx_byte0;
                       bit_index <= 7;
                       phase     <= PHASE_TX0;
-                      state     <= PREPARE_DATA_LOW;
+                      state     <= PREPARE_DATA_WRITE;
 
                     else
                       -- No hay bytes válidos para escribir
@@ -251,7 +251,7 @@ begin
                     shift_reg <= tx_byte1;
                     bit_index <= 7;
                     phase     <= PHASE_TX1;
-                    state     <= PREPARE_DATA_LOW;
+                    state     <= PREPARE_DATA_WRITE;
                   else
                     state <= STOP_SCL_LOW;
                   end if;
@@ -270,7 +270,7 @@ begin
             --------------------------------------------------
             -- Lectura de un byte desde el esclavo
             --------------------------------------------------
-          when READ_BIT_LOW =>
+          when RELEASE_FOR_READ =>
 
             scl_reg       <= '0';
             sda_drive_low <= '0'; -- soltar SDA
@@ -282,22 +282,22 @@ begin
             rx_reg(bit_index) <= SDA;
 
             if bit_index = 0 then
-              state <= READ_NACK_LOW;
+              state <= RELEASE_FOR_NACK;
             else
               bit_index <= bit_index - 1;
-              state     <= READ_BIT_LOW;
+              state     <= RELEASE_FOR_READ;
             end if;
 
             --------------------------------------------------
             -- NACK final del maestro en lectura de 1 byte
             --------------------------------------------------
-          when READ_NACK_LOW =>
+          when RELEASE_FOR_NACK =>
 
             scl_reg       <= '0';
             sda_drive_low <= '0'; -- soltar SDA = NACK
-            state         <= READ_NACK_HIGH;
+            state         <= CHECK_NACK;
 
-          when READ_NACK_HIGH =>
+          when CHECK_NACK =>
 
             scl_reg       <= '1';
             sda_drive_low <= '0';
