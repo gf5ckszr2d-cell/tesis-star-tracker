@@ -2,54 +2,36 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity ov7670_manual_wr_rd is
+entity ov7670_manual_ctrl is
     port (
-        clk_i2c : in std_logic;  -- mismo reloj que usa el i2c_master
+        clk_i2c : in std_logic;
         rst     : in std_logic;
 
+        -- Control f铆sico
         start_btn : in std_logic;
         sw        : in std_logic_vector(15 downto 0);
 
-        SDA : inout std_logic;
-        SCL : out std_logic;
+        -- Respuestas desde i2c_master
+        i2c_done      : in std_logic;
+        i2c_ack_error : in std_logic;
+        i2c_rx_data   : in std_logic_vector(7 downto 0);
 
+        -- 脫rdenes hacia i2c_master
+        i2c_start    : out std_logic;
+        i2c_rw       : out std_logic;
+        i2c_tx_byte0 : out std_logic_vector(7 downto 0);
+        i2c_tx_byte1 : out std_logic_vector(7 downto 0);
+        i2c_tx_count : out unsigned(1 downto 0);
+
+        -- Salidas de usuario
         led_read_data : out std_logic_vector(7 downto 0);
-
-        busy : out std_logic;
-        ok   : out std_logic;
-        fail : out std_logic
+        busy          : out std_logic;
+        ok            : out std_logic;
+        fail          : out std_logic
     );
 end entity;
 
-architecture rtl of ov7670_manual_wr_rd is
-
-    component i2c_master is
-        port (
-            clk_i2c : in std_logic;
-            rst     : in std_logic;
-
-            start      : in std_logic;
-            slave_addr : in std_logic_vector(6 downto 0);
-            rw         : in std_logic;
-
-            tx_byte0 : in std_logic_vector(7 downto 0);
-            tx_byte1 : in std_logic_vector(7 downto 0);
-            tx_count : in unsigned(1 downto 0);
-
-            rx_data : out std_logic_vector(7 downto 0);
-
-            SDA : inout std_logic;
-            SCL : out std_logic;
-
-            busy      : out std_logic;
-            done      : out std_logic;
-            ack_error : out std_logic
-        );
-    end component;
-
-    constant OV7670_ADDR : std_logic_vector(6 downto 0) := "0100001";
-    -- "0100001" & '0' = x"42" escritura
-    -- "0100001" & '1' = x"43" lectura
+architecture rtl of ov7670_manual_ctrl is
 
     type state_t is (
         IDLE,
@@ -74,22 +56,29 @@ architecture rtl of ov7670_manual_wr_rd is
     signal write_data_latched : std_logic_vector(7 downto 0) := (others => '0');
     signal read_data_latched  : std_logic_vector(7 downto 0) := (others => '0');
 
-    signal i2c_start     : std_logic := '0';
-    signal i2c_rw        : std_logic := '0';
-    signal i2c_tx_byte0  : std_logic_vector(7 downto 0) := (others => '0');
-    signal i2c_tx_byte1  : std_logic_vector(7 downto 0) := (others => '0');
-    signal i2c_tx_count  : unsigned(1 downto 0) := (others => '0');
-
-    signal i2c_rx_data   : std_logic_vector(7 downto 0);
-    signal i2c_busy      : std_logic;
-    signal i2c_done      : std_logic;
-    signal i2c_ack_error : std_logic;
+    signal i2c_start_reg    : std_logic := '0';
+    signal i2c_rw_reg       : std_logic := '0';
+    signal i2c_tx_byte0_reg : std_logic_vector(7 downto 0) := (others => '0');
+    signal i2c_tx_byte1_reg : std_logic_vector(7 downto 0) := (others => '0');
+    signal i2c_tx_count_reg : unsigned(1 downto 0) := (others => '0');
 
     signal ok_reg   : std_logic := '0';
     signal fail_reg : std_logic := '0';
 
 begin
 
+    --------------------------------------------------------------------
+    -- Salidas hacia i2c_master
+    --------------------------------------------------------------------
+    i2c_start    <= i2c_start_reg;
+    i2c_rw       <= i2c_rw_reg;
+    i2c_tx_byte0 <= i2c_tx_byte0_reg;
+    i2c_tx_byte1 <= i2c_tx_byte1_reg;
+    i2c_tx_count <= i2c_tx_count_reg;
+
+    --------------------------------------------------------------------
+    -- Salidas de usuario
+    --------------------------------------------------------------------
     led_read_data <= read_data_latched;
 
     ok   <= ok_reg;
@@ -98,33 +87,7 @@ begin
     busy <= '1' when state /= IDLE and state /= WAIT_RELEASE else '0';
 
     --------------------------------------------------------------------
-    -- Instancia del maestro I2C
-    --------------------------------------------------------------------
-    u_i2c_master : i2c_master
-        port map (
-            clk_i2c => clk_i2c,
-            rst     => rst,
-
-            start      => i2c_start,
-            slave_addr => OV7670_ADDR,
-            rw         => i2c_rw,
-
-            tx_byte0 => i2c_tx_byte0,
-            tx_byte1 => i2c_tx_byte1,
-            tx_count => i2c_tx_count,
-
-            rx_data => i2c_rx_data,
-
-            SDA => SDA,
-            SCL => SCL,
-
-            busy      => i2c_busy,
-            done      => i2c_done,
-            ack_error => i2c_ack_error
-        );
-
-    --------------------------------------------------------------------
-    -- FSM: escritura manual + lectura + verificaci髇
+    -- FSM de control manual
     --------------------------------------------------------------------
     process(clk_i2c)
     begin
@@ -138,24 +101,24 @@ begin
                 write_data_latched <= (others => '0');
                 read_data_latched  <= (others => '0');
 
-                i2c_start    <= '0';
-                i2c_rw       <= '0';
-                i2c_tx_byte0 <= (others => '0');
-                i2c_tx_byte1 <= (others => '0');
-                i2c_tx_count <= (others => '0');
+                i2c_start_reg    <= '0';
+                i2c_rw_reg       <= '0';
+                i2c_tx_byte0_reg <= (others => '0');
+                i2c_tx_byte1_reg <= (others => '0');
+                i2c_tx_count_reg <= (others => '0');
 
                 ok_reg   <= '0';
                 fail_reg <= '0';
 
             else
 
-                -- Por defecto, el start del I2C dura solo un ciclo
-                i2c_start <= '0';
+                -- Por defecto, i2c_start solo dura un ciclo.
+                i2c_start_reg <= '0';
 
                 case state is
 
                     ----------------------------------------------------
-                    -- Espera orden manual
+                    -- Espera el bot贸n de inicio
                     ----------------------------------------------------
                     when IDLE =>
 
@@ -170,7 +133,7 @@ begin
                     ----------------------------------------------------
                     -- Captura switches
                     -- sw[15:8] = registro
-                    -- sw[7:0]  = dato
+                    -- sw[7:0]  = dato a escribir
                     ----------------------------------------------------
                     when CAPTURE_SWITCHES =>
 
@@ -181,16 +144,16 @@ begin
 
                     ----------------------------------------------------
                     -- Escritura:
-                    -- START -> x42 -> reg_addr -> write_data -> STOP
+                    -- START -> x42 -> registro -> dato -> STOP
                     ----------------------------------------------------
                     when START_WRITE =>
 
-                        i2c_rw       <= '0';
-                        i2c_tx_byte0 <= reg_addr_latched;
-                        i2c_tx_byte1 <= write_data_latched;
-                        i2c_tx_count <= to_unsigned(2, 2);
+                        i2c_rw_reg       <= '0'; -- escritura
+                        i2c_tx_byte0_reg <= reg_addr_latched;
+                        i2c_tx_byte1_reg <= write_data_latched;
+                        i2c_tx_count_reg <= to_unsigned(2, 2);
 
-                        i2c_start <= '1';
+                        i2c_start_reg <= '1';
 
                         state <= WAIT_WRITE_DONE;
 
@@ -199,8 +162,8 @@ begin
                         if i2c_done = '1' then
 
                             if i2c_ack_error = '1' then
-                                fail_reg <= '1';
                                 ok_reg   <= '0';
+                                fail_reg <= '1';
                                 state    <= WAIT_RELEASE;
                             else
                                 state <= START_POINT_REGISTER;
@@ -211,17 +174,17 @@ begin
                         end if;
 
                     ----------------------------------------------------
-                    -- Apuntar al registro antes de leer:
-                    -- START -> x42 -> reg_addr -> STOP
+                    -- Apuntar al mismo registro antes de leer:
+                    -- START -> x42 -> registro -> STOP
                     ----------------------------------------------------
                     when START_POINT_REGISTER =>
 
-                        i2c_rw       <= '0';
-                        i2c_tx_byte0 <= reg_addr_latched;
-                        i2c_tx_byte1 <= (others => '0');
-                        i2c_tx_count <= to_unsigned(1, 2);
+                        i2c_rw_reg       <= '0'; -- escritura
+                        i2c_tx_byte0_reg <= reg_addr_latched;
+                        i2c_tx_byte1_reg <= (others => '0');
+                        i2c_tx_count_reg <= to_unsigned(1, 2);
 
-                        i2c_start <= '1';
+                        i2c_start_reg <= '1';
 
                         state <= WAIT_POINT_DONE;
 
@@ -230,8 +193,8 @@ begin
                         if i2c_done = '1' then
 
                             if i2c_ack_error = '1' then
-                                fail_reg <= '1';
                                 ok_reg   <= '0';
+                                fail_reg <= '1';
                                 state    <= WAIT_RELEASE;
                             else
                                 state <= START_READ;
@@ -243,16 +206,16 @@ begin
 
                     ----------------------------------------------------
                     -- Lectura:
-                    -- START -> x43 -> read_data -> NACK -> STOP
+                    -- START -> x43 -> dato le铆do -> NACK -> STOP
                     ----------------------------------------------------
                     when START_READ =>
 
-                        i2c_rw       <= '1';
-                        i2c_tx_byte0 <= (others => '0');
-                        i2c_tx_byte1 <= (others => '0');
-                        i2c_tx_count <= (others => '0');
+                        i2c_rw_reg       <= '1'; -- lectura
+                        i2c_tx_byte0_reg <= (others => '0');
+                        i2c_tx_byte1_reg <= (others => '0');
+                        i2c_tx_count_reg <= (others => '0');
 
-                        i2c_start <= '1';
+                        i2c_start_reg <= '1';
 
                         state <= WAIT_READ_DONE;
 
@@ -261,8 +224,8 @@ begin
                         if i2c_done = '1' then
 
                             if i2c_ack_error = '1' then
-                                fail_reg <= '1';
                                 ok_reg   <= '0';
+                                fail_reg <= '1';
                                 state    <= WAIT_RELEASE;
                             else
                                 read_data_latched <= i2c_rx_data;
@@ -274,7 +237,7 @@ begin
                         end if;
 
                     ----------------------------------------------------
-                    -- Compara lectura contra escritura
+                    -- Verificaci贸n
                     ----------------------------------------------------
                     when VERIFY_DATA =>
 
@@ -289,7 +252,7 @@ begin
                         state <= WAIT_RELEASE;
 
                     ----------------------------------------------------
-                    -- Espera soltar bot髇 para no repetir
+                    -- Espera soltar bot贸n para no repetir operaci贸n
                     ----------------------------------------------------
                     when WAIT_RELEASE =>
 
