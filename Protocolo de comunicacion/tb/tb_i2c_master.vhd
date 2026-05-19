@@ -11,7 +11,6 @@ architecture sim of tb_i2c_master is
         port (
             clk_i2c : in std_logic;
             rst     : in std_logic;
-
             start      : in std_logic;
             slave_addr : in std_logic_vector(6 downto 0);
             rw         : in std_logic;
