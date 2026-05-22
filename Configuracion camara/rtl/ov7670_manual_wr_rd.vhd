@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity ov7670_manual_ctrl is
     port (
-        clk_i2c : in std_logic;
+        clk : in std_logic;
         rst     : in std_logic;
 
         -- Control físico
@@ -89,9 +89,9 @@ begin
     --------------------------------------------------------------------
     -- FSM de control manual
     --------------------------------------------------------------------
-    process(clk_i2c)
+    process(clk)
     begin
-        if rising_edge(clk_i2c) then
+        if rising_edge(clk) then
 
             if rst = '1' then
 
