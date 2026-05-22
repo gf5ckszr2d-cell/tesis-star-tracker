@@ -3,28 +3,27 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity i2c_master is
+  generic (
+    CLK_FREQ_HZ : integer := 100000000;
+    I2C_SCL_HZ  : integer := 100000
+  );
   port (
-    clk_i2c : in std_logic; -- reloj I2C ya dividido externamente
-    rst     : in std_logic;
+    clk : in std_logic;
+    rst : in std_logic;
 
-    -- Control
     start      : in std_logic;
     slave_addr : in std_logic_vector(6 downto 0);
-    rw         : in std_logic; -- '0' = escritura, '1' = lectura
+    rw         : in std_logic;
 
-    -- Datos de escritura
     tx_byte0 : in std_logic_vector(7 downto 0);
     tx_byte1 : in std_logic_vector(7 downto 0);
-    tx_count : in unsigned(1 downto 0); -- 1 o 2 bytes para escritura
+    tx_count : in unsigned(1 downto 0);
 
-    -- Dato de lectura
     rx_data : out std_logic_vector(7 downto 0);
 
-    -- Bus I2C
     SDA : inout std_logic;
     SCL : out std_logic;
 
-    -- Estado
     busy      : out std_logic;
     done      : out std_logic;
     ack_error : out std_logic
@@ -33,28 +32,25 @@ end entity;
 
 architecture rtl of i2c_master is
 
+  constant TICK_DIVIDER : integer := CLK_FREQ_HZ / (I2C_SCL_HZ * 2);
+  constant DIV_MAX      : integer := TICK_DIVIDER - 1;
+
   type state_t is (
     IDLE,
     START_SDA_LOW,
     START_SCL_LOW,
-
     PREPARE_DATA_LOW,
     SEND_BIT_HIGH,
-
     ACK_LOW,
     ACK_HIGH,
-
     READ_BIT_LOW,
     READ_BIT_HIGH,
-
     READ_NACK_LOW,
     READ_NACK_HIGH,
-
     STOP_SCL_LOW,
     STOP_SDA_LOW,
     STOP_SCL_HIGH,
     STOP_RELEASE,
-
     WAIT_START_RELEASE
   );
 
@@ -68,18 +64,16 @@ architecture rtl of i2c_master is
   signal state : state_t := IDLE;
   signal phase : phase_t := PHASE_ADDR;
 
-  signal scl_reg : std_logic := '1';
+  signal tick_counter : integer range 0 to DIV_MAX := 0;
 
-  -- SDA open-drain:
-  -- '1' = forzar SDA a 0
-  -- '0' = soltar SDA, queda en Z
+  signal scl_reg : std_logic := '1';
   signal sda_drive_low : std_logic := '0';
 
   signal busy_reg      : std_logic := '0';
   signal done_reg      : std_logic := '0';
   signal ack_error_reg : std_logic := '0';
 
-  signal rw_reg       : std_logic            := '0';
+  signal rw_reg       : std_logic := '0';
   signal tx_count_reg : unsigned(1 downto 0) := (others => '0');
 
   signal shift_reg : std_logic_vector(7 downto 0) := (others => '0');
@@ -91,22 +85,24 @@ begin
 
   SCL <= scl_reg;
 
-  SDA <= '0' when sda_drive_low = '1' else
-    'Z';
+  SDA <= '0' when sda_drive_low = '1' else 'Z';
 
   busy      <= busy_reg;
   done      <= done_reg;
   ack_error <= ack_error_reg;
   rx_data   <= rx_reg;
 
-  process (clk_i2c)
+  process(clk)
+    variable tick_now : std_logic;
   begin
-    if rising_edge(clk_i2c) then
+    if rising_edge(clk) then
 
       if rst = '1' then
 
         state <= IDLE;
         phase <= PHASE_ADDR;
+
+        tick_counter <= 0;
 
         scl_reg       <= '1';
         sda_drive_low <= '0';
@@ -125,234 +121,223 @@ begin
 
       else
 
-        -- done solo dura un ciclo
         done_reg <= '0';
+        tick_now := '0';
 
-        case state is
+        if tick_counter = DIV_MAX then
+          tick_counter <= 0;
+          tick_now := '1';
+        else
+          tick_counter <= tick_counter + 1;
+        end if;
 
-            --------------------------------------------------
-            -- Estado de reposo
-            --------------------------------------------------
-          when IDLE =>
+        if state = IDLE and start = '1' then
 
-            scl_reg       <= '1';
-            sda_drive_low <= '0';
-            busy_reg      <= '0';
+          scl_reg       <= '1';
+          sda_drive_low <= '0';
 
-            if start = '1' then
+          busy_reg      <= '1';
+          ack_error_reg <= '0';
 
-              busy_reg      <= '1';
-              ack_error_reg <= '0';
+          rw_reg       <= rw;
+          tx_count_reg <= tx_count;
 
-              rw_reg       <= rw;
-              tx_count_reg <= tx_count;
+          shift_reg <= slave_addr & rw;
+          bit_index <= 7;
+          phase     <= PHASE_ADDR;
 
-              -- Primero se envía dirección de esclavo + bit R/W
-              shift_reg <= slave_addr & rw;
-              bit_index <= 7;
-              phase     <= PHASE_ADDR;
+          state <= START_SDA_LOW;
 
-              state <= START_SDA_LOW;
-            else
+        elsif tick_now = '1' then
+
+          case state is
+
+            when IDLE =>
+
+              scl_reg       <= '1';
+              sda_drive_low <= '0';
+              busy_reg      <= '0';
+
               state <= IDLE;
-            end if;
 
-            --------------------------------------------------
-            -- START: SDA baja mientras SCL está alta
-            --------------------------------------------------
-          when START_SDA_LOW =>
+            when START_SDA_LOW =>
 
-            scl_reg       <= '1';
-            sda_drive_low <= '1';
-            state         <= START_SCL_LOW;
+              scl_reg       <= '1';
+              sda_drive_low <= '1';
+              state         <= START_SCL_LOW;
 
-          when START_SCL_LOW =>
+            when START_SCL_LOW =>
 
-            scl_reg       <= '0';
-            sda_drive_low <= '1';
-            state         <= PREPARE_DATA_LOW;
+              scl_reg       <= '0';
+              sda_drive_low <= '1';
+              state         <= PREPARE_DATA_LOW;
 
-            --------------------------------------------------
-            -- Preparación y envío de bits
-            --------------------------------------------------
-          when PREPARE_DATA_LOW =>
+            when PREPARE_DATA_LOW =>
 
-            scl_reg <= '0';
+              scl_reg <= '0';
 
-            if shift_reg(bit_index) = '0' then
-              sda_drive_low <= '1'; -- preparar 0 en SDA
-            else
-              sda_drive_low <= '0'; -- soltar SDA para representar 1
-            end if;
+              if shift_reg(bit_index) = '0' then
+                sda_drive_low <= '1';
+              else
+                sda_drive_low <= '0';
+              end if;
 
-            state <= SEND_BIT_HIGH;
+              state <= SEND_BIT_HIGH;
 
-          when SEND_BIT_HIGH =>
+            when SEND_BIT_HIGH =>
 
-            scl_reg <= '1';
+              scl_reg <= '1';
 
-            if bit_index = 0 then
-              state <= ACK_LOW;
-            else
-              bit_index <= bit_index - 1;
-              state     <= PREPARE_DATA_LOW;
-            end if;
+              if bit_index = 0 then
+                state <= ACK_LOW;
+              else
+                bit_index <= bit_index - 1;
+                state     <= PREPARE_DATA_LOW;
+              end if;
 
-            --------------------------------------------------
-            -- Lectura del ACK del esclavo
-            --------------------------------------------------
-          when ACK_LOW =>
+            when ACK_LOW =>
 
-            scl_reg       <= '0';
-            sda_drive_low <= '0'; -- soltar SDA para que responda el esclavo
-            state         <= ACK_HIGH;
+              scl_reg       <= '0';
+              sda_drive_low <= '0';
+              state         <= ACK_HIGH;
 
-          when ACK_HIGH =>
+            when ACK_HIGH =>
 
-            scl_reg <= '1';
+              scl_reg <= '1';
 
-            if SDA = '1' then
-              -- NACK
-              ack_error_reg <= '1';
-              state         <= STOP_SCL_LOW;
+              if SDA = '1' then
 
-            else
-              -- ACK correcto
-              case phase is
+                ack_error_reg <= '1';
+                state         <= STOP_SCL_LOW;
 
-                when PHASE_ADDR =>
+              else
 
-                  if rw_reg = '1' then
-                    -- Lectura de un byte
-                    phase     <= PHASE_READ;
-                    bit_index <= 7;
-                    state     <= READ_BIT_LOW;
+                case phase is
 
-                  else
-                    -- Escritura
-                    if tx_count_reg = to_unsigned(1, 2) or
-                      tx_count_reg = to_unsigned(2, 2) then
+                  when PHASE_ADDR =>
 
-                      shift_reg <= tx_byte0;
+                    if rw_reg = '1' then
+
+                      phase     <= PHASE_READ;
                       bit_index <= 7;
-                      phase     <= PHASE_TX0;
-                      state     <= PREPARE_DATA_LOW;
+                      state     <= READ_BIT_LOW;
 
                     else
-                      -- No hay bytes válidos para escribir
-                      ack_error_reg <= '1';
-                      state         <= STOP_SCL_LOW;
+
+                      if tx_count_reg = to_unsigned(1, 2) or
+                         tx_count_reg = to_unsigned(2, 2) then
+
+                        shift_reg <= tx_byte0;
+                        bit_index <= 7;
+                        phase     <= PHASE_TX0;
+                        state     <= PREPARE_DATA_LOW;
+
+                      else
+
+                        ack_error_reg <= '1';
+                        state         <= STOP_SCL_LOW;
+
+                      end if;
                     end if;
-                  end if;
 
-                when PHASE_TX0 =>
+                  when PHASE_TX0 =>
 
-                  if tx_count_reg = to_unsigned(2, 2) then
-                    shift_reg <= tx_byte1;
-                    bit_index <= 7;
-                    phase     <= PHASE_TX1;
-                    state     <= PREPARE_DATA_LOW;
-                  else
+                    if tx_count_reg = to_unsigned(2, 2) then
+                      shift_reg <= tx_byte1;
+                      bit_index <= 7;
+                      phase     <= PHASE_TX1;
+                      state     <= PREPARE_DATA_LOW;
+                    else
+                      state <= STOP_SCL_LOW;
+                    end if;
+
+                  when PHASE_TX1 =>
+
                     state <= STOP_SCL_LOW;
-                  end if;
 
-                when PHASE_TX1 =>
+                  when others =>
 
-                  state <= STOP_SCL_LOW;
+                    state <= STOP_SCL_LOW;
 
-                when others =>
+                end case;
+              end if;
 
-                  state <= STOP_SCL_LOW;
+            when READ_BIT_LOW =>
 
-              end case;
-            end if;
+              scl_reg       <= '0';
+              sda_drive_low <= '0';
+              state         <= READ_BIT_HIGH;
 
-            --------------------------------------------------
-            -- Lectura de un byte desde el esclavo
-            --------------------------------------------------
-          when READ_BIT_LOW =>
+            when READ_BIT_HIGH =>
 
-            scl_reg       <= '0';
-            sda_drive_low <= '0'; -- soltar SDA
-            state         <= READ_BIT_HIGH;
+              scl_reg           <= '1';
+              rx_reg(bit_index) <= SDA;
 
-          when READ_BIT_HIGH =>
+              if bit_index = 0 then
+                state <= READ_NACK_LOW;
+              else
+                bit_index <= bit_index - 1;
+                state     <= READ_BIT_LOW;
+              end if;
 
-            scl_reg           <= '1';
-            rx_reg(bit_index) <= SDA;
+            when READ_NACK_LOW =>
 
-            if bit_index = 0 then
-              state <= READ_NACK_LOW;
-            else
-              bit_index <= bit_index - 1;
-              state     <= READ_BIT_LOW;
-            end if;
+              scl_reg       <= '0';
+              sda_drive_low <= '0';
+              state         <= READ_NACK_HIGH;
 
-            --------------------------------------------------
-            -- NACK final del maestro en lectura de 1 byte
-            --------------------------------------------------
-          when READ_NACK_LOW =>
+            when READ_NACK_HIGH =>
 
-            scl_reg       <= '0';
-            sda_drive_low <= '0'; -- soltar SDA = NACK
-            state         <= READ_NACK_HIGH;
+              scl_reg       <= '1';
+              sda_drive_low <= '0';
+              state         <= STOP_SCL_LOW;
 
-          when READ_NACK_HIGH =>
+            when STOP_SCL_LOW =>
 
-            scl_reg       <= '1';
-            sda_drive_low <= '0';
-            state         <= STOP_SCL_LOW;
+              scl_reg <= '0';
+              state   <= STOP_SDA_LOW;
 
-            --------------------------------------------------
-            -- STOP: SDA sube mientras SCL está alta
-            --------------------------------------------------
-          when STOP_SCL_LOW =>
+            when STOP_SDA_LOW =>
 
-            scl_reg <= '0';
-            state   <= STOP_SDA_LOW;
+              scl_reg       <= '0';
+              sda_drive_low <= '1';
+              state         <= STOP_SCL_HIGH;
 
-          when STOP_SDA_LOW =>
+            when STOP_SCL_HIGH =>
 
-            scl_reg       <= '0';
-            sda_drive_low <= '1'; -- SDA baja antes del STOP
-            state         <= STOP_SCL_HIGH;
+              scl_reg       <= '1';
+              sda_drive_low <= '1';
+              state         <= STOP_RELEASE;
 
-          when STOP_SCL_HIGH =>
+            when STOP_RELEASE =>
 
-            scl_reg       <= '1';
-            sda_drive_low <= '1'; -- mantener SDA baja con SCL alta
-            state         <= STOP_RELEASE;
+              scl_reg       <= '1';
+              sda_drive_low <= '0';
 
-          when STOP_RELEASE =>
+              busy_reg <= '0';
+              done_reg <= '1';
 
-            scl_reg       <= '1';
-            sda_drive_low <= '0'; -- liberar SDA: STOP
-
-            busy_reg <= '0';
-            done_reg <= '1';
-
-            state <= WAIT_START_RELEASE;
-
-            --------------------------------------------------
-            -- Evita reinicio automático si start queda en 1
-            --------------------------------------------------
-          when WAIT_START_RELEASE =>
-
-            scl_reg       <= '1';
-            sda_drive_low <= '0';
-            busy_reg      <= '0';
-
-            if start = '0' then
-              state <= IDLE;
-            else
               state <= WAIT_START_RELEASE;
-            end if;
 
-          when others =>
+            when WAIT_START_RELEASE =>
 
-            state <= IDLE;
+              scl_reg       <= '1';
+              sda_drive_low <= '0';
+              busy_reg      <= '0';
 
-        end case;
+              if start = '0' then
+                state <= IDLE;
+              else
+                state <= WAIT_START_RELEASE;
+              end if;
+
+            when others =>
+
+              state <= IDLE;
+
+          end case;
+
+        end if;
 
       end if;
 
