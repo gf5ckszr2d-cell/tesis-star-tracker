@@ -5,25 +5,21 @@ use ieee.numeric_std.all;
 entity ov7670_manual_ctrl is
     port (
         clk : in std_logic;
-        rst     : in std_logic;
+        rst : in std_logic;
 
-        -- Control físico
         start_btn : in std_logic;
         sw        : in std_logic_vector(15 downto 0);
 
-        -- Respuestas desde i2c_master
         i2c_done      : in std_logic;
         i2c_ack_error : in std_logic;
         i2c_rx_data   : in std_logic_vector(7 downto 0);
 
-        -- Órdenes hacia i2c_master
         i2c_start    : out std_logic;
         i2c_rw       : out std_logic;
         i2c_tx_byte0 : out std_logic_vector(7 downto 0);
         i2c_tx_byte1 : out std_logic_vector(7 downto 0);
         i2c_tx_count : out unsigned(1 downto 0);
 
-        -- Salidas de usuario
         led_read_data : out std_logic_vector(7 downto 0);
         busy          : out std_logic;
         ok            : out std_logic;
@@ -36,16 +32,12 @@ architecture rtl of ov7670_manual_ctrl is
     type state_t is (
         IDLE,
         CAPTURE_SWITCHES,
-
         START_WRITE,
         WAIT_WRITE_DONE,
-
         START_POINT_REGISTER,
         WAIT_POINT_DONE,
-
         START_READ,
         WAIT_READ_DONE,
-
         VERIFY_DATA,
         WAIT_RELEASE
     );
@@ -67,18 +59,12 @@ architecture rtl of ov7670_manual_ctrl is
 
 begin
 
-    --------------------------------------------------------------------
-    -- Salidas hacia i2c_master
-    --------------------------------------------------------------------
     i2c_start    <= i2c_start_reg;
     i2c_rw       <= i2c_rw_reg;
     i2c_tx_byte0 <= i2c_tx_byte0_reg;
     i2c_tx_byte1 <= i2c_tx_byte1_reg;
     i2c_tx_count <= i2c_tx_count_reg;
 
-    --------------------------------------------------------------------
-    -- Salidas de usuario
-    --------------------------------------------------------------------
     led_read_data <= read_data_latched;
 
     ok   <= ok_reg;
@@ -86,9 +72,6 @@ begin
 
     busy <= '1' when state /= IDLE and state /= WAIT_RELEASE else '0';
 
-    --------------------------------------------------------------------
-    -- FSM de control manual
-    --------------------------------------------------------------------
     process(clk)
     begin
         if rising_edge(clk) then
@@ -112,14 +95,10 @@ begin
 
             else
 
-                -- Por defecto, i2c_start solo dura un ciclo.
                 i2c_start_reg <= '0';
 
                 case state is
 
-                    ----------------------------------------------------
-                    -- Espera el botón de inicio
-                    ----------------------------------------------------
                     when IDLE =>
 
                         if start_btn = '1' then
@@ -130,11 +109,6 @@ begin
                             state <= IDLE;
                         end if;
 
-                    ----------------------------------------------------
-                    -- Captura switches
-                    -- sw[15:8] = registro
-                    -- sw[7:0]  = dato a escribir
-                    ----------------------------------------------------
                     when CAPTURE_SWITCHES =>
 
                         reg_addr_latched   <= sw(15 downto 8);
@@ -142,13 +116,9 @@ begin
 
                         state <= START_WRITE;
 
-                    ----------------------------------------------------
-                    -- Escritura:
-                    -- START -> x42 -> registro -> dato -> STOP
-                    ----------------------------------------------------
                     when START_WRITE =>
 
-                        i2c_rw_reg       <= '0'; -- escritura
+                        i2c_rw_reg       <= '0';
                         i2c_tx_byte0_reg <= reg_addr_latched;
                         i2c_tx_byte1_reg <= write_data_latched;
                         i2c_tx_count_reg <= to_unsigned(2, 2);
@@ -173,13 +143,9 @@ begin
                             state <= WAIT_WRITE_DONE;
                         end if;
 
-                    ----------------------------------------------------
-                    -- Apuntar al mismo registro antes de leer:
-                    -- START -> x42 -> registro -> STOP
-                    ----------------------------------------------------
                     when START_POINT_REGISTER =>
 
-                        i2c_rw_reg       <= '0'; -- escritura
+                        i2c_rw_reg       <= '0';
                         i2c_tx_byte0_reg <= reg_addr_latched;
                         i2c_tx_byte1_reg <= (others => '0');
                         i2c_tx_count_reg <= to_unsigned(1, 2);
@@ -204,13 +170,9 @@ begin
                             state <= WAIT_POINT_DONE;
                         end if;
 
-                    ----------------------------------------------------
-                    -- Lectura:
-                    -- START -> x43 -> dato leído -> NACK -> STOP
-                    ----------------------------------------------------
                     when START_READ =>
 
-                        i2c_rw_reg       <= '1'; -- lectura
+                        i2c_rw_reg       <= '1';
                         i2c_tx_byte0_reg <= (others => '0');
                         i2c_tx_byte1_reg <= (others => '0');
                         i2c_tx_count_reg <= (others => '0');
@@ -236,9 +198,6 @@ begin
                             state <= WAIT_READ_DONE;
                         end if;
 
-                    ----------------------------------------------------
-                    -- Verificación
-                    ----------------------------------------------------
                     when VERIFY_DATA =>
 
                         if read_data_latched = write_data_latched then
@@ -251,9 +210,6 @@ begin
 
                         state <= WAIT_RELEASE;
 
-                    ----------------------------------------------------
-                    -- Espera soltar botón para no repetir operación
-                    ----------------------------------------------------
                     when WAIT_RELEASE =>
 
                         if start_btn = '0' then
