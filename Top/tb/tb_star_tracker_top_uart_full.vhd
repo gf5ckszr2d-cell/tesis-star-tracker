@@ -2,10 +2,13 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity tb_star_tracker_top is
+library std;
+use std.env.all;
+
+entity tb_star_tracker_top_uart_full is
 end entity;
 
-architecture sim of tb_star_tracker_top is
+architecture sim of tb_star_tracker_top_uart_full is
 
     component star_tracker_top is
         generic (
@@ -50,7 +53,16 @@ architecture sim of tb_star_tracker_top is
     end record;
 
     type config_rom_t is array (natural range <>) of reg_pair_t;
-    type byte_array_t is array (natural range <>) of std_logic_vector(7 downto 0);
+
+    constant FRAME_WIDTH      : integer := 160;
+    constant FRAME_HEIGHT     : integer := 120;
+    constant FRAME_PIXELS     : integer := FRAME_WIDTH * FRAME_HEIGHT;
+    constant ADDR_WIDTH       : integer := 15;
+    constant SIM_UART_BAUD    : integer := 20000000;
+
+    constant CLK_PERIOD       : time := 10 ns;
+    constant PCLK_PERIOD      : time := 41.667 ns;
+    constant UART_BIT_PERIOD  : time := 50 ns;
 
     constant EXPECTED_CONFIG : config_rom_t := (
         (reg_addr => x"12", reg_data => x"80"),
@@ -76,24 +88,6 @@ architecture sim of tb_star_tracker_top is
         (reg_addr => x"32", reg_data => x"80")
     );
 
-    constant TEST_LINE_BYTES : byte_array_t := (
-        x"30", x"A0", x"31", x"B0",
-        x"32", x"A1", x"33", x"B1"
-    );
-
-    constant EXPECTED_UART_BYTES : byte_array_t := (
-        x"53", x"54", x"59", x"31",
-        x"04", x"00",
-        x"01", x"00",
-        x"04", x"00", x"00", x"00",
-        x"30", x"31", x"32", x"33",
-        x"C6"
-    );
-
-    constant CLK_PERIOD  : time := 10 ns;
-    constant PCLK_PERIOD : time := 40 ns;
-    constant UART_BIT_PERIOD : time := 1 us;
-
     signal clk : std_logic := '0';
     signal rst : std_logic := '1';
 
@@ -112,17 +106,21 @@ architecture sim of tb_star_tracker_top is
 
     signal uart_tx_line : std_logic;
 
-    signal pixel_valid  : std_logic;
-    signal frame_done   : std_logic;
+    signal pixel_valid   : std_logic;
+    signal frame_done    : std_logic;
     signal led_read_data : std_logic_vector(7 downto 0);
-    signal busy         : std_logic;
-    signal ok           : std_logic;
-    signal fail         : std_logic;
+    signal busy          : std_logic;
+    signal ok            : std_logic;
+    signal fail          : std_logic;
 
     signal sda_slave_drive : std_logic := 'Z';
-    signal seen_pixels     : integer range 0 to 4 := 0;
     signal i2c_config_done : std_logic := '0';
-    signal uart_seen_bytes : integer range 0 to EXPECTED_UART_BYTES'length := 0;
+    signal camera_done     : std_logic := '0';
+    signal uart_done_seen  : std_logic := '0';
+
+    signal pixel_count             : integer range 0 to FRAME_PIXELS := 0;
+    signal frame_done_before_full  : std_logic := '0';
+    signal pixel_after_frame_done  : std_logic := '0';
 
     function sda_to_bit(signal_value : std_logic) return std_logic is
     begin
@@ -133,6 +131,13 @@ architecture sim of tb_star_tracker_top is
         end if;
     end function;
 
+    function expected_y(pixel_index : integer) return std_logic_vector is
+        variable value : integer;
+    begin
+        value := (pixel_index * 5 + 17) mod 256;
+        return std_logic_vector(to_unsigned(value, 8));
+    end function;
+
 begin
 
     SDA <= 'H';
@@ -140,10 +145,10 @@ begin
 
     uut : star_tracker_top
         generic map (
-            FRAME_WIDTH    => 4,
-            FRAME_HEIGHT   => 1,
-            ADDR_WIDTH     => 4,
-            UART_BAUD_RATE => 1000000,
+            FRAME_WIDTH    => FRAME_WIDTH,
+            FRAME_HEIGHT   => FRAME_HEIGHT,
+            ADDR_WIDTH     => ADDR_WIDTH,
+            UART_BAUD_RATE => SIM_UART_BAUD,
             SIM_BYPASS_XCLK_LOCK => true
         )
         port map (
@@ -196,13 +201,29 @@ begin
 
     stimulus : process
 
-        procedure send_camera_line(constant line_bytes : in byte_array_t) is
+        procedure send_byte(constant value : in std_logic_vector(7 downto 0)) is
+        begin
+            cam_data <= value;
+            wait until rising_edge(cam_pclk);
+        end procedure;
+
+        procedure send_line(constant row_index : in integer) is
+            variable pixel_index : integer;
         begin
             cam_href <= '1';
-            for index in line_bytes'range loop
-                cam_data <= line_bytes(index);
-                wait until rising_edge(cam_pclk);
+
+            for column_index in 0 to FRAME_WIDTH - 1 loop
+                pixel_index := row_index * FRAME_WIDTH + column_index;
+
+                if (column_index mod 2) = 0 then
+                    send_byte(expected_y(pixel_index));
+                    send_byte(x"A5");
+                else
+                    send_byte(expected_y(pixel_index));
+                    send_byte(x"5A");
+                end if;
             end loop;
+
             cam_href <= '0';
             cam_data <= (others => '0');
             wait until rising_edge(cam_pclk);
@@ -210,7 +231,7 @@ begin
         end procedure;
 
     begin
-        report "Inicio de simulacion star_tracker_top con init y captura";
+        report "Inicio de simulacion top completo OV7670 -> BRAM -> UART";
 
         rst <= '1';
         start_btn <= '0';
@@ -218,17 +239,16 @@ begin
         cam_href <= '0';
         cam_data <= (others => '0');
 
-        wait for 200 ns;
+        wait for 500 ns;
 
         rst <= '0';
         wait until rising_edge(clk);
-
         start_btn <= '1';
 
-        wait until i2c_config_done = '1' or fail = '1' for 30 ms;
+        wait until i2c_config_done = '1' or fail = '1' for 40 ms;
 
         assert i2c_config_done = '1'
-            report "ERROR: no termino la configuracion I2C"
+            report "ERROR: no termino la configuracion SCCB/I2C"
             severity failure;
 
         assert fail = '0'
@@ -240,63 +260,70 @@ begin
             severity failure;
 
         assert cam_reset = '1'
-            report "ERROR: cam_reset debe liberar la camara despues de rst"
+            report "ERROR: cam_reset debe liberar la camara despues del reset"
             severity failure;
 
-        for index in 0 to 9 loop
+        report "Init SCCB/I2C completa; iniciando frame QQVGA";
+
+        for index in 0 to 19999 loop
             wait until rising_edge(cam_pclk);
         end loop;
 
-        wait until rising_edge(cam_pclk);
-        wait until rising_edge(cam_pclk);
-        wait until rising_edge(cam_pclk);
         cam_vsync <= '0';
         wait until rising_edge(cam_pclk);
 
-        send_camera_line(TEST_LINE_BYTES);
+        for row_index in 0 to FRAME_HEIGHT - 1 loop
+            send_line(row_index);
+        end loop;
 
         cam_vsync <= '1';
         wait until rising_edge(cam_pclk);
         wait for 1 ns;
+        camera_done <= '1';
 
         assert frame_done = '1'
-            report "ERROR: frame_done no se activo"
+            report "ERROR: frame_done no se activo al cerrar el frame"
             severity failure;
 
-        assert led_read_data = x"33"
-            report "ERROR: led_read_data no contiene el ultimo Y capturado"
+        assert pixel_count = FRAME_PIXELS
+            report "ERROR: no se capturaron exactamente 19200 pixeles Y"
             severity failure;
 
-        assert seen_pixels = 4
-            report "ERROR: no se observaron los 4 pixeles Y esperados"
+        assert frame_done_before_full = '0'
+            report "ERROR: frame_done se activo antes de completar el frame"
             severity failure;
 
         assert fail = '0'
             report "ERROR: fail se activo durante captura"
             severity failure;
 
-        wait until ok = '1' or fail = '1' for 1 ms;
+        wait until ok = '1' or fail = '1' for 60 ms;
+
+        assert fail = '0'
+            report "ERROR: fail se activo durante dump UART"
+            severity failure;
 
         assert ok = '1'
             report "ERROR: ok no se activo despues del dump UART"
             severity failure;
 
-        assert uart_seen_bytes = EXPECTED_UART_BYTES'length
+        assert uart_done_seen = '1'
             report "ERROR: no se recibio el paquete UART completo"
             severity failure;
 
-        start_btn <= '0';
+        assert pixel_after_frame_done = '0'
+            report "ERROR: se observaron pixeles validos despues de frame_done"
+            severity failure;
 
-        report "Simulacion star_tracker_top finalizada correctamente";
-
-        wait;
+        report "PASS_TOP_UART_FULL: init, captura QQVGA, BRAM, UART, payload y checksum correctos";
+        finish;
     end process;
 
     i2c_slave_model : process
 
         procedure wait_start is
         begin
-            wait until SDA = '0' and SCL = '1';
+            wait until sda_to_bit(SDA) = '0' and sda_to_bit(SCL) = '1';
         end procedure;
 
         procedure receive_master_byte(
@@ -335,46 +362,78 @@ begin
 
             receive_master_byte(received_byte);
             assert received_byte = x"42"
-                report "ERROR: byte de direccion de escritura no es 0x42"
+                report "ERROR: byte de direccion SCCB de escritura no es 0x42"
                 severity failure;
             send_ack;
 
             receive_master_byte(received_byte);
             assert received_byte = EXPECTED_CONFIG(index).reg_addr
-                report "ERROR: direccion de registro no coincide"
+                report "ERROR: direccion de registro OV7670 no coincide"
                 severity failure;
             send_ack;
 
             receive_master_byte(received_byte);
             assert received_byte = EXPECTED_CONFIG(index).reg_data
-                report "ERROR: dato de registro no coincide"
+                report "ERROR: dato de registro OV7670 no coincide"
                 severity failure;
             send_ack;
+
+            report "SCCB registro " & integer'image(index) & " verificado";
 
         end loop;
 
         i2c_config_done <= '1';
+        report "Modelo SCCB/I2C recibio toda la configuracion esperada";
 
         wait;
     end process;
 
-    pixel_monitor : process(cam_pclk)
-    begin
-        if rising_edge(cam_pclk) then
-            if rst = '1' then
-                seen_pixels <= 0;
-            elsif pixel_valid = '1' then
-                seen_pixels <= seen_pixels + 1;
-            end if;
-        end if;
-    end process;
-
-    uart_monitor : process
-        variable rx_byte : std_logic_vector(7 downto 0);
+    pixel_monitor : process
+        variable expected_pixel : std_logic_vector(7 downto 0);
     begin
         wait until rst = '0';
 
-        for byte_index in EXPECTED_UART_BYTES'range loop
+        while true loop
+            wait until rising_edge(cam_pclk);
+            wait for 1 ns;
+
+            if pixel_valid = '1' then
+                assert pixel_count < FRAME_PIXELS
+                    report "ERROR: se emitieron mas de 19200 pixeles Y"
+                    severity failure;
+
+                expected_pixel := expected_y(pixel_count);
+
+                assert led_read_data = expected_pixel
+                    report "ERROR: pixel Y capturado no coincide. index=" &
+                           integer'image(pixel_count) &
+                           " expected=" & integer'image(to_integer(unsigned(expected_pixel))) &
+                           " actual=" & integer'image(to_integer(unsigned(led_read_data)))
+                    severity failure;
+
+                assert frame_done = '0'
+                    report "ERROR: pixel_valid y frame_done activos simultaneamente"
+                    severity failure;
+
+                pixel_count <= pixel_count + 1;
+            end if;
+
+            if frame_done = '1' then
+                if pixel_count /= FRAME_PIXELS then
+                    frame_done_before_full <= '1';
+                end if;
+            end if;
+
+            if camera_done = '1' and pixel_valid = '1' then
+                pixel_after_frame_done <= '1';
+            end if;
+        end loop;
+    end process;
+
+    uart_monitor : process
+
+        procedure receive_uart_byte(variable rx_byte : out std_logic_vector(7 downto 0)) is
+        begin
             wait until uart_tx_line = '0';
             wait for UART_BIT_PERIOD / 2;
 
@@ -391,15 +450,88 @@ begin
             assert uart_tx_line = '1'
                 report "ERROR: stop bit UART incorrecto"
                 severity failure;
+        end procedure;
 
-            assert rx_byte = EXPECTED_UART_BYTES(byte_index)
-                report "ERROR: byte UART no coincide"
+        variable rx_byte          : std_logic_vector(7 downto 0);
+        variable payload_checksum : unsigned(7 downto 0) := (others => '0');
+        variable width_value      : integer;
+        variable height_value     : integer;
+        variable length_value     : integer;
+        variable expected_byte    : std_logic_vector(7 downto 0);
+
+    begin
+        wait until rst = '0';
+
+        receive_uart_byte(rx_byte);
+        assert rx_byte = x"53" report "ERROR: UART magic[0] incorrecto" severity failure;
+
+        receive_uart_byte(rx_byte);
+        assert rx_byte = x"54" report "ERROR: UART magic[1] incorrecto" severity failure;
+
+        receive_uart_byte(rx_byte);
+        assert rx_byte = x"59" report "ERROR: UART magic[2] incorrecto" severity failure;
+
+        receive_uart_byte(rx_byte);
+        assert rx_byte = x"31" report "ERROR: UART magic[3] incorrecto" severity failure;
+
+        receive_uart_byte(rx_byte);
+        width_value := to_integer(unsigned(rx_byte));
+        receive_uart_byte(rx_byte);
+        width_value := width_value + 256 * to_integer(unsigned(rx_byte));
+        assert width_value = FRAME_WIDTH
+            report "ERROR: UART width no es 160"
+            severity failure;
+
+        receive_uart_byte(rx_byte);
+        height_value := to_integer(unsigned(rx_byte));
+        receive_uart_byte(rx_byte);
+        height_value := height_value + 256 * to_integer(unsigned(rx_byte));
+        assert height_value = FRAME_HEIGHT
+            report "ERROR: UART height no es 120"
+            severity failure;
+
+        receive_uart_byte(rx_byte);
+        length_value := to_integer(unsigned(rx_byte));
+        receive_uart_byte(rx_byte);
+        length_value := length_value + 256 * to_integer(unsigned(rx_byte));
+        receive_uart_byte(rx_byte);
+        length_value := length_value + 65536 * to_integer(unsigned(rx_byte));
+        receive_uart_byte(rx_byte);
+        length_value := length_value + 16777216 * to_integer(unsigned(rx_byte));
+        assert length_value = FRAME_PIXELS
+            report "ERROR: UART payload length no es 19200"
+            severity failure;
+
+        report "UART header correcto: STY1 160x120 payload=19200";
+
+        for pixel_index in 0 to FRAME_PIXELS - 1 loop
+            receive_uart_byte(rx_byte);
+            expected_byte := expected_y(pixel_index);
+
+            assert rx_byte = expected_byte
+                report "ERROR: payload UART Y no coincide"
                 severity failure;
 
-            uart_seen_bytes <= byte_index + 1;
+            payload_checksum := payload_checksum + unsigned(rx_byte);
         end loop;
 
+        receive_uart_byte(rx_byte);
+        assert rx_byte = std_logic_vector(payload_checksum)
+            report "ERROR: checksum UART no coincide"
+            severity failure;
+
+        uart_done_seen <= '1';
+        report "UART payload completo y checksum correcto";
+
         wait;
+    end process;
+
+    watchdog : process
+    begin
+        wait for 80 ms;
+        assert false
+            report "ERROR: timeout de simulacion top completo"
+            severity failure;
     end process;
 
 end architecture;

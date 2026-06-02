@@ -1,0 +1,5 @@
+.Xil/
+sim_build/
+*.jou
+*.log
+*.wdb

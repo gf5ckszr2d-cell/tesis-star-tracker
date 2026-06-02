@@ -148,6 +148,14 @@ begin
 
           state <= START_SDA_LOW;
 
+        elsif state = WAIT_START_RELEASE and start = '0' then
+
+          scl_reg       <= '1';
+          sda_drive_low <= '0';
+          busy_reg      <= '0';
+
+          state <= IDLE;
+
         elsif tick_now = '1' then
 
           case state is

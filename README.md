@@ -16,6 +16,41 @@ Aunque el nombre general del proyecto es `star_tracker`, este repositorio todavi
 - XCLK esperado para la camara: 24 MHz generado desde el reloj de 100 MHz de la placa mediante MMCM.
 - Top-level actual: `star_tracker_top`.
 
+## Entradas y salidas del top
+
+| Puerto | Direccion | Uso |
+|---|---:|---|
+| `clk` | in | Reloj de sistema de 100 MHz de la Nexys A7. |
+| `rst` | in | Reset general activo en alto. |
+| `start_btn` | in | Inicia configuracion; despues de init exitoso rearma una nueva captura. |
+| `SDA`, `SCL` | inout/out | Bus SCCB/I2C hacia la OV7670. |
+| `cam_xclk` | out | Reloj de 24 MHz entregado a la camara. |
+| `cam_pclk` | in | Reloj de pixel generado por la OV7670. |
+| `cam_vsync`, `cam_href` | in | Sincronismos de frame y linea. |
+| `cam_data[7:0]` | in | Bus paralelo de video. |
+| `cam_pwdn`, `cam_reset` | out/out | Control basico de power-down y reset de la camara. |
+| `uart_tx` | out | Envio binario del frame por USB-UART. |
+| `pixel_valid`, `frame_done` | out/out | LEDs/debug de captura. |
+| `led_read_data[7:0]` | out | Ultimo byte `Y` capturado. |
+| `busy`, `ok`, `fail` | out/out/out | Estado general del flujo. |
+
+## Mapeo actual Nexys-OV7670
+
+| Funcion | Puerto RTL | Pin Nexys |
+|---|---|---|
+| SCCB SCL | `SCL` | JA1 / C17 |
+| SCCB SDA | `SDA` | JA2 / D18 |
+| Datos camara | `cam_data[0]`..`cam_data[7]` | JB1, JB2, JB3, JB4, JB7, JB8, JB9, JB10 |
+| XCLK | `cam_xclk` | JC1 / K1 |
+| PCLK | `cam_pclk` | JC2 / F6 |
+| VSYNC | `cam_vsync` | JC3 / J2 |
+| HREF | `cam_href` | JC4 / G6 |
+| PWDN | `cam_pwdn` | JC7 / E7 |
+| RESET | `cam_reset` | JC8 / J3 |
+| UART a PC | `uart_tx` | D4 |
+
+El top ya no usa switches. Toda la configuracion de la camara viene de `ov7670_init_config`.
+
 ## Estructura del repositorio
 
 ```text
@@ -27,13 +62,11 @@ Aunque el nombre general del proyecto es `star_tracker`, este repositorio todavi
 |   |   |-- framebuffer_y_bram.vhd
 |   |   |-- ov7670_capture_y_stream.vhd
 |   |   |-- ov7670_init_config.vhd
-|   |   |-- ov7670_manual_wr_rd.vhd
 |   |   `-- ov7670_xclk_gen.vhd
 |   `-- tb/
 |       |-- tb_framebuffer_y_bram.vhd
 |       |-- tb_ov7670_capture_y_stream.vhd
-|       |-- tb_ov7670_init_config.vhd
-|       `-- tb_ov7670_manual_ctrl.vhd
+|       `-- tb_ov7670_init_config.vhd
 |-- Constraints/
 |   `-- nexys.xdc
 |-- Protocolo de comunicacion/
@@ -60,16 +93,14 @@ Aunque el nombre general del proyecto es `star_tracker`, este repositorio todavi
 - `Configuracion camara/rtl/frame_capture_store.vhd`: controlador de escritura de frame. Toma `pixel_valid`, calcula direccion row-major y congela el frame al terminar.
 - `Configuracion camara/rtl/framebuffer_y_bram.vhd`: framebuffer inferido dual-clock para guardar 19,200 bytes `Y`.
 - `Configuracion camara/rtl/frame_uart_dump.vhd`: lee la BRAM y envia el frame por UART con encabezado binario y checksum.
-- `Configuracion camara/rtl/ov7670_manual_wr_rd.vhd`: controlador manual para prueba de registros de la OV7670. Captura `sw(15 downto 8)` como direccion de registro y `sw(7 downto 0)` como dato, escribe, vuelve a apuntar al registro, lee y compara.
 - `Protocolo de comunicacion/rtl/uart_tx.vhd`: transmisor UART 8N1, usado para volcar el frame a la PC a 921600 baud.
 - `Top/rtl/star_tracker_top.vhd`: integra `XCLK`, inicializacion automatica, maestro I2C, captura de luminancia, BRAM y UART TX. Los LEDs muestran ultimo byte `Y`, estado de init/dump y errores.
-- `Constraints/nexys.xdc`: constraints de pines para la Nexys A7-100T. Incluye reloj, switches, LEDs, botones, pines PMOD usados para `SCL`/`SDA` y `uart_tx` por USB-UART; los pines de captura de camara quedan pendientes hasta confirmar cableado.
+- `Constraints/nexys.xdc`: constraints de pines para la Nexys A7-100T. Incluye reloj, LEDs, botones, `SCL`/`SDA`, bus paralelo de la OV7670, control de camara y `uart_tx` por USB-UART.
 - `Protocolo de comunicacion/tb/tb_i2c_master.vhd`: testbench del maestro I2C con esclavo simulado para validar una escritura.
 - `Protocolo de comunicacion/tb/tb_uart_tx.vhd`: testbench del transmisor UART 8N1.
 - `Configuracion camara/tb/tb_framebuffer_y_bram.vhd`: testbench de escritura/lectura dual-clock del framebuffer.
 - `Configuracion camara/tb/tb_ov7670_init_config.vhd`: testbench integrado del controlador de inicializacion con el maestro I2C y un esclavo OV7670 simulado. Verifica en `SDA/SCL` la secuencia `0x42`, registro y valor para cada par de configuracion.
 - `Configuracion camara/tb/tb_ov7670_capture_y_stream.vhd`: testbench de captura con camara simulada. Genera `PCLK`, `VSYNC`, `HREF` y bytes `Y U Y V`, y verifica que solo salgan los `Y`.
-- `Configuracion camara/tb/tb_ov7670_manual_ctrl.vhd`: testbench del controlador manual, incluyendo caso correcto y caso de verificacion fallida.
 - `Top/tb/tb_star_tracker_top.vhd`: testbench integrado del top-level con esclavo I2C simulado y una trama de camara minima.
 
 ## Simulacion de testbenches
@@ -85,7 +116,6 @@ ghdl -a "Configuracion camara/rtl/ov7670_capture_y_stream.vhd"
 ghdl -a "Configuracion camara/rtl/frame_capture_store.vhd"
 ghdl -a "Configuracion camara/rtl/framebuffer_y_bram.vhd"
 ghdl -a "Configuracion camara/rtl/frame_uart_dump.vhd"
-ghdl -a "Configuracion camara/rtl/ov7670_manual_wr_rd.vhd"
 ghdl -a "Top/rtl/star_tracker_top.vhd"
 ```
 
@@ -127,14 +157,6 @@ Para simular el capturador de luminancia:
 ghdl -a "Configuracion camara/tb/tb_ov7670_capture_y_stream.vhd"
 ghdl -e tb_ov7670_capture_y_stream
 ghdl -r tb_ov7670_capture_y_stream --stop-time=10us
-```
-
-Para simular el controlador manual:
-
-```powershell
-ghdl -a "Configuracion camara/tb/tb_ov7670_manual_ctrl.vhd"
-ghdl -e tb_ov7670_manual_ctrl
-ghdl -r tb_ov7670_manual_ctrl --stop-time=1ms
 ```
 
 Para simular el top integrado:
@@ -192,11 +214,10 @@ Este repositorio no incluye todavia un archivo `.xpr`. Para abrirlo en Vivado:
    - `Configuracion camara/rtl/frame_capture_store.vhd`
    - `Configuracion camara/rtl/framebuffer_y_bram.vhd`
    - `Configuracion camara/rtl/frame_uart_dump.vhd`
-   - `Configuracion camara/rtl/ov7670_manual_wr_rd.vhd`
    - `Top/rtl/star_tracker_top.vhd`
 3. Seleccionar `star_tracker_top` como top-level.
 4. Agregar `Constraints/nexys.xdc` como archivo de constraints.
-5. Agregar constraints para los pines fisicos de `cam_xclk`, `cam_pclk`, `cam_vsync`, `cam_href`, `cam_data[7:0]`, `cam_pwdn` y `cam_reset` segun el cableado real de la camara.
+5. Verificar que el cableado fisico de la OV7670 coincida con el mapeo PMOD documentado en `Constraints/nexys.xdc`.
 6. Ejecutar elaboracion, sintesis e implementacion.
 7. Generar el bitstream y programar la Nexys A7-100T.
 
@@ -206,7 +227,7 @@ Para simular en Vivado, agregar tambien los archivos en las carpetas `tb/` y sel
 
 Las siguientes etapas no estan implementadas todavia y quedan como trabajo futuro del star tracker:
 
-- Constraints definitivos para los pines fisicos de captura de la OV7670.
+- Validacion en placa del mapeo fisico OV7670-PMOD.
 - Preprocesamiento de imagen.
 - Deteccion de estrellas o puntos brillantes.
 - Calculo de centroides.

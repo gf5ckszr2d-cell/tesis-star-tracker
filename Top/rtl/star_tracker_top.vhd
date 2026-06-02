@@ -7,14 +7,14 @@ entity star_tracker_top is
         FRAME_WIDTH    : integer := 160;
         FRAME_HEIGHT   : integer := 120;
         ADDR_WIDTH     : integer := 15;
-        UART_BAUD_RATE : integer := 921600
+        UART_BAUD_RATE : integer := 921600;
+        SIM_BYPASS_XCLK_LOCK : boolean := false
     );
     port (
         clk : in std_logic;
         rst : in std_logic;
 
         start_btn : in std_logic;
-        sw        : in std_logic_vector(15 downto 0);
 
         SDA : inout std_logic;
         SCL : out std_logic;
@@ -56,6 +56,7 @@ architecture rtl of star_tracker_top is
     signal i2c_busy      : std_logic;
 
     signal xclk_locked : std_logic;
+    signal xclk_ready  : std_logic;
 
     signal init_busy          : std_logic;
     signal init_done          : std_logic;
@@ -63,6 +64,7 @@ architecture rtl of star_tracker_top is
     signal init_done_latched  : std_logic := '0';
     signal init_error_latched : std_logic := '0';
     signal init_current_step  : unsigned(4 downto 0);
+    signal init_start         : std_logic;
 
     signal capture_rst          : std_logic;
     signal capture_pixel_y      : std_logic_vector(7 downto 0);
@@ -277,6 +279,8 @@ begin
     cam_pwdn  <= '0';
     cam_reset <= not rst;
 
+    xclk_ready <= '1' when SIM_BYPASS_XCLK_LOCK else xclk_locked;
+    init_start <= start_btn and xclk_ready and not init_done_latched;
     capture_rst <= rst or not init_done_pclk or not store_capture_busy;
 
     led_read_data <= capture_pixel_y;
@@ -299,7 +303,7 @@ begin
             clk => clk,
             rst => rst,
 
-            start => start_btn and xclk_locked and not init_done_latched,
+            start => init_start,
 
             i2c_done      => i2c_done,
             i2c_ack_error => i2c_ack_error,
