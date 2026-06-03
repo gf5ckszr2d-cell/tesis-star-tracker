@@ -1,0 +1,162 @@
+digraph ov7670_init_config_fsm {
+    graph [
+        label="ov7670_init_config - FSM de inicializacion SCCB/I2C",
+        labelloc=t,
+        fontsize=22,
+        fontname="Segoe UI",
+        bgcolor="white",
+        pad=0.35,
+        nodesep=0.55,
+        ranksep=0.75,
+        splines=spline
+    ];
+
+    node [
+        shape=box,
+        style="rounded,filled",
+        fontname="Segoe UI",
+        fontsize=12,
+        margin="0.16,0.10",
+        color="#334155",
+        penwidth=1.4,
+        fillcolor="#F8FAFC"
+    ];
+
+    edge [
+        fontname="Segoe UI",
+        fontsize=10,
+        color="#475569",
+        fontcolor="#334155",
+        arrowsize=0.75,
+        penwidth=1.2
+    ];
+
+    start_node [
+        label="reset / inicio",
+        shape=circle,
+        width=1.15,
+        fixedsize=true,
+        fillcolor="#E0F2FE",
+        color="#0284C7"
+    ];
+
+    IDLE [
+        label=<
+            <B>IDLE</B><BR/>
+            Espera start=1<BR/>
+            Limpia done/error
+        >,
+        fillcolor="#ECFEFF",
+        color="#0891B2"
+    ];
+
+    LOAD_PAIR [
+        label=<
+            <B>LOAD_PAIR</B><BR/>
+            Carga CONFIG_ROM(config_index)<BR/>
+            reg_addr -&gt; i2c_tx_byte0<BR/>
+            reg_data -&gt; i2c_tx_byte1
+        >,
+        fillcolor="#F0FDF4",
+        color="#16A34A"
+    ];
+
+    START_WRITE [
+        label=<
+            <B>START_WRITE</B><BR/>
+            i2c_start = 1<BR/>
+            Pulso de 1 ciclo
+        >,
+        fillcolor="#F0FDF4",
+        color="#16A34A"
+    ];
+
+    WAIT_WRITE_DONE [
+        label=<
+            <B>WAIT_WRITE_DONE</B><BR/>
+            Espera i2c_done<BR/>
+            Revisa i2c_ack_error
+        >,
+        fillcolor="#FFFBEB",
+        color="#D97706"
+    ];
+
+    WAIT_RESET_DELAY [
+        label=<
+            <B>WAIT_RESET_DELAY</B><BR/>
+            Solo despues del reset OV7670<BR/>
+            Espera RESET_DELAY_MS
+        >,
+        fillcolor="#FEF3C7",
+        color="#D97706"
+    ];
+
+    NEXT_PAIR [
+        label=<
+            <B>NEXT_PAIR</B><BR/>
+            Avanza config_index<BR/>
+            o detecta ultimo registro
+        >,
+        fillcolor="#F0FDF4",
+        color="#16A34A"
+    ];
+
+    DONE_STATE [
+        label=<
+            <B>DONE_STATE</B><BR/>
+            done = 1<BR/>
+            Configuracion completa
+        >,
+        fillcolor="#DCFCE7",
+        color="#15803D",
+        penwidth=1.8
+    ];
+
+    ERROR_STATE [
+        label=<
+            <B>ERROR_STATE</B><BR/>
+            error = 1<BR/>
+            ACK fallido
+        >,
+        fillcolor="#FEE2E2",
+        color="#DC2626",
+        penwidth=1.8
+    ];
+
+    WAIT_START_RELEASE [
+        label=<
+            <B>WAIT_START_RELEASE</B><BR/>
+            Espera start=0<BR/>
+            Evita reinicio accidental
+        >,
+        fillcolor="#F1F5F9",
+        color="#64748B"
+    ];
+
+    start_node -> IDLE [label="rst=1"];
+
+    IDLE -> IDLE [label="start=0"];
+    IDLE -> LOAD_PAIR [label="start=1"];
+
+    LOAD_PAIR -> START_WRITE [label="par cargado"];
+    START_WRITE -> WAIT_WRITE_DONE [label="i2c_start pulso"];
+
+    WAIT_WRITE_DONE -> WAIT_WRITE_DONE [label="i2c_done=0"];
+    WAIT_WRITE_DONE -> ERROR_STATE [label="i2c_done=1 / ACK error", color="#DC2626", fontcolor="#B91C1C"];
+    WAIT_WRITE_DONE -> WAIT_RESET_DELAY [label="primer registro OK"];
+    WAIT_WRITE_DONE -> NEXT_PAIR [label="registro OK"];
+
+    WAIT_RESET_DELAY -> WAIT_RESET_DELAY [label="delay_count < RESET_DELAY_CYCLES"];
+    WAIT_RESET_DELAY -> NEXT_PAIR [label="delay completo"];
+
+    NEXT_PAIR -> LOAD_PAIR [label="quedan registros"];
+    NEXT_PAIR -> DONE_STATE [label="ultimo registro"];
+
+    DONE_STATE -> WAIT_START_RELEASE [label="done=1"];
+    ERROR_STATE -> WAIT_START_RELEASE [label="error=1", color="#DC2626", fontcolor="#B91C1C"];
+
+    WAIT_START_RELEASE -> WAIT_START_RELEASE [label="start=1"];
+    WAIT_START_RELEASE -> IDLE [label="start=0"];
+
+    { rank=same; DONE_STATE; ERROR_STATE; }
+}
