@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/alexa/tesis-star-tracker/sim_build/xsim_ov7670_init_config/xsim_ov7670_init_config.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_ov7670_init_config" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+   </zoom_setting>
+   <column_width_setting>
+   </column_width_setting>
+   <WVObjectSize size="5" />
+   <wvobject fp_name="group1" type="group">
+      <obj_property name="label">Control init</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_init_config/clk" type="logic">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/rst" type="logic">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/start" type="logic">
+         <obj_property name="ElementShortName">start</obj_property>
+         <obj_property name="ObjectShortName">start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/init_busy" type="logic">
+         <obj_property name="ElementShortName">init_busy</obj_property>
+         <obj_property name="ObjectShortName">init_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/init_done" type="logic">
+         <obj_property name="ElementShortName">init_done</obj_property>
+         <obj_property name="ObjectShortName">init_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/init_error" type="logic">
+         <obj_property name="ElementShortName">init_error</obj_property>
+         <obj_property name="ObjectShortName">init_error</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/current_step" type="array">
+         <obj_property name="ElementShortName">current_step[4:0]</obj_property>
+         <obj_property name="ObjectShortName">current_step[4:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group9" type="group">
+      <obj_property name="label">Handshake I2C</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_init_config/ctrl_i2c_start" type="logic">
+         <obj_property name="ElementShortName">ctrl_i2c_start</obj_property>
+         <obj_property name="ObjectShortName">ctrl_i2c_start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/ctrl_i2c_rw" type="logic">
+         <obj_property name="ElementShortName">ctrl_i2c_rw</obj_property>
+         <obj_property name="ObjectShortName">ctrl_i2c_rw</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/ctrl_i2c_tx_byte0" type="array">
+         <obj_property name="ElementShortName">ctrl_i2c_tx_byte0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">ctrl_i2c_tx_byte0[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/ctrl_i2c_tx_byte1" type="array">
+         <obj_property name="ElementShortName">ctrl_i2c_tx_byte1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">ctrl_i2c_tx_byte1[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/ctrl_i2c_tx_count" type="array">
+         <obj_property name="ElementShortName">ctrl_i2c_tx_count[1:0]</obj_property>
+         <obj_property name="ObjectShortName">ctrl_i2c_tx_count[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/i2c_busy" type="logic">
+         <obj_property name="ElementShortName">i2c_busy</obj_property>
+         <obj_property name="ObjectShortName">i2c_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/i2c_done" type="logic">
+         <obj_property name="ElementShortName">i2c_done</obj_property>
+         <obj_property name="ObjectShortName">i2c_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/i2c_ack_error" type="logic">
+         <obj_property name="ElementShortName">i2c_ack_error</obj_property>
+         <obj_property name="ObjectShortName">i2c_ack_error</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group18" type="group">
+      <obj_property name="label">Bus I2C</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_init_config/SCL" type="logic">
+         <obj_property name="ElementShortName">SCL</obj_property>
+         <obj_property name="ObjectShortName">SCL</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/SDA" type="logic">
+         <obj_property name="ElementShortName">SDA</obj_property>
+         <obj_property name="ObjectShortName">SDA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/sda_slave_drive" type="logic">
+         <obj_property name="ElementShortName">sda_slave_drive</obj_property>
+         <obj_property name="ObjectShortName">sda_slave_drive</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group22" type="group">
+      <obj_property name="label">FSM init_config</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/config_index" type="other">
+         <obj_property name="ElementShortName">config_index</obj_property>
+         <obj_property name="ObjectShortName">config_index</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/delay_count" type="other">
+         <obj_property name="ElementShortName">delay_count</obj_property>
+         <obj_property name="ObjectShortName">delay_count</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/i2c_start_reg" type="logic">
+         <obj_property name="ElementShortName">i2c_start_reg</obj_property>
+         <obj_property name="ObjectShortName">i2c_start_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/i2c_rw_reg" type="logic">
+         <obj_property name="ElementShortName">i2c_rw_reg</obj_property>
+         <obj_property name="ObjectShortName">i2c_rw_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/i2c_tx_byte0_reg" type="array">
+         <obj_property name="ElementShortName">i2c_tx_byte0_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_tx_byte0_reg[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/i2c_tx_byte1_reg" type="array">
+         <obj_property name="ElementShortName">i2c_tx_byte1_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_tx_byte1_reg[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/i2c_tx_count_reg" type="array">
+         <obj_property name="ElementShortName">i2c_tx_count_reg[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_tx_count_reg[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/done_reg" type="logic">
+         <obj_property name="ElementShortName">done_reg</obj_property>
+         <obj_property name="ObjectShortName">done_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_init_config/error_reg" type="logic">
+         <obj_property name="ElementShortName">error_reg</obj_property>
+         <obj_property name="ObjectShortName">error_reg</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group33" type="group">
+      <obj_property name="label">FSM i2c_master</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_init_config/u_i2c_master/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_i2c_master/phase" type="other">
+         <obj_property name="ElementShortName">phase</obj_property>
+         <obj_property name="ObjectShortName">phase</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_i2c_master/bit_index" type="other">
+         <obj_property name="ElementShortName">bit_index</obj_property>
+         <obj_property name="ObjectShortName">bit_index</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_i2c_master/scl_reg" type="logic">
+         <obj_property name="ElementShortName">scl_reg</obj_property>
+         <obj_property name="ObjectShortName">scl_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_i2c_master/sda_drive_low" type="logic">
+         <obj_property name="ElementShortName">sda_drive_low</obj_property>
+         <obj_property name="ObjectShortName">sda_drive_low</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_i2c_master/busy_reg" type="logic">
+         <obj_property name="ElementShortName">busy_reg</obj_property>
+         <obj_property name="ObjectShortName">busy_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_i2c_master/done_reg" type="logic">
+         <obj_property name="ElementShortName">done_reg</obj_property>
+         <obj_property name="ObjectShortName">done_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_init_config/u_i2c_master/ack_error_reg" type="logic">
+         <obj_property name="ElementShortName">ack_error_reg</obj_property>
+         <obj_property name="ObjectShortName">ack_error_reg</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

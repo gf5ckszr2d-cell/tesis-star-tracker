@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/alexa/tesis-star-tracker/sim_build/xsim_i2c_master/xsim_i2c_master.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_i2c_master" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+   </zoom_setting>
+   <column_width_setting>
+   </column_width_setting>
+   <WVObjectSize size="4" />
+   <wvobject fp_name="group1" type="group">
+      <obj_property name="label">Control</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_i2c_master/clk" type="logic">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/rst" type="logic">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/start" type="logic">
+         <obj_property name="ElementShortName">start</obj_property>
+         <obj_property name="ObjectShortName">start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/busy" type="logic">
+         <obj_property name="ElementShortName">busy</obj_property>
+         <obj_property name="ObjectShortName">busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/done" type="logic">
+         <obj_property name="ElementShortName">done</obj_property>
+         <obj_property name="ObjectShortName">done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/ack_error" type="logic">
+         <obj_property name="ElementShortName">ack_error</obj_property>
+         <obj_property name="ObjectShortName">ack_error</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group8" type="group">
+      <obj_property name="label">Bus I2C</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_i2c_master/SCL" type="logic">
+         <obj_property name="ElementShortName">SCL</obj_property>
+         <obj_property name="ObjectShortName">SCL</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/SDA" type="logic">
+         <obj_property name="ElementShortName">SDA</obj_property>
+         <obj_property name="ObjectShortName">SDA</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group11" type="group">
+      <obj_property name="label">Entrada/Salida</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_i2c_master/slave_addr" type="array">
+         <obj_property name="ElementShortName">slave_addr[6:0]</obj_property>
+         <obj_property name="ObjectShortName">slave_addr[6:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/rw" type="logic">
+         <obj_property name="ElementShortName">rw</obj_property>
+         <obj_property name="ObjectShortName">rw</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/tx_byte0" type="array">
+         <obj_property name="ElementShortName">tx_byte0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">tx_byte0[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/tx_byte1" type="array">
+         <obj_property name="ElementShortName">tx_byte1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">tx_byte1[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/rx_data" type="array">
+         <obj_property name="ElementShortName">rx_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">rx_data[7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group17" type="group">
+      <obj_property name="label">FSM interna</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_i2c_master/uut/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/uut/phase" type="other">
+         <obj_property name="ElementShortName">phase</obj_property>
+         <obj_property name="ObjectShortName">phase</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/uut/bit_index" type="other">
+         <obj_property name="ElementShortName">bit_index</obj_property>
+         <obj_property name="ObjectShortName">bit_index</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/uut/tick_counter" type="other">
+         <obj_property name="ElementShortName">tick_counter</obj_property>
+         <obj_property name="ObjectShortName">tick_counter</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/uut/scl_reg" type="logic">
+         <obj_property name="ElementShortName">scl_reg</obj_property>
+         <obj_property name="ObjectShortName">scl_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/uut/sda_drive_low" type="logic">
+         <obj_property name="ElementShortName">sda_drive_low</obj_property>
+         <obj_property name="ObjectShortName">sda_drive_low</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/uut/busy_reg" type="logic">
+         <obj_property name="ElementShortName">busy_reg</obj_property>
+         <obj_property name="ObjectShortName">busy_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/uut/done_reg" type="logic">
+         <obj_property name="ElementShortName">done_reg</obj_property>
+         <obj_property name="ObjectShortName">done_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_i2c_master/uut/ack_error_reg" type="logic">
+         <obj_property name="ElementShortName">ack_error_reg</obj_property>
+         <obj_property name="ObjectShortName">ack_error_reg</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
