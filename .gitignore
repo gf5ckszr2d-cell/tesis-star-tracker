@@ -3,6 +3,7 @@ sim_build/
 *.jou
 *.log
 *.wdb
+*.dcp
 *.str
 dfx_runtime.txt
 *.cache/

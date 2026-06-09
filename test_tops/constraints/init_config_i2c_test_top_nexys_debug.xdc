@@ -9,9 +9,10 @@ create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports { c
 set_property -dict { PACKAGE_PIN N17 IOSTANDARD LVCMOS33 } [get_ports { rst }]
 set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { start }]
 
-## SCCB/I2C on JA
+## SCCB/I2C on the same ordered OV7670 connector row used by the top.
+## Camera row: SCL/SDA -> JA1/JA7.
 set_property -dict { PACKAGE_PIN C17 IOSTANDARD LVCMOS33 } [get_ports { SCL }]
-set_property -dict { PACKAGE_PIN D18 IOSTANDARD LVCMOS33 } [get_ports { SDA }]
+set_property -dict { PACKAGE_PIN D17 IOSTANDARD LVCMOS33 } [get_ports { SDA }]
 set_property PULLUP true [get_ports { SDA }]
 
 ## init_config step on LEDs 0..4

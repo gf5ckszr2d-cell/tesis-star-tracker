@@ -24,30 +24,32 @@ set_property -dict { PACKAGE_PIN V15 IOSTANDARD LVCMOS33 } [get_ports { frame_do
 set_property -dict { PACKAGE_PIN N17 IOSTANDARD LVCMOS33 } [get_ports { rst }]
 set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { start_btn }]
 
-## SCCB/I2C on JA
-set_property -dict { PACKAGE_PIN C17 IOSTANDARD LVCMOS33 } [get_ports { SCL }]
-set_property -dict { PACKAGE_PIN D18 IOSTANDARD LVCMOS33 } [get_ports { SDA }]
+## OV7670 camera connector, ordered by physical 2x9 module rows.
+## Camera row 1 is power only: 3.3V / GND.
+## JA row pairs: JA1/JA7, JA2/JA8, JA3/JA9, JA4/JA10.
+set_property -dict { PACKAGE_PIN C17 IOSTANDARD LVCMOS33 } [get_ports { SCL }]          ;# JA1  -> SCL
+set_property -dict { PACKAGE_PIN D17 IOSTANDARD LVCMOS33 } [get_ports { SDA }]          ;# JA7  -> SDA
 set_property PULLUP true [get_ports { SDA }]
+set_property -dict { PACKAGE_PIN D18 IOSTANDARD LVCMOS33 } [get_ports { cam_vsync }]    ;# JA2  -> VS
+set_property -dict { PACKAGE_PIN E17 IOSTANDARD LVCMOS33 } [get_ports { cam_href }]     ;# JA8  -> HS/HREF
+set_property -dict { PACKAGE_PIN E18 IOSTANDARD LVCMOS33 } [get_ports { cam_pclk }]     ;# JA3  -> PCLK/PLK
+set_property -dict { PACKAGE_PIN F18 IOSTANDARD LVCMOS33 } [get_ports { cam_xclk }]     ;# JA9  -> XCLK/XLK
+set_property -dict { PACKAGE_PIN G17 IOSTANDARD LVCMOS33 } [get_ports { cam_data[7] }]  ;# JA4  -> D7
+set_property -dict { PACKAGE_PIN G18 IOSTANDARD LVCMOS33 } [get_ports { cam_data[6] }]  ;# JA10 -> D6
 
-## OV7670 camera data/control
-set_property -dict { PACKAGE_PIN D14 IOSTANDARD LVCMOS33 } [get_ports { cam_data[0] }]
-set_property -dict { PACKAGE_PIN F16 IOSTANDARD LVCMOS33 } [get_ports { cam_data[1] }]
-set_property -dict { PACKAGE_PIN G16 IOSTANDARD LVCMOS33 } [get_ports { cam_data[2] }]
-set_property -dict { PACKAGE_PIN H14 IOSTANDARD LVCMOS33 } [get_ports { cam_data[3] }]
-set_property -dict { PACKAGE_PIN E16 IOSTANDARD LVCMOS33 } [get_ports { cam_data[4] }]
-set_property -dict { PACKAGE_PIN F13 IOSTANDARD LVCMOS33 } [get_ports { cam_data[5] }]
-set_property -dict { PACKAGE_PIN G13 IOSTANDARD LVCMOS33 } [get_ports { cam_data[6] }]
-set_property -dict { PACKAGE_PIN H16 IOSTANDARD LVCMOS33 } [get_ports { cam_data[7] }]
-set_property -dict { PACKAGE_PIN K1  IOSTANDARD LVCMOS33 } [get_ports { cam_xclk }]
-set_property -dict { PACKAGE_PIN F6  IOSTANDARD LVCMOS33 } [get_ports { cam_pclk }]
-set_property -dict { PACKAGE_PIN J2  IOSTANDARD LVCMOS33 } [get_ports { cam_vsync }]
-set_property -dict { PACKAGE_PIN G6  IOSTANDARD LVCMOS33 } [get_ports { cam_href }]
-set_property -dict { PACKAGE_PIN E7  IOSTANDARD LVCMOS33 } [get_ports { cam_pwdn }]
-set_property -dict { PACKAGE_PIN J3  IOSTANDARD LVCMOS33 } [get_ports { cam_reset }]
+## JB row pairs: JB1/JB7, JB2/JB8, JB3/JB9, JB4/JB10.
+set_property -dict { PACKAGE_PIN D14 IOSTANDARD LVCMOS33 } [get_ports { cam_data[5] }]  ;# JB1  -> D5
+set_property -dict { PACKAGE_PIN E16 IOSTANDARD LVCMOS33 } [get_ports { cam_data[4] }]  ;# JB7  -> D4
+set_property -dict { PACKAGE_PIN F16 IOSTANDARD LVCMOS33 } [get_ports { cam_data[3] }]  ;# JB2  -> D3
+set_property -dict { PACKAGE_PIN F13 IOSTANDARD LVCMOS33 } [get_ports { cam_data[2] }]  ;# JB8  -> D2
+set_property -dict { PACKAGE_PIN G16 IOSTANDARD LVCMOS33 } [get_ports { cam_data[1] }]  ;# JB3  -> D1
+set_property -dict { PACKAGE_PIN G13 IOSTANDARD LVCMOS33 } [get_ports { cam_data[0] }]  ;# JB9  -> D0
+set_property -dict { PACKAGE_PIN H14 IOSTANDARD LVCMOS33 } [get_ports { cam_reset }]    ;# JB4  -> RESET/RET
+set_property -dict { PACKAGE_PIN H16 IOSTANDARD LVCMOS33 } [get_ports { cam_pwdn }]     ;# JB10 -> PWDN
 create_clock -add -name cam_pclk_pin -period 41.667 -waveform {0 20.833} [get_ports { cam_pclk }]
 set_clock_groups -asynchronous -group [get_clocks { sys_clk_pin }] -group [get_clocks { cam_pclk_pin }]
 
-## OV7670 PCLK enters through PMOD JC2/F6, which is not a clock-capable pin on this
+## OV7670 PCLK enters through a PMOD pin, which may not be clock-capable on this
 ## Nexys A7 package. The camera cable already uses this pinout, so the prototype
 ## accepts a non-dedicated route for this external pixel clock.
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets cam_pclk_IBUF]
