@@ -42,6 +42,7 @@ puts $fh {log_wave /tb_ov7670_capture_y_stream/enable}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/vsync}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/href}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/data}
+puts $fh {log_wave /tb_ov7670_capture_y_stream/seen_pixel_count}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/pixel_y}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/pixel_valid}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/pixel_x}
@@ -49,8 +50,8 @@ puts $fh {log_wave /tb_ov7670_capture_y_stream/pixel_y_pos}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/frame_active}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/frame_done}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/overflow}
-puts $fh {log_wave /tb_ov7670_capture_y_stream/seen_pixel_count}
 
+puts $fh {log_wave /tb_ov7670_capture_y_stream/uut/state}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/uut/x_count}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/uut/y_count}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/uut/byte_phase}
@@ -66,14 +67,12 @@ puts $fh {log_wave /tb_ov7670_capture_y_stream/uut/frame_done_reg}
 puts $fh {log_wave /tb_ov7670_capture_y_stream/uut/overflow_reg}
 
 puts $fh {create_wave_config waves_ov7670_capture_y_stream}
-puts $fh {set control_group [add_wave_group {Control}]}
-puts $fh {add_wave -into $control_group /tb_ov7670_capture_y_stream/pclk /tb_ov7670_capture_y_stream/rst /tb_ov7670_capture_y_stream/enable /tb_ov7670_capture_y_stream/seen_pixel_count}
-puts $fh {set camera_group [add_wave_group {Entrada OV7670}]}
-puts $fh {add_wave -into $camera_group /tb_ov7670_capture_y_stream/vsync /tb_ov7670_capture_y_stream/href /tb_ov7670_capture_y_stream/data}
+puts $fh {set input_group [add_wave_group {Entrada OV7670}]}
+puts $fh {add_wave -into $input_group /tb_ov7670_capture_y_stream/pclk /tb_ov7670_capture_y_stream/rst /tb_ov7670_capture_y_stream/enable /tb_ov7670_capture_y_stream/vsync /tb_ov7670_capture_y_stream/href /tb_ov7670_capture_y_stream/data}
 puts $fh {set output_group [add_wave_group {Salida Y stream}]}
-puts $fh {add_wave -into $output_group /tb_ov7670_capture_y_stream/pixel_y /tb_ov7670_capture_y_stream/pixel_valid /tb_ov7670_capture_y_stream/pixel_x /tb_ov7670_capture_y_stream/pixel_y_pos /tb_ov7670_capture_y_stream/frame_active /tb_ov7670_capture_y_stream/frame_done /tb_ov7670_capture_y_stream/overflow}
-puts $fh {set internal_group [add_wave_group {Internas captura}]}
-puts $fh {add_wave -into $internal_group /tb_ov7670_capture_y_stream/uut/x_count /tb_ov7670_capture_y_stream/uut/y_count /tb_ov7670_capture_y_stream/uut/byte_phase /tb_ov7670_capture_y_stream/uut/href_active /tb_ov7670_capture_y_stream/uut/vsync_active /tb_ov7670_capture_y_stream/uut/href_active_prev}
+puts $fh {add_wave -into $output_group /tb_ov7670_capture_y_stream/pixel_y /tb_ov7670_capture_y_stream/pixel_valid /tb_ov7670_capture_y_stream/pixel_x /tb_ov7670_capture_y_stream/pixel_y_pos /tb_ov7670_capture_y_stream/frame_active /tb_ov7670_capture_y_stream/frame_done /tb_ov7670_capture_y_stream/overflow /tb_ov7670_capture_y_stream/seen_pixel_count}
+puts $fh {set fsm_group [add_wave_group {FSM interna}]}
+puts $fh {add_wave -into $fsm_group /tb_ov7670_capture_y_stream/uut/state /tb_ov7670_capture_y_stream/uut/x_count /tb_ov7670_capture_y_stream/uut/y_count /tb_ov7670_capture_y_stream/uut/byte_phase /tb_ov7670_capture_y_stream/uut/href_active /tb_ov7670_capture_y_stream/uut/vsync_active /tb_ov7670_capture_y_stream/uut/href_active_prev}
 puts $fh {set regs_group [add_wave_group {Registros salida}]}
 puts $fh {add_wave -into $regs_group /tb_ov7670_capture_y_stream/uut/frame_active_reg /tb_ov7670_capture_y_stream/uut/pixel_y_reg /tb_ov7670_capture_y_stream/uut/pixel_valid_reg /tb_ov7670_capture_y_stream/uut/pixel_x_reg /tb_ov7670_capture_y_stream/uut/pixel_y_pos_reg /tb_ov7670_capture_y_stream/uut/frame_done_reg /tb_ov7670_capture_y_stream/uut/overflow_reg}
 

@@ -15,7 +15,7 @@ set rtl_files [list \
 ]
 
 read_vhdl $rtl_files
-read_xdc [list [file join $repo_root "Constraints" "nexys.xdc"]]
+read_xdc [list [file join $repo_root "Top" "constraints" "star_tracker_top_nexys.xdc"]]
 
 synth_design -top star_tracker_top -part xc7a100tcsg324-1
 

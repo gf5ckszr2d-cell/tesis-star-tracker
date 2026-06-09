@@ -147,7 +147,7 @@ architecture rtl of star_tracker_top is
         );
     end component;
 
-    component ov7670_capture_y_stream_fsm
+    component ov7670_capture_y_stream
         generic (
             FRAME_WIDTH        : integer := 160;
             FRAME_HEIGHT       : integer := 120;
@@ -405,7 +405,7 @@ begin
         end if;
     end process;
 
-    u_capture_y_stream : ov7670_capture_y_stream_fsm
+    u_capture_y_stream : ov7670_capture_y_stream
         generic map (
             FRAME_WIDTH  => FRAME_WIDTH,
             FRAME_HEIGHT => FRAME_HEIGHT

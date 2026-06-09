@@ -45,15 +45,15 @@ El PASS esperado del test global UART incluye:
 ## Archivos clave
 
 - `README.md`: estado general, estructura y formato UART.
-- `Docs/EXPLICACION_SRC_RTL.md`: documentacion RTL didactica con descripcion y diagramas de estado.
 - `Scripts/xsim_top_uart_full.tcl`: flujo Vivado/XSim del test global UART.
-- `Top/tb/tb_star_tracker_top_uart_full.vhd`: testbench global UART.
+- `Top/tb/tb_star_tracker_top.vhd`: testbench global UART.
 - `Top/rtl/star_tracker_top.vhd`: top-level del sistema.
 - `Protocolo de comunicacion/rtl/i2c_master.vhd`: maestro SCCB/I2C.
+- `Configuracion camara/rtl/ov7670_capture_y_stream.vhd`: capturador oficial por FSM sincronizado con VSYNC.
 - `Configuracion camara/rtl/frame_uart_dump.vhd`: volcado de frame por UART.
 
-Antes de modificar modulos RTL, consultar la documentacion existente. La documentacion RTL ya existe
-y debe usarse como referencia para entender interfaces, maquinas de estado y flujo de datos.
+Antes de modificar modulos RTL, consultar primero `README.md`, `Docs/` y los scripts TCL existentes
+para entender interfaces, maquinas de estado y flujo de datos.
 
 ## Simulacion y hardware
 

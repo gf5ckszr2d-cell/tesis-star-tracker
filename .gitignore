@@ -10,3 +10,4 @@ dfx_runtime.txt
 *.hw/
 *.runs/
 *.ip_user_files/
+Top/bitstreams/.jobs/
