@@ -29,7 +29,7 @@ set rtl_files [list \
     [file join $repo_root "Protocolo de comunicacion" "rtl" "uart_tx.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "ov7670_xclk_gen.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "ov7670_init_config.vhd"] \
-    [file join $repo_root "Configuracion camara" "rtl" "ov7670_capture_y_stream.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "ov7670_capture_y_stream_fsm.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_capture_store.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "framebuffer_y_bram.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_uart_dump.vhd"] \

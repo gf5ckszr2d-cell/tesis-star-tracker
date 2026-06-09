@@ -5,36 +5,10 @@ use ieee.numeric_std.all;
 library std;
 use std.env.all;
 
-entity tb_ov7670_capture_y_stream is
+entity tb_ov7670_capture_y_stream_fsm is
 end entity;
 
-architecture sim of tb_ov7670_capture_y_stream is
-
-    component ov7670_capture_y_stream is
-        generic (
-            FRAME_WIDTH        : integer := 160;
-            FRAME_HEIGHT       : integer := 120;
-            VSYNC_ACTIVE_LEVEL : std_logic := '1';
-            HREF_ACTIVE_LEVEL  : std_logic := '1'
-        );
-        port (
-            pclk   : in std_logic;
-            rst    : in std_logic;
-            enable : in std_logic;
-
-            vsync : in std_logic;
-            href  : in std_logic;
-            data  : in std_logic_vector(7 downto 0);
-
-            pixel_y      : out std_logic_vector(7 downto 0);
-            pixel_valid  : out std_logic;
-            pixel_x      : out unsigned(9 downto 0);
-            pixel_y_pos  : out unsigned(9 downto 0);
-            frame_active : out std_logic;
-            frame_done   : out std_logic;
-            overflow     : out std_logic
-        );
-    end component;
+architecture sim of tb_ov7670_capture_y_stream_fsm is
 
     type byte_array_t is array (natural range <>) of std_logic_vector(7 downto 0);
 
@@ -77,7 +51,7 @@ architecture sim of tb_ov7670_capture_y_stream is
 
 begin
 
-    uut : ov7670_capture_y_stream
+    uut : entity work.ov7670_capture_y_stream_fsm
         generic map (
             FRAME_WIDTH        => TEST_WIDTH,
             FRAME_HEIGHT       => TEST_HEIGHT,
@@ -85,14 +59,12 @@ begin
             HREF_ACTIVE_LEVEL  => '1'
         )
         port map (
-            pclk   => pclk,
-            rst    => rst,
-            enable => enable,
-
-            vsync => vsync,
-            href  => href,
-            data  => data,
-
+            pclk         => pclk,
+            rst          => rst,
+            enable       => enable,
+            vsync        => vsync,
+            href         => href,
+            data         => data,
             pixel_y      => pixel_y,
             pixel_valid  => pixel_valid,
             pixel_x      => pixel_x,
@@ -128,7 +100,7 @@ begin
         end procedure;
 
     begin
-        report "Inicio de simulacion ov7670_capture_y_stream";
+        report "Inicio test unitario ov7670_capture_y_stream_fsm";
 
         rst <= '1';
         enable <= '0';
@@ -139,7 +111,31 @@ begin
         wait for 5 * PCLK_PERIOD;
 
         rst <= '0';
+        vsync <= '0';
+        href <= '1';
+        data <= x"EE";
         enable <= '1';
+
+        for index in 0 to 5 loop
+            wait until rising_edge(pclk);
+            data <= std_logic_vector(to_unsigned(16#E0# + index, data'length));
+        end loop;
+
+        wait for 1 ns;
+
+        assert seen_pixel_count = 0
+            report "ERROR: la FSM capturo pixeles antes de sincronizar con VSYNC"
+            severity failure;
+
+        assert frame_active = '0'
+            report "ERROR: frame_active se activo antes de una sincronizacion valida"
+            severity failure;
+
+        href <= '0';
+        data <= (others => '0');
+        wait until rising_edge(pclk);
+
+        vsync <= '1';
         wait until rising_edge(pclk);
         wait until rising_edge(pclk);
 
@@ -167,7 +163,7 @@ begin
 
         wait for 5 * PCLK_PERIOD;
 
-        report "PASS_OV7670_CAPTURE_Y_STREAM: frame YUV422 capturado correctamente";
+        report "PASS_OV7670_CAPTURE_Y_STREAM_FSM: frame YUV422 capturado correctamente";
 
         finish;
     end process;
@@ -197,7 +193,7 @@ begin
                 seen_pixel_count <= seen_pixel_count + 1;
 
                 if seen_pixel_count = EXPECTED_Y'length - 1 then
-                    report "Todos los pixeles Y esperados fueron capturados";
+                    report "Todos los pixeles Y esperados fueron capturados por la FSM";
                 end if;
             end if;
         end if;
@@ -207,7 +203,7 @@ begin
     begin
         wait for 20 us;
         assert false
-            report "ERROR: timeout test unitario ov7670_capture_y_stream"
+            report "ERROR: timeout test unitario ov7670_capture_y_stream_fsm"
             severity failure;
     end process;
 

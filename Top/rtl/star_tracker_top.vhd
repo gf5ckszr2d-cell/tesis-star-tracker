@@ -108,6 +108,7 @@ architecture rtl of star_tracker_top is
     signal uart_data  : std_logic_vector(7 downto 0);
     signal uart_busy  : std_logic;
     signal uart_done  : std_logic;
+    signal uart_tx_line : std_logic;
 
     component ov7670_xclk_gen
         port (
@@ -146,7 +147,7 @@ architecture rtl of star_tracker_top is
         );
     end component;
 
-    component ov7670_capture_y_stream
+    component ov7670_capture_y_stream_fsm
         generic (
             FRAME_WIDTH        : integer := 160;
             FRAME_HEIGHT       : integer := 120;
@@ -278,6 +279,7 @@ begin
 
     cam_pwdn  <= '0';
     cam_reset <= not rst;
+    uart_tx   <= uart_tx_line;
 
     xclk_ready <= '1' when SIM_BYPASS_XCLK_LOCK else xclk_locked;
     init_start <= start_btn and xclk_ready and not init_done_latched;
@@ -403,7 +405,7 @@ begin
         end if;
     end process;
 
-    u_capture_y_stream : ov7670_capture_y_stream
+    u_capture_y_stream : ov7670_capture_y_stream_fsm
         generic map (
             FRAME_WIDTH  => FRAME_WIDTH,
             FRAME_HEIGHT => FRAME_HEIGHT
@@ -510,21 +512,41 @@ begin
             dump_done_toggle => dump_done_toggle
         );
 
-    u_uart_tx : entity work.uart_tx
-        generic map (
-            CLK_FREQ_HZ => 100000000,
-            BAUD_RATE   => UART_BAUD_RATE
-        )
-        port map (
-            clk => clk,
-            rst => rst,
+    uart_tx_block : block
+        component uart_tx
+            generic (
+                CLK_FREQ_HZ : integer := 100000000;
+                BAUD_RATE   : integer := 921600
+            );
+            port (
+                clk : in std_logic;
+                rst : in std_logic;
 
-            tx_start => uart_start,
-            tx_data  => uart_data,
+                tx_start : in std_logic;
+                tx_data  : in std_logic_vector(7 downto 0);
 
-            tx_line => uart_tx,
-            busy    => uart_busy,
-            done    => uart_done
-        );
+                tx_line : out std_logic;
+                busy    : out std_logic;
+                done    : out std_logic
+            );
+        end component;
+    begin
+        u_uart_tx : uart_tx
+            generic map (
+                CLK_FREQ_HZ => 100000000,
+                BAUD_RATE   => UART_BAUD_RATE
+            )
+            port map (
+                clk => clk,
+                rst => rst,
+
+                tx_start => uart_start,
+                tx_data  => uart_data,
+
+                tx_line => uart_tx_line,
+                busy    => uart_busy,
+                done    => uart_done
+            );
+    end block;
 
 end architecture;

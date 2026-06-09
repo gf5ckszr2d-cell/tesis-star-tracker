@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/alexa/tesis-star-tracker/sim_build/xsim_ov7670_xclk_gen/xsim_ov7670_xclk_gen.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_ov7670_xclk_gen" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+   </zoom_setting>
+   <column_width_setting>
+   </column_width_setting>
+   <WVObjectSize size="3" />
+   <wvobject fp_name="group1" type="group">
+      <obj_property name="label">Control y estado</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_xclk_gen/clk_100mhz" type="logic">
+         <obj_property name="ElementShortName">clk_100mhz</obj_property>
+         <obj_property name="ObjectShortName">clk_100mhz</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_xclk_gen/rst" type="logic">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_xclk_gen/locked" type="logic">
+         <obj_property name="ElementShortName">locked</obj_property>
+         <obj_property name="ObjectShortName">locked</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group5" type="group">
+      <obj_property name="label">Salida de camara</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_xclk_gen/xclk" type="logic">
+         <obj_property name="ElementShortName">xclk</obj_property>
+         <obj_property name="ObjectShortName">xclk</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group7" type="group">
+      <obj_property name="label">Relojes internos MMCM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_xclk_gen/uut/clkfb" type="logic">
+         <obj_property name="ElementShortName">clkfb</obj_property>
+         <obj_property name="ObjectShortName">clkfb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_xclk_gen/uut/clkfb_buf" type="logic">
+         <obj_property name="ElementShortName">clkfb_buf</obj_property>
+         <obj_property name="ObjectShortName">clkfb_buf</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_xclk_gen/uut/xclk_mmcm" type="logic">
+         <obj_property name="ElementShortName">xclk_mmcm</obj_property>
+         <obj_property name="ObjectShortName">xclk_mmcm</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
