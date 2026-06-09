@@ -4,8 +4,28 @@ set project_dir [file normalize [file join $script_dir "star_tracker_top"]]
 
 set project_name "star_tracker_top"
 set part_name "xc7a100tcsg324-1"
+set preferred_board_parts [list \
+    "digilentinc.com:nexys-a7-100t:part0:1.3" \
+    "digilentinc.com:nexys-a7-100t:part0:1.0" \
+]
 
 create_project -force $project_name $project_dir -part $part_name
+
+set selected_board_part ""
+foreach board_part $preferred_board_parts {
+    set matches [get_board_parts -quiet $board_part]
+    if {[llength $matches] > 0} {
+        set selected_board_part [lindex $matches 0]
+        break
+    }
+}
+
+if {$selected_board_part ne ""} {
+    set_property board_part $selected_board_part [current_project]
+    puts "BOARD_PART: $selected_board_part"
+} else {
+    puts "BOARD_PART_WARNING: Nexys A7-100T board files not found; using FPGA part $part_name"
+}
 
 set_property target_language VHDL [current_project]
 set_property simulator_language VHDL [current_project]
