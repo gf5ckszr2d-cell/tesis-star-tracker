@@ -47,5 +47,10 @@ set_property -dict { PACKAGE_PIN J3  IOSTANDARD LVCMOS33 } [get_ports { cam_rese
 create_clock -add -name cam_pclk_pin -period 41.667 -waveform {0 20.833} [get_ports { cam_pclk }]
 set_clock_groups -asynchronous -group [get_clocks { sys_clk_pin }] -group [get_clocks { cam_pclk_pin }]
 
+## OV7670 PCLK enters through PMOD JC2/F6, which is not a clock-capable pin on this
+## Nexys A7 package. The camera cable already uses this pinout, so the prototype
+## accepts a non-dedicated route for this external pixel clock.
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets cam_pclk_IBUF]
+
 ## USB-RS232 UART TX
 set_property -dict { PACKAGE_PIN D4 IOSTANDARD LVCMOS33 } [get_ports { uart_tx }]
