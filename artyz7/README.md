@@ -19,6 +19,30 @@ Digilent Arty Z7-10 sin modificar el flujo oficial de Nexys A7.
 - La salida UART PL se asigna a `CK_IO0`; usar un adaptador USB-serial externo de 3.3 V.
 - El USB-UART integrado de Arty Z7 no se asume disponible directamente desde PL.
 
+## Cableado OV7670
+
+El cableado usa `JA` para la columna izquierda del header de la camara y `JB` para la columna
+derecha. La alimentacion de la camara debe ir a `3.3V` y `GND` de la placa.
+
+| PMOD | Senal OV7670 |
+|---|---|
+| JA1 | SCL |
+| JA2 | VSYNC/VS |
+| JA3 | PCLK/PLK |
+| JA4 | D7 |
+| JA7 | D5 |
+| JA8 | D3 |
+| JA9 | D1 |
+| JA10 | RESET/RET |
+| JB1 | SDA |
+| JB2 | HREF/HS |
+| JB3 | XCLK/XLK |
+| JB4 | D6 |
+| JB7 | D4 |
+| JB8 | D2 |
+| JB9 | D0 |
+| JB10 | PWDN |
+
 ## Archivos principales
 
 - `rtl/artyz7_clk_125_to_100.vhd`: MMCM para generar 100 MHz desde 125 MHz.
