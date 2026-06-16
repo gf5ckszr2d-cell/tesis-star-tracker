@@ -11,39 +11,47 @@ Esta carpeta contiene el receptor Python para el bitstream actual del proyecto.
 - Formato de imagen: `Y8` en escala de grises
 - Checksum: suma modulo 256 del payload
 
-## Dependencias
+## Uso rapido desde PowerShell
+
+Abrir PowerShell en esta carpeta:
 
 ```powershell
-python -m pip install -r "recepción de frame/requirements.txt"
+cd "C:\Users\alexa\tesis-star-tracker\recepción de frame"
 ```
 
-Si `python` no esta en PATH, usar el ejecutable completo de Python.
-
-## Ver puertos serie
+Instalar dependencias:
 
 ```powershell
-python "recepción de frame/list_serial_ports.py"
+.\setup_python.cmd
 ```
 
-O directamente:
+Listar puertos serie:
 
 ```powershell
-".\recepción de frame\run_list_serial_ports.cmd"
+.\run_list_serial_ports.cmd
 ```
 
-## Capturar un frame
-
-Abrir el programa primero y despues presionar `start` en la FPGA.
+Capturar un frame por UART:
 
 ```powershell
-python "recepción de frame/capture_frame_uart.py" --port COM6 --baud 921600
+.\run_capture_frame_uart.cmd --port COM4 --baud 921600
 ```
 
-O directamente:
+Tambien se puede ejecutar directamente con PowerShell:
 
 ```powershell
-".\recepción de frame\run_capture_frame_uart.cmd" --port COM6 --baud 921600
+powershell -NoProfile -ExecutionPolicy Bypass -File .\setup_python.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\list_serial_ports.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\run_capture_frame_uart.ps1 -Port COM4 -Baud 921600
 ```
+
+## Orden recomendado
+
+1. Conectar la Nexys A7-100T por USB.
+2. Programar el bitstream.
+3. Abrir el receptor UART en PowerShell.
+4. Ejecutar la captura.
+5. Presionar `start_btn` en la FPGA.
 
 ## Salida
 
@@ -55,5 +63,7 @@ Por defecto se crean:
 ## Notas
 
 - Este receptor no espera `RGB565`.
-- El script anterior de `38400` bytes no aplica a este bitstream.
-- Si no aparece `STY1`, revisar baudrate, puerto COM, GND comun y cableado del UART.
+- El script antiguo de `38400` bytes no aplica a este bitstream.
+- El baudrate esperado por defecto es `921600`.
+- Cambia `COM4` por el puerto que aparezca al ejecutar `run_list_serial_ports.cmd`.
+- Si no aparece `STY1`, revisar baudrate, puerto COM, reset/start de la FPGA y cableado de la camara.

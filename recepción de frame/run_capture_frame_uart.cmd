@@ -5,20 +5,29 @@ set "SCRIPT_DIR=%~dp0"
 
 where python >nul 2>nul
 if %errorlevel%==0 (
-    python "%SCRIPT_DIR%capture_frame_uart.py" %*
-    exit /b %errorlevel%
+    python --version >nul 2>nul
+    if %errorlevel%==0 (
+        python "%SCRIPT_DIR%capture_frame_uart.py" %*
+        exit /b %errorlevel%
+    )
 )
 
 where py >nul 2>nul
 if %errorlevel%==0 (
-    py "%SCRIPT_DIR%capture_frame_uart.py" %*
-    exit /b %errorlevel%
+    py --version >nul 2>nul
+    if %errorlevel%==0 (
+        py "%SCRIPT_DIR%capture_frame_uart.py" %*
+        exit /b %errorlevel%
+    )
 )
 
-if exist "%LocalAppData%\Programs\Python\Python313\python.exe" (
-    "%LocalAppData%\Programs\Python\Python313\python.exe" "%SCRIPT_DIR%capture_frame_uart.py" %*
-    exit /b %errorlevel%
+for /d %%D in ("%LocalAppData%\Programs\Python\Python*") do (
+    if exist "%%D\python.exe" (
+        "%%D\python.exe" "%SCRIPT_DIR%capture_frame_uart.py" %*
+        exit /b %errorlevel%
+    )
 )
 
-echo No se encontro Python. Instala Python 3 y vuelve a intentar.
+echo No se encontro una instalacion valida de Python.
+echo Instala Python 3 y marca "Add python.exe to PATH".
 exit /b 1
