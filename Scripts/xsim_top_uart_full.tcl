@@ -29,6 +29,7 @@ set rtl_files [list \
     [file join $repo_root "Protocolo de comunicacion" "rtl" "uart_tx.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "ov7670_xclk_gen.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "ov7670_init_config.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "ov7670_runtime_config.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "ov7670_capture_y_stream.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_capture_store.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "framebuffer_y_bram.vhd"] \
@@ -50,6 +51,8 @@ set fh [open $run_tcl w]
 puts $fh {log_wave /tb_star_tracker_top/clk}
 puts $fh {log_wave /tb_star_tracker_top/rst}
 puts $fh {log_wave /tb_star_tracker_top/start_btn}
+puts $fh {log_wave /tb_star_tracker_top/btn_config}
+puts $fh {log_wave /tb_star_tracker_top/sw}
 puts $fh {log_wave /tb_star_tracker_top/cam_pclk}
 puts $fh {log_wave /tb_star_tracker_top/cam_xclk}
 puts $fh {log_wave /tb_star_tracker_top/cam_vsync}
@@ -80,6 +83,12 @@ puts $fh {log_wave /tb_star_tracker_top/uut/uart_done}
 puts $fh {log_wave /tb_star_tracker_top/uut/xclk_locked}
 puts $fh {log_wave /tb_star_tracker_top/uut/xclk_ready}
 puts $fh {log_wave /tb_star_tracker_top/uut/init_start}
+puts $fh {log_wave /tb_star_tracker_top/uut/runtime_busy}
+puts $fh {log_wave /tb_star_tracker_top/uut/runtime_done}
+puts $fh {log_wave /tb_star_tracker_top/uut/runtime_error}
+puts $fh {log_wave /tb_star_tracker_top/uut/runtime_active_param}
+puts $fh {log_wave /tb_star_tracker_top/uut/i2c_runtime_owner}
+puts $fh {log_wave /tb_star_tracker_top/runtime_write_count}
 puts $fh {run all}
 puts $fh {quit}
 close $fh

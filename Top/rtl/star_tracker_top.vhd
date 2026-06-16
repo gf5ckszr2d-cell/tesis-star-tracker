@@ -15,6 +15,8 @@ entity star_tracker_top is
         rst : in std_logic;
 
         start_btn : in std_logic;
+        btn_config : in std_logic;
+        sw : in std_logic_vector(15 downto 0);
 
         SDA : inout std_logic;
         SCL : out std_logic;
@@ -54,6 +56,24 @@ architecture rtl of star_tracker_top is
     signal i2c_done      : std_logic;
     signal i2c_ack_error : std_logic;
     signal i2c_busy      : std_logic;
+
+    signal init_i2c_start    : std_logic;
+    signal init_i2c_rw       : std_logic;
+    signal init_i2c_tx_byte0 : std_logic_vector(7 downto 0);
+    signal init_i2c_tx_byte1 : std_logic_vector(7 downto 0);
+    signal init_i2c_tx_count : unsigned(1 downto 0);
+
+    signal runtime_i2c_start    : std_logic;
+    signal runtime_i2c_rw       : std_logic;
+    signal runtime_i2c_tx_byte0 : std_logic_vector(7 downto 0);
+    signal runtime_i2c_tx_byte1 : std_logic_vector(7 downto 0);
+    signal runtime_i2c_tx_count : unsigned(1 downto 0);
+    signal runtime_busy         : std_logic;
+    signal runtime_done         : std_logic;
+    signal runtime_error        : std_logic;
+    signal runtime_error_latched : std_logic := '0';
+    signal runtime_active_param : std_logic_vector(1 downto 0);
+    signal i2c_runtime_owner    : std_logic;
 
     signal xclk_locked : std_logic;
     signal xclk_ready  : std_logic;
@@ -275,6 +295,33 @@ architecture rtl of star_tracker_top is
         );
     end component;
 
+    component ov7670_runtime_config
+        port (
+            clk : in std_logic;
+            rst : in std_logic;
+
+            enable      : in std_logic;
+            config_btn  : in std_logic;
+            param_sel   : in std_logic_vector(1 downto 0);
+            param_value : in std_logic_vector(7 downto 0);
+
+            i2c_busy      : in std_logic;
+            i2c_done      : in std_logic;
+            i2c_ack_error : in std_logic;
+
+            i2c_start    : out std_logic;
+            i2c_rw       : out std_logic;
+            i2c_tx_byte0 : out std_logic_vector(7 downto 0);
+            i2c_tx_byte1 : out std_logic_vector(7 downto 0);
+            i2c_tx_count : out unsigned(1 downto 0);
+
+            busy  : out std_logic;
+            done  : out std_logic;
+            error : out std_logic;
+            active_param : out std_logic_vector(1 downto 0)
+        );
+    end component;
+
 begin
 
     cam_pwdn  <= '0';
@@ -284,11 +331,18 @@ begin
     xclk_ready <= '1' when SIM_BYPASS_XCLK_LOCK else xclk_locked;
     init_start <= start_btn and xclk_ready and not init_done_latched;
     capture_rst <= rst or not init_done_pclk or not store_capture_busy;
+    i2c_runtime_owner <= init_done_latched and runtime_busy;
+
+    i2c_start    <= runtime_i2c_start    when i2c_runtime_owner = '1' else init_i2c_start;
+    i2c_rw       <= runtime_i2c_rw       when i2c_runtime_owner = '1' else init_i2c_rw;
+    i2c_tx_byte0 <= runtime_i2c_tx_byte0 when i2c_runtime_owner = '1' else init_i2c_tx_byte0;
+    i2c_tx_byte1 <= runtime_i2c_tx_byte1 when i2c_runtime_owner = '1' else init_i2c_tx_byte1;
+    i2c_tx_count <= runtime_i2c_tx_count when i2c_runtime_owner = '1' else init_i2c_tx_count;
 
     led_read_data <= capture_pixel_y;
-    busy          <= init_busy or i2c_busy or store_capture_busy or dump_busy or uart_busy;
+    busy          <= init_busy or runtime_busy or i2c_busy or store_capture_busy or dump_busy or uart_busy;
     ok            <= init_done_latched and dump_done_latched;
-    fail          <= init_error_latched or capture_overflow or store_overflow;
+    fail          <= init_error_latched or runtime_error_latched or capture_overflow or store_overflow;
     pixel_valid   <= capture_pixel_valid;
     frame_done    <= capture_frame_done;
 
@@ -310,16 +364,42 @@ begin
             i2c_done      => i2c_done,
             i2c_ack_error => i2c_ack_error,
 
-            i2c_start    => i2c_start,
-            i2c_rw       => i2c_rw,
-            i2c_tx_byte0 => i2c_tx_byte0,
-            i2c_tx_byte1 => i2c_tx_byte1,
-            i2c_tx_count => i2c_tx_count,
+            i2c_start    => init_i2c_start,
+            i2c_rw       => init_i2c_rw,
+            i2c_tx_byte0 => init_i2c_tx_byte0,
+            i2c_tx_byte1 => init_i2c_tx_byte1,
+            i2c_tx_count => init_i2c_tx_count,
 
             busy         => init_busy,
             done         => init_done,
             error        => init_error,
             current_step => init_current_step
+        );
+
+    u_runtime_config : ov7670_runtime_config
+        port map (
+            clk => clk,
+            rst => rst,
+
+            enable      => sw(15),
+            config_btn  => btn_config,
+            param_sel   => sw(14 downto 13),
+            param_value => sw(7 downto 0),
+
+            i2c_busy      => i2c_busy,
+            i2c_done      => i2c_done,
+            i2c_ack_error => i2c_ack_error,
+
+            i2c_start    => runtime_i2c_start,
+            i2c_rw       => runtime_i2c_rw,
+            i2c_tx_byte0 => runtime_i2c_tx_byte0,
+            i2c_tx_byte1 => runtime_i2c_tx_byte1,
+            i2c_tx_count => runtime_i2c_tx_count,
+
+            busy  => runtime_busy,
+            done  => runtime_done,
+            error => runtime_error,
+            active_param => runtime_active_param
         );
 
     process(clk)
@@ -328,6 +408,7 @@ begin
             if rst = '1' then
                 init_done_latched  <= '0';
                 init_error_latched <= '0';
+                runtime_error_latched <= '0';
                 dump_done_latched  <= '0';
             else
                 if init_done = '1' then
@@ -336,6 +417,10 @@ begin
 
                 if init_error = '1' then
                     init_error_latched <= '1';
+                end if;
+
+                if runtime_error = '1' then
+                    runtime_error_latched <= '1';
                 end if;
 
                 if dump_done = '1' then

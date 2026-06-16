@@ -23,6 +23,8 @@ architecture sim of tb_star_tracker_top is
             rst : in std_logic;
 
             start_btn : in std_logic;
+            btn_config : in std_logic;
+            sw : in std_logic_vector(15 downto 0);
 
             SDA : inout std_logic;
             SCL : out std_logic;
@@ -92,6 +94,8 @@ architecture sim of tb_star_tracker_top is
     signal rst : std_logic := '1';
 
     signal start_btn : std_logic := '0';
+    signal btn_config : std_logic := '0';
+    signal sw : std_logic_vector(15 downto 0) := (others => '0');
 
     signal SDA : std_logic := 'H';
     signal SCL : std_logic;
@@ -115,6 +119,7 @@ architecture sim of tb_star_tracker_top is
 
     signal sda_slave_drive : std_logic := 'Z';
     signal i2c_config_done : std_logic := '0';
+    signal runtime_write_count : integer range 0 to 6 := 0;
     signal camera_done     : std_logic := '0';
     signal uart_done_seen  : std_logic := '0';
 
@@ -156,6 +161,8 @@ begin
             rst => rst,
 
             start_btn => start_btn,
+            btn_config => btn_config,
+            sw => sw,
 
             SDA => SDA,
             SCL => SCL,
@@ -230,11 +237,24 @@ begin
             wait until rising_edge(cam_pclk);
         end procedure;
 
+        procedure pulse_config_button is
+        begin
+            wait until rising_edge(clk);
+            btn_config <= '1';
+            wait until rising_edge(clk);
+            wait until rising_edge(clk);
+            wait until rising_edge(clk);
+            btn_config <= '0';
+            wait until rising_edge(clk);
+        end procedure;
+
     begin
         report "Inicio de simulacion top completo OV7670 -> BRAM -> UART";
 
         rst <= '1';
         start_btn <= '0';
+        btn_config <= '0';
+        sw <= (others => '0');
         cam_vsync <= '1';
         cam_href <= '0';
         cam_data <= (others => '0');
@@ -264,6 +284,55 @@ begin
             severity failure;
 
         report "Init SCCB/I2C completa; iniciando frame QQVGA";
+
+        sw <= (others => '0');
+        sw(14 downto 13) <= "00";
+        sw(7 downto 0) <= x"60";
+        pulse_config_button;
+
+        wait for 500 us;
+        assert runtime_write_count = 0
+            report "ERROR: btn_config genero escritura con SW15=0"
+            severity failure;
+
+        sw(15) <= '1';
+
+        sw(14 downto 13) <= "00";
+        sw(7 downto 0) <= x"60";
+        pulse_config_button;
+        wait until runtime_write_count = 1 for 5 ms;
+        assert runtime_write_count = 1
+            report "ERROR: no se escribio contraste runtime"
+            severity failure;
+        wait for 500 us;
+
+        sw(14 downto 13) <= "01";
+        sw(7 downto 0) <= x"12";
+        pulse_config_button;
+        wait until runtime_write_count = 3 for 5 ms;
+        assert runtime_write_count = 3
+            report "ERROR: no se escribio secuencia de ganancia runtime"
+            severity failure;
+        wait for 500 us;
+
+        sw(14 downto 13) <= "10";
+        sw(7 downto 0) <= x"34";
+        pulse_config_button;
+        wait until runtime_write_count = 5 for 5 ms;
+        assert runtime_write_count = 5
+            report "ERROR: no se escribio secuencia de exposicion runtime"
+            severity failure;
+        wait for 500 us;
+
+        sw(14 downto 13) <= "11";
+        sw(7 downto 0) <= x"90";
+        pulse_config_button;
+        wait until runtime_write_count = 6 for 5 ms;
+        assert runtime_write_count = 6
+            report "ERROR: no se escribio brillo runtime"
+            severity failure;
+
+        report "Configuracion runtime verificada: contraste, ganancia, exposicion y brillo";
 
         for index in 0 to 19999 loop
             wait until rising_edge(cam_pclk);
@@ -349,6 +418,34 @@ begin
             sda_slave_drive <= 'Z';
         end procedure;
 
+        procedure receive_expected_write(
+            constant expected_reg : in std_logic_vector(7 downto 0);
+            constant expected_data : in std_logic_vector(7 downto 0);
+            constant label_text : in string
+        ) is
+            variable runtime_byte : std_logic_vector(7 downto 0);
+        begin
+            wait_start;
+
+            receive_master_byte(runtime_byte);
+            assert runtime_byte = x"42"
+                report "ERROR: byte de direccion SCCB runtime no es 0x42 en " & label_text
+                severity failure;
+            send_ack;
+
+            receive_master_byte(runtime_byte);
+            assert runtime_byte = expected_reg
+                report "ERROR: direccion de registro runtime no coincide en " & label_text
+                severity failure;
+            send_ack;
+
+            receive_master_byte(runtime_byte);
+            assert runtime_byte = expected_data
+                report "ERROR: dato de registro runtime no coincide en " & label_text
+                severity failure;
+            send_ack;
+        end procedure;
+
         variable received_byte : std_logic_vector(7 downto 0);
 
     begin
@@ -384,6 +481,26 @@ begin
 
         i2c_config_done <= '1';
         report "Modelo SCCB/I2C recibio toda la configuracion esperada";
+
+        receive_expected_write(x"56", x"60", "contraste");
+        runtime_write_count <= 1;
+        report "SCCB runtime contraste verificado";
+
+        receive_expected_write(x"13", x"8B", "ganancia modo manual");
+        runtime_write_count <= 2;
+        receive_expected_write(x"00", x"12", "ganancia valor");
+        runtime_write_count <= 3;
+        report "SCCB runtime ganancia verificada";
+
+        receive_expected_write(x"13", x"8E", "exposicion modo manual");
+        runtime_write_count <= 4;
+        receive_expected_write(x"10", x"34", "exposicion valor");
+        runtime_write_count <= 5;
+        report "SCCB runtime exposicion verificada";
+
+        receive_expected_write(x"55", x"90", "brillo");
+        runtime_write_count <= 6;
+        report "SCCB runtime brillo verificado";
 
         wait;
     end process;

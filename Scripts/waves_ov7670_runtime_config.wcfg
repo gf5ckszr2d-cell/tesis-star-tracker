@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/alexa/tesis-star-tracker/sim_build/xsim_ov7670_runtime_config/xsim_ov7670_runtime_config.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_ov7670_runtime_config" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+   </zoom_setting>
+   <column_width_setting>
+   </column_width_setting>
+   <WVObjectSize size="4" />
+   <wvobject fp_name="group1" type="group">
+      <obj_property name="label">Control manual</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_runtime_config/clk" type="logic">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/rst" type="logic">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/enable" type="logic">
+         <obj_property name="ElementShortName">enable</obj_property>
+         <obj_property name="ObjectShortName">enable</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/config_btn" type="logic">
+         <obj_property name="ElementShortName">config_btn</obj_property>
+         <obj_property name="ObjectShortName">config_btn</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/param_sel" type="array">
+         <obj_property name="ElementShortName">param_sel[1:0]</obj_property>
+         <obj_property name="ObjectShortName">param_sel[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/param_value" type="array">
+         <obj_property name="ElementShortName">param_value[7:0]</obj_property>
+         <obj_property name="ObjectShortName">param_value[7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group8" type="group">
+      <obj_property name="label">Solicitud I2C</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_runtime_config/i2c_start" type="logic">
+         <obj_property name="ElementShortName">i2c_start</obj_property>
+         <obj_property name="ObjectShortName">i2c_start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/i2c_rw" type="logic">
+         <obj_property name="ElementShortName">i2c_rw</obj_property>
+         <obj_property name="ObjectShortName">i2c_rw</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/i2c_tx_byte0" type="array">
+         <obj_property name="ElementShortName">i2c_tx_byte0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_tx_byte0[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/i2c_tx_byte1" type="array">
+         <obj_property name="ElementShortName">i2c_tx_byte1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_tx_byte1[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/i2c_tx_count" type="array">
+         <obj_property name="ElementShortName">i2c_tx_count[1:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_tx_count[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/i2c_busy" type="logic">
+         <obj_property name="ElementShortName">i2c_busy</obj_property>
+         <obj_property name="ObjectShortName">i2c_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/i2c_done" type="logic">
+         <obj_property name="ElementShortName">i2c_done</obj_property>
+         <obj_property name="ObjectShortName">i2c_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/i2c_ack_error" type="logic">
+         <obj_property name="ElementShortName">i2c_ack_error</obj_property>
+         <obj_property name="ObjectShortName">i2c_ack_error</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group17" type="group">
+      <obj_property name="label">Estado</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_runtime_config/busy" type="logic">
+         <obj_property name="ElementShortName">busy</obj_property>
+         <obj_property name="ObjectShortName">busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/done" type="logic">
+         <obj_property name="ElementShortName">done</obj_property>
+         <obj_property name="ObjectShortName">done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/error" type="logic">
+         <obj_property name="ElementShortName">error</obj_property>
+         <obj_property name="ObjectShortName">error</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/active_param" type="array">
+         <obj_property name="ElementShortName">active_param[1:0]</obj_property>
+         <obj_property name="ObjectShortName">active_param[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/write_count" type="other">
+         <obj_property name="ElementShortName">write_count</obj_property>
+         <obj_property name="ObjectShortName">write_count</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group23" type="group">
+      <obj_property name="label">FSM interna</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_ov7670_runtime_config/uut/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/uut/btn_meta" type="logic">
+         <obj_property name="ElementShortName">btn_meta</obj_property>
+         <obj_property name="ObjectShortName">btn_meta</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/uut/btn_sync" type="logic">
+         <obj_property name="ElementShortName">btn_sync</obj_property>
+         <obj_property name="ObjectShortName">btn_sync</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/uut/btn_prev" type="logic">
+         <obj_property name="ElementShortName">btn_prev</obj_property>
+         <obj_property name="ObjectShortName">btn_prev</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/uut/latched_sel" type="array">
+         <obj_property name="ElementShortName">latched_sel[1:0]</obj_property>
+         <obj_property name="ObjectShortName">latched_sel[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/uut/latched_value" type="array">
+         <obj_property name="ElementShortName">latched_value[7:0]</obj_property>
+         <obj_property name="ObjectShortName">latched_value[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/uut/write_index" type="other">
+         <obj_property name="ElementShortName">write_index</obj_property>
+         <obj_property name="ObjectShortName">write_index</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_ov7670_runtime_config/uut/write_count" type="other">
+         <obj_property name="ElementShortName">write_count</obj_property>
+         <obj_property name="ObjectShortName">write_count</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
