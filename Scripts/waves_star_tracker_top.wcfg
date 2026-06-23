@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/alexa/tesis-star-tracker/sim_build/xsim_top_uart_full/xsim_top_uart_full.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_star_tracker_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+   </zoom_setting>
+   <column_width_setting>
+   </column_width_setting>
+   <WVObjectSize size="6" />
+   <wvobject fp_name="group1" type="group">
+      <obj_property name="label">1. Control y resultado</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_star_tracker_top/clk" type="logic">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/rst" type="logic">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/start_btn" type="logic">
+         <obj_property name="ElementShortName">start_btn</obj_property>
+         <obj_property name="ObjectShortName">start_btn</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/busy" type="logic">
+         <obj_property name="ElementShortName">busy</obj_property>
+         <obj_property name="ObjectShortName">busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/ok" type="logic">
+         <obj_property name="ElementShortName">ok</obj_property>
+         <obj_property name="ObjectShortName">ok</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/fail" type="logic">
+         <obj_property name="ElementShortName">fail</obj_property>
+         <obj_property name="ObjectShortName">fail</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group8" type="group">
+      <obj_property name="label">2. XCLK e inicializacion SCCB I2C</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_star_tracker_top/cam_xclk" type="logic">
+         <obj_property name="ElementShortName">cam_xclk</obj_property>
+         <obj_property name="ObjectShortName">cam_xclk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/SCL" type="logic">
+         <obj_property name="ElementShortName">SCL</obj_property>
+         <obj_property name="ObjectShortName">SCL</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/SDA" type="logic">
+         <obj_property name="ElementShortName">SDA</obj_property>
+         <obj_property name="ObjectShortName">SDA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/xclk_locked" type="logic">
+         <obj_property name="ElementShortName">xclk_locked</obj_property>
+         <obj_property name="ObjectShortName">xclk_locked</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/xclk_ready" type="logic">
+         <obj_property name="ElementShortName">xclk_ready</obj_property>
+         <obj_property name="ObjectShortName">xclk_ready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/init_start" type="logic">
+         <obj_property name="ElementShortName">init_start</obj_property>
+         <obj_property name="ObjectShortName">init_start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/init_busy" type="logic">
+         <obj_property name="ElementShortName">init_busy</obj_property>
+         <obj_property name="ObjectShortName">init_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/init_done" type="logic">
+         <obj_property name="ElementShortName">init_done</obj_property>
+         <obj_property name="ObjectShortName">init_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/init_error" type="logic">
+         <obj_property name="ElementShortName">init_error</obj_property>
+         <obj_property name="ObjectShortName">init_error</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group18" type="group">
+      <obj_property name="label">3. Calibracion manual</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_star_tracker_top/btn_config" type="logic">
+         <obj_property name="ElementShortName">btn_config</obj_property>
+         <obj_property name="ObjectShortName">btn_config</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/sw" type="array">
+         <obj_property name="ElementShortName">sw[15:0]</obj_property>
+         <obj_property name="ObjectShortName">sw[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/runtime_write_count" type="other">
+         <obj_property name="ElementShortName">runtime_write_count</obj_property>
+         <obj_property name="ObjectShortName">runtime_write_count</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/runtime_busy" type="logic">
+         <obj_property name="ElementShortName">runtime_busy</obj_property>
+         <obj_property name="ObjectShortName">runtime_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/runtime_done" type="logic">
+         <obj_property name="ElementShortName">runtime_done</obj_property>
+         <obj_property name="ObjectShortName">runtime_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/runtime_error" type="logic">
+         <obj_property name="ElementShortName">runtime_error</obj_property>
+         <obj_property name="ObjectShortName">runtime_error</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/runtime_active_param" type="array">
+         <obj_property name="ElementShortName">runtime_active_param[1:0]</obj_property>
+         <obj_property name="ObjectShortName">runtime_active_param[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/i2c_runtime_owner" type="logic">
+         <obj_property name="ElementShortName">i2c_runtime_owner</obj_property>
+         <obj_property name="ObjectShortName">i2c_runtime_owner</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group27" type="group">
+      <obj_property name="label">4. Captura OV7670 Y</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_star_tracker_top/cam_pclk" type="logic">
+         <obj_property name="ElementShortName">cam_pclk</obj_property>
+         <obj_property name="ObjectShortName">cam_pclk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/cam_vsync" type="logic">
+         <obj_property name="ElementShortName">cam_vsync</obj_property>
+         <obj_property name="ObjectShortName">cam_vsync</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/cam_href" type="logic">
+         <obj_property name="ElementShortName">cam_href</obj_property>
+         <obj_property name="ObjectShortName">cam_href</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/cam_data" type="array">
+         <obj_property name="ElementShortName">cam_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">cam_data[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/pixel_valid" type="logic">
+         <obj_property name="ElementShortName">pixel_valid</obj_property>
+         <obj_property name="ObjectShortName">pixel_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/frame_done" type="logic">
+         <obj_property name="ElementShortName">frame_done</obj_property>
+         <obj_property name="ObjectShortName">frame_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/pixel_count" type="other">
+         <obj_property name="ElementShortName">pixel_count</obj_property>
+         <obj_property name="ObjectShortName">pixel_count</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/led_read_data" type="array">
+         <obj_property name="ElementShortName">led_read_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">led_read_data[7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group36" type="group">
+      <obj_property name="label">5. Framebuffer BRAM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_star_tracker_top/uut/fb_wr_en" type="logic">
+         <obj_property name="ElementShortName">fb_wr_en</obj_property>
+         <obj_property name="ObjectShortName">fb_wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/fb_wr_addr" type="array">
+         <obj_property name="ElementShortName">fb_wr_addr[14:0]</obj_property>
+         <obj_property name="ObjectShortName">fb_wr_addr[14:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/fb_wr_data" type="array">
+         <obj_property name="ElementShortName">fb_wr_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">fb_wr_data[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/capture_frame_done" type="logic">
+         <obj_property name="ElementShortName">capture_frame_done</obj_property>
+         <obj_property name="ObjectShortName">capture_frame_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/store_frame_ready" type="logic">
+         <obj_property name="ElementShortName">store_frame_ready</obj_property>
+         <obj_property name="ObjectShortName">store_frame_ready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/fb_rd_addr" type="array">
+         <obj_property name="ElementShortName">fb_rd_addr[14:0]</obj_property>
+         <obj_property name="ObjectShortName">fb_rd_addr[14:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/fb_rd_data" type="array">
+         <obj_property name="ElementShortName">fb_rd_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">fb_rd_data[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/capture_overflow" type="logic">
+         <obj_property name="ElementShortName">capture_overflow</obj_property>
+         <obj_property name="ObjectShortName">capture_overflow</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/store_overflow" type="logic">
+         <obj_property name="ElementShortName">store_overflow</obj_property>
+         <obj_property name="ObjectShortName">store_overflow</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group46" type="group">
+      <obj_property name="label">6. Paquete UART</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_star_tracker_top/uut/dump_busy" type="logic">
+         <obj_property name="ElementShortName">dump_busy</obj_property>
+         <obj_property name="ObjectShortName">dump_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/dump_done" type="logic">
+         <obj_property name="ElementShortName">dump_done</obj_property>
+         <obj_property name="ObjectShortName">dump_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/uart_start" type="logic">
+         <obj_property name="ElementShortName">uart_start</obj_property>
+         <obj_property name="ObjectShortName">uart_start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/uart_data" type="array">
+         <obj_property name="ElementShortName">uart_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">uart_data[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/uart_busy" type="logic">
+         <obj_property name="ElementShortName">uart_busy</obj_property>
+         <obj_property name="ObjectShortName">uart_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/uart_done" type="logic">
+         <obj_property name="ElementShortName">uart_done</obj_property>
+         <obj_property name="ObjectShortName">uart_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uart_tx_line" type="logic">
+         <obj_property name="ElementShortName">uart_tx_line</obj_property>
+         <obj_property name="ObjectShortName">uart_tx_line</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uart_done_seen" type="logic">
+         <obj_property name="ElementShortName">uart_done_seen</obj_property>
+         <obj_property name="ObjectShortName">uart_done_seen</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

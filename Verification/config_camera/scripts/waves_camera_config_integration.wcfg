@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/alexa/tesis-star-tracker/sim_build/camera_config_integration/camera_config_integration.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_camera_config_integration_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+   </zoom_setting>
+   <column_width_setting>
+   </column_width_setting>
+   <WVObjectSize size="5" />
+   <wvobject fp_name="group1" type="group">
+      <obj_property name="label">1. Control de prueba</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_camera_config_integration_top/clk" type="logic">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/rst" type="logic">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/init_start" type="logic">
+         <obj_property name="ElementShortName">init_start</obj_property>
+         <obj_property name="ObjectShortName">init_start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/transaction_count" type="other">
+         <obj_property name="ElementShortName">transaction_count</obj_property>
+         <obj_property name="ObjectShortName">transaction_count</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group6" type="group">
+      <obj_property name="label">2. Inicializacion ROM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_camera_config_integration_top/init_busy" type="logic">
+         <obj_property name="ElementShortName">init_busy</obj_property>
+         <obj_property name="ObjectShortName">init_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/init_done" type="logic">
+         <obj_property name="ElementShortName">init_done</obj_property>
+         <obj_property name="ObjectShortName">init_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/init_error" type="logic">
+         <obj_property name="ElementShortName">init_error</obj_property>
+         <obj_property name="ObjectShortName">init_error</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/init_current_step" type="array">
+         <obj_property name="ElementShortName">init_current_step[4:0]</obj_property>
+         <obj_property name="ObjectShortName">init_current_step[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/uut/u_init/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group12" type="group">
+      <obj_property name="label">3. Configuracion runtime</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_camera_config_integration_top/runtime_enable" type="logic">
+         <obj_property name="ElementShortName">runtime_enable</obj_property>
+         <obj_property name="ObjectShortName">runtime_enable</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/config_btn" type="logic">
+         <obj_property name="ElementShortName">config_btn</obj_property>
+         <obj_property name="ObjectShortName">config_btn</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/param_sel" type="array">
+         <obj_property name="ElementShortName">param_sel[1:0]</obj_property>
+         <obj_property name="ObjectShortName">param_sel[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/param_value" type="array">
+         <obj_property name="ElementShortName">param_value[7:0]</obj_property>
+         <obj_property name="ObjectShortName">param_value[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/runtime_busy" type="logic">
+         <obj_property name="ElementShortName">runtime_busy</obj_property>
+         <obj_property name="ObjectShortName">runtime_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/runtime_done" type="logic">
+         <obj_property name="ElementShortName">runtime_done</obj_property>
+         <obj_property name="ObjectShortName">runtime_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/runtime_error" type="logic">
+         <obj_property name="ElementShortName">runtime_error</obj_property>
+         <obj_property name="ObjectShortName">runtime_error</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/runtime_active_param" type="array">
+         <obj_property name="ElementShortName">runtime_active_param[1:0]</obj_property>
+         <obj_property name="ObjectShortName">runtime_active_param[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/uut/u_runtime/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group22" type="group">
+      <obj_property name="label">4. Arbitraje I2C</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_camera_config_integration_top/i2c_runtime_owner" type="logic">
+         <obj_property name="ElementShortName">i2c_runtime_owner</obj_property>
+         <obj_property name="ObjectShortName">i2c_runtime_owner</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/uut/selected_start" type="logic">
+         <obj_property name="ElementShortName">selected_start</obj_property>
+         <obj_property name="ObjectShortName">selected_start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/uut/selected_byte0" type="array">
+         <obj_property name="ElementShortName">selected_byte0[7:0]</obj_property>
+         <obj_property name="ObjectShortName">selected_byte0[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/uut/selected_byte1" type="array">
+         <obj_property name="ElementShortName">selected_byte1[7:0]</obj_property>
+         <obj_property name="ObjectShortName">selected_byte1[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/i2c_busy" type="logic">
+         <obj_property name="ElementShortName">i2c_busy</obj_property>
+         <obj_property name="ObjectShortName">i2c_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/i2c_done" type="logic">
+         <obj_property name="ElementShortName">i2c_done</obj_property>
+         <obj_property name="ObjectShortName">i2c_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/i2c_ack_error" type="logic">
+         <obj_property name="ElementShortName">i2c_ack_error</obj_property>
+         <obj_property name="ObjectShortName">i2c_ack_error</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group30" type="group">
+      <obj_property name="label">5. Bus SCCB I2C</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_camera_config_integration_top/SCL" type="logic">
+         <obj_property name="ElementShortName">SCL</obj_property>
+         <obj_property name="ObjectShortName">SCL</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/SDA" type="logic">
+         <obj_property name="ElementShortName">SDA</obj_property>
+         <obj_property name="ObjectShortName">SDA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_camera_config_integration_top/uut/u_i2c/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

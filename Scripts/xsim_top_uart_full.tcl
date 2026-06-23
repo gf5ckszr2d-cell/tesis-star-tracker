@@ -1,6 +1,8 @@
 set repo_root [file normalize [file join [file dirname [info script]] ".."]]
 set sim_dir [file join $repo_root "sim_build" "xsim_top_uart_full"]
 set run_tcl [file join $sim_dir "run_top_uart_full.tcl"]
+set wdb_file [file join $sim_dir "xsim_top_uart_full.wdb"]
+set wave_cfg [file join $repo_root "Scripts" "waves_star_tracker_top.wcfg"]
 set snapshot "tb_star_tracker_top_snapshot"
 
 file mkdir $sim_dir
@@ -48,51 +50,62 @@ run_cmd [list cmd /c $xvhdl --2008 --relax -work xil_defaultlib $tb_file]
 run_cmd [list cmd /c $xelab --debug typical --relax --mt 2 -L xil_defaultlib -L unisim -L unimacro -L secureip --snapshot $snapshot xil_defaultlib.tb_star_tracker_top]
 
 set fh [open $run_tcl w]
-puts $fh {log_wave /tb_star_tracker_top/clk}
-puts $fh {log_wave /tb_star_tracker_top/rst}
-puts $fh {log_wave /tb_star_tracker_top/start_btn}
-puts $fh {log_wave /tb_star_tracker_top/btn_config}
-puts $fh {log_wave /tb_star_tracker_top/sw}
-puts $fh {log_wave /tb_star_tracker_top/cam_pclk}
-puts $fh {log_wave /tb_star_tracker_top/cam_xclk}
-puts $fh {log_wave /tb_star_tracker_top/cam_vsync}
-puts $fh {log_wave /tb_star_tracker_top/cam_href}
-puts $fh {log_wave /tb_star_tracker_top/cam_data}
-puts $fh {log_wave /tb_star_tracker_top/pixel_valid}
-puts $fh {log_wave /tb_star_tracker_top/frame_done}
-puts $fh {log_wave /tb_star_tracker_top/led_read_data}
-puts $fh {log_wave /tb_star_tracker_top/fail}
-puts $fh {log_wave /tb_star_tracker_top/ok}
-puts $fh {log_wave /tb_star_tracker_top/uart_tx_line}
-puts $fh {log_wave /tb_star_tracker_top/uut/fb_wr_en}
-puts $fh {log_wave /tb_star_tracker_top/uut/fb_wr_addr}
-puts $fh {log_wave /tb_star_tracker_top/uut/fb_wr_data}
-puts $fh {log_wave /tb_star_tracker_top/uut/fb_rd_addr}
-puts $fh {log_wave /tb_star_tracker_top/uut/fb_rd_data}
-puts $fh {log_wave /tb_star_tracker_top/uut/capture_frame_done}
-puts $fh {log_wave /tb_star_tracker_top/uut/store_frame_ready}
-puts $fh {log_wave /tb_star_tracker_top/uut/store_frame_ready_toggle}
-puts $fh {log_wave /tb_star_tracker_top/uut/capture_overflow}
-puts $fh {log_wave /tb_star_tracker_top/uut/store_overflow}
-puts $fh {log_wave /tb_star_tracker_top/uut/dump_busy}
-puts $fh {log_wave /tb_star_tracker_top/uut/dump_done}
-puts $fh {log_wave /tb_star_tracker_top/uut/uart_start}
-puts $fh {log_wave /tb_star_tracker_top/uut/uart_data}
-puts $fh {log_wave /tb_star_tracker_top/uut/uart_busy}
-puts $fh {log_wave /tb_star_tracker_top/uut/uart_done}
-puts $fh {log_wave /tb_star_tracker_top/uut/xclk_locked}
-puts $fh {log_wave /tb_star_tracker_top/uut/xclk_ready}
-puts $fh {log_wave /tb_star_tracker_top/uut/init_start}
-puts $fh {log_wave /tb_star_tracker_top/uut/runtime_busy}
-puts $fh {log_wave /tb_star_tracker_top/uut/runtime_done}
-puts $fh {log_wave /tb_star_tracker_top/uut/runtime_error}
-puts $fh {log_wave /tb_star_tracker_top/uut/runtime_active_param}
-puts $fh {log_wave /tb_star_tracker_top/uut/i2c_runtime_owner}
-puts $fh {log_wave /tb_star_tracker_top/runtime_write_count}
+puts $fh [list set wave_cfg $wave_cfg]
+foreach signal {
+    /tb_star_tracker_top/clk /tb_star_tracker_top/rst
+    /tb_star_tracker_top/start_btn /tb_star_tracker_top/busy
+    /tb_star_tracker_top/ok /tb_star_tracker_top/fail
+    /tb_star_tracker_top/cam_xclk /tb_star_tracker_top/SCL
+    /tb_star_tracker_top/SDA /tb_star_tracker_top/uut/xclk_locked
+    /tb_star_tracker_top/uut/xclk_ready /tb_star_tracker_top/uut/init_start
+    /tb_star_tracker_top/uut/init_busy /tb_star_tracker_top/uut/init_done
+    /tb_star_tracker_top/uut/init_error
+    /tb_star_tracker_top/btn_config /tb_star_tracker_top/sw
+    /tb_star_tracker_top/runtime_write_count
+    /tb_star_tracker_top/uut/runtime_busy /tb_star_tracker_top/uut/runtime_done
+    /tb_star_tracker_top/uut/runtime_error /tb_star_tracker_top/uut/runtime_active_param
+    /tb_star_tracker_top/uut/i2c_runtime_owner
+    /tb_star_tracker_top/cam_pclk /tb_star_tracker_top/cam_vsync
+    /tb_star_tracker_top/cam_href /tb_star_tracker_top/cam_data
+    /tb_star_tracker_top/pixel_valid /tb_star_tracker_top/frame_done
+    /tb_star_tracker_top/pixel_count /tb_star_tracker_top/led_read_data
+    /tb_star_tracker_top/uut/fb_wr_en /tb_star_tracker_top/uut/fb_wr_addr
+    /tb_star_tracker_top/uut/fb_wr_data /tb_star_tracker_top/uut/fb_rd_addr
+    /tb_star_tracker_top/uut/fb_rd_data /tb_star_tracker_top/uut/capture_frame_done
+    /tb_star_tracker_top/uut/store_frame_ready /tb_star_tracker_top/uut/store_frame_ready_toggle
+    /tb_star_tracker_top/uut/capture_overflow /tb_star_tracker_top/uut/store_overflow
+    /tb_star_tracker_top/uut/dump_busy /tb_star_tracker_top/uut/dump_done
+    /tb_star_tracker_top/uut/uart_start /tb_star_tracker_top/uut/uart_data
+    /tb_star_tracker_top/uut/uart_busy /tb_star_tracker_top/uut/uart_done
+    /tb_star_tracker_top/uart_tx_line /tb_star_tracker_top/uart_done_seen
+} { puts $fh [list log_wave $signal] }
+
+puts $fh {create_wave_config star_tracker_top}
+puts $fh {set g1 [add_wave_group {1. Control y resultado}]}
+puts $fh {add_wave -into $g1 /tb_star_tracker_top/clk /tb_star_tracker_top/rst /tb_star_tracker_top/start_btn /tb_star_tracker_top/busy /tb_star_tracker_top/ok /tb_star_tracker_top/fail}
+puts $fh {set g2 [add_wave_group {2. XCLK e inicializacion SCCB I2C}]}
+puts $fh {add_wave -into $g2 /tb_star_tracker_top/cam_xclk /tb_star_tracker_top/SCL /tb_star_tracker_top/SDA /tb_star_tracker_top/uut/xclk_locked /tb_star_tracker_top/uut/xclk_ready /tb_star_tracker_top/uut/init_start /tb_star_tracker_top/uut/init_busy /tb_star_tracker_top/uut/init_done /tb_star_tracker_top/uut/init_error}
+puts $fh {set g3 [add_wave_group {3. Calibracion manual}]}
+puts $fh {add_wave -into $g3 /tb_star_tracker_top/btn_config /tb_star_tracker_top/sw /tb_star_tracker_top/runtime_write_count /tb_star_tracker_top/uut/runtime_busy /tb_star_tracker_top/uut/runtime_done /tb_star_tracker_top/uut/runtime_error /tb_star_tracker_top/uut/runtime_active_param /tb_star_tracker_top/uut/i2c_runtime_owner}
+puts $fh {set g4 [add_wave_group {4. Captura OV7670 Y}]}
+puts $fh {add_wave -into $g4 /tb_star_tracker_top/cam_pclk /tb_star_tracker_top/cam_vsync /tb_star_tracker_top/cam_href /tb_star_tracker_top/cam_data /tb_star_tracker_top/pixel_valid /tb_star_tracker_top/frame_done /tb_star_tracker_top/pixel_count /tb_star_tracker_top/led_read_data}
+puts $fh {set g5 [add_wave_group {5. Framebuffer BRAM}]}
+puts $fh {add_wave -into $g5 /tb_star_tracker_top/uut/fb_wr_en /tb_star_tracker_top/uut/fb_wr_addr /tb_star_tracker_top/uut/fb_wr_data /tb_star_tracker_top/uut/capture_frame_done /tb_star_tracker_top/uut/store_frame_ready /tb_star_tracker_top/uut/fb_rd_addr /tb_star_tracker_top/uut/fb_rd_data /tb_star_tracker_top/uut/capture_overflow /tb_star_tracker_top/uut/store_overflow}
+puts $fh {set g6 [add_wave_group {6. Paquete UART}]}
+puts $fh {add_wave -into $g6 /tb_star_tracker_top/uut/dump_busy /tb_star_tracker_top/uut/dump_done /tb_star_tracker_top/uut/uart_start /tb_star_tracker_top/uut/uart_data /tb_star_tracker_top/uut/uart_busy /tb_star_tracker_top/uut/uart_done /tb_star_tracker_top/uart_tx_line /tb_star_tracker_top/uart_done_seen}
+puts $fh {save_wave_config $wave_cfg}
 puts $fh {run all}
+puts $fh {save_wave_config $wave_cfg}
 puts $fh {quit}
 close $fh
 
-run_cmd [list cmd /c $xsim $snapshot -tclbatch $run_tcl -wdb [file join $sim_dir "xsim_top_uart_full.wdb"]]
+run_cmd [list cmd /c $xsim $snapshot -tclbatch $run_tcl -wdb $wdb_file]
+
+puts ""
+puts "============================================================"
+puts "SIMULACION GLOBAL COMPLETADA"
+puts "WDB:  $wdb_file"
+puts "WCFG: $wave_cfg"
+puts "============================================================"
 
 exit 0

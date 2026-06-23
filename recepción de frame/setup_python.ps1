@@ -4,12 +4,50 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $requirements = Join-Path $scriptDir "requirements.txt"
 
 function Resolve-Python {
-    foreach ($cmd in @("python", "py")) {
-        $found = Get-Command $cmd -ErrorAction SilentlyContinue
+    function Test-PythonCommand {
+        param(
+            [string]$Exe,
+            [string[]]$Args = @()
+        )
+
+        $found = Get-Command $Exe -ErrorAction SilentlyContinue
         if ($null -ne $found) {
-            & $cmd --version *> $null
-            if ($LASTEXITCODE -eq 0) {
-                return $cmd
+            try {
+                $version = & $Exe @Args --version 2>&1
+                if (($LASTEXITCODE -eq 0) -and (($version -join " ") -match "Python 3")) {
+                    return $true
+                }
+            } catch {
+                return $false
+            }
+        }
+
+        return $false
+    }
+
+    $commands = @(
+        @{ Exe = "py"; Args = @("-3") },
+        @{ Exe = "python"; Args = @() }
+    )
+
+    foreach ($cmd in $commands) {
+        if (Test-PythonCommand -Exe $cmd.Exe -Args $cmd.Args) {
+            return [PSCustomObject]@{
+                Exe = $cmd.Exe
+                Args = $cmd.Args
+            }
+        }
+    }
+
+    $directCandidates = @(
+        (Join-Path $env:LocalAppData "Python\bin\python.exe")
+    )
+
+    foreach ($candidate in $directCandidates) {
+        if ((Test-Path $candidate) -and (Test-PythonCommand -Exe $candidate)) {
+            return [PSCustomObject]@{
+                Exe = $candidate
+                Args = @()
             }
         }
     }
@@ -22,9 +60,11 @@ function Resolve-Python {
 
         foreach ($candidate in $candidates) {
             if (Test-Path $candidate) {
-                & $candidate --version *> $null
-                if ($LASTEXITCODE -eq 0) {
-                    return $candidate
+                if (Test-PythonCommand -Exe $candidate) {
+                    return [PSCustomObject]@{
+                        Exe = $candidate
+                        Args = @()
+                    }
                 }
             }
         }
@@ -34,10 +74,10 @@ function Resolve-Python {
 }
 
 $python = Resolve-Python
-Write-Host "Usando Python: $python"
+Write-Host ("Usando Python: {0} {1}" -f $python.Exe, ($python.Args -join " "))
 
-& $python -m pip install --upgrade pip
+& $python.Exe @($python.Args) -m pip install --upgrade pip
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-& $python -m pip install -r $requirements
+& $python.Exe @($python.Args) -m pip install -r $requirements
 exit $LASTEXITCODE

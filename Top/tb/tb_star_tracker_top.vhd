@@ -60,11 +60,12 @@ architecture sim of tb_star_tracker_top is
     constant FRAME_HEIGHT     : integer := 120;
     constant FRAME_PIXELS     : integer := FRAME_WIDTH * FRAME_HEIGHT;
     constant ADDR_WIDTH       : integer := 15;
-    constant SIM_UART_BAUD    : integer := 20000000;
+    -- Acelera solo la simulacion: un bit UART por ciclo de clk.
+    constant SIM_UART_BAUD    : integer := 100000000;
 
     constant CLK_PERIOD       : time := 10 ns;
     constant PCLK_PERIOD      : time := 41.667 ns;
-    constant UART_BIT_PERIOD  : time := 50 ns;
+    constant UART_BIT_PERIOD  : time := 10 ns;
 
     constant EXPECTED_CONFIG : config_rom_t := (
         (reg_addr => x"12", reg_data => x"80"),
@@ -249,7 +250,11 @@ begin
         end procedure;
 
     begin
-        report "Inicio de simulacion top completo OV7670 -> BRAM -> UART";
+        report "============================================================";
+        report "TEST GLOBAL: star_tracker_top";
+        report "Flujo: SCCB/I2C -> OV7670 -> captura Y -> BRAM -> UART";
+        report "============================================================";
+        report "[FASE 1/5] Aplicando reset e iniciando configuracion OV7670";
 
         rst <= '1';
         start_btn <= '0';
@@ -283,7 +288,8 @@ begin
             report "ERROR: cam_reset debe liberar la camara despues del reset"
             severity failure;
 
-        report "Init SCCB/I2C completa; iniciando frame QQVGA";
+        report "[OK 1/5] Init SCCB/I2C: 21 registros verificados";
+        report "[FASE 2/5] Verificando configuracion manual en operacion";
 
         sw <= (others => '0');
         sw(14 downto 13) <= "00";
@@ -332,7 +338,8 @@ begin
             report "ERROR: no se escribio brillo runtime"
             severity failure;
 
-        report "Configuracion runtime verificada: contraste, ganancia, exposicion y brillo";
+        report "[OK 2/5] Runtime: contraste, ganancia, exposicion y brillo verificados";
+        report "[FASE 3/5] Enviando frame YUYV QQVGA simulado";
 
         for index in 0 to 19999 loop
             wait until rising_edge(cam_pclk);
@@ -366,6 +373,9 @@ begin
             report "ERROR: fail se activo durante captura"
             severity failure;
 
+        report "[OK 3/5] Captura: 160x120, 19200 pixeles Y correctos";
+        report "[FASE 4/5] Leyendo BRAM y transmitiendo paquete UART";
+
         wait until ok = '1' or fail = '1' for 60 ms;
 
         assert fail = '0'
@@ -384,7 +394,11 @@ begin
             report "ERROR: se observaron pixeles validos despues de frame_done"
             severity failure;
 
-        report "PASS_TOP_UART_FULL: init, captura QQVGA, BRAM, UART, payload y checksum correctos";
+        report "[OK 4/5] BRAM: frame completo almacenado y leido sin overflow";
+        report "[OK 5/5] UART: STY1, 160x120, 19200 bytes y checksum correctos";
+        report "============================================================";
+        report "PASS_TOP_UART_FULL: TODAS LAS PRUEBAS PASARON";
+        report "============================================================";
         finish;
     end process;
 

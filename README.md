@@ -60,6 +60,7 @@ El test global esperado valida paquete UART con `STY1`, ancho `160`, alto `120`,
 - `uart_tx`: transmisor UART 8N1.
 - `ov7670_xclk_gen`: genera `XCLK` de 24 MHz desde el reloj de 100 MHz de la Nexys A7-100T.
 - `ov7670_init_config`: envia la tabla de registros de inicializacion de la OV7670.
+- `ov7670_runtime_config`: permite calibrar contraste, ganancia, exposicion y brillo despues de la inicializacion.
 - `ov7670_capture_y_stream`: capturador FSM en dominio `PCLK`; espera sincronizacion con `VSYNC` antes de capturar y emite solo luminancia `Y` del patron YUV 4:2:2.
 - `frame_capture_store`: arma una captura unica, escribe pixeles en direccion row-major y marca frame listo.
 - `framebuffer_y_bram`: framebuffer dual-clock para `19200` bytes.
@@ -92,6 +93,23 @@ Entradas/salidas de usuario:
 - `fail`: indica error de inicializacion, captura o almacenamiento.
 - `busy`: indica actividad de init, I2C, captura, dump o UART.
 - `led_read_data[7:0]`: muestra el ultimo byte `Y` capturado.
+
+## Calibracion manual de camara
+
+El bitstream mantiene como base la configuracion validada de la ROM. La calibracion manual es
+opcional y queda bloqueada mientras `SW15=0`; en ese estado, `btn_config` y los switches de
+selector/valor no generan escrituras SCCB/I2C y el flujo de captura funciona como antes.
+
+Con `SW15=1`, `BTND` aplica el valor de `SW7:0` al parametro seleccionado por `SW14:13`:
+
+| `SW14:13` | Parametro | Registro |
+|---|---|---|
+| `00` | Contraste | `0x56` |
+| `01` | Ganancia manual | `0x13=0x8B`, luego `0x00` |
+| `10` | Exposicion manual | `0x13=0x8E`, luego `0x10` |
+| `11` | Brillo | `0x55` |
+
+El reset general restaura el flujo de inicializacion desde la ROM base.
 
 ## Simulacion XSim
 

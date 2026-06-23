@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/alexa/tesis-star-tracker/sim_build/capture_storage_integration/capture_storage_integration.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_capture_storage_integration_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+   </zoom_setting>
+   <column_width_setting>
+   </column_width_setting>
+   <WVObjectSize size="4" />
+   <wvobject fp_name="group1" type="group">
+      <obj_property name="label">1. Control y sincronizacion</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_capture_storage_integration_top/pclk" type="logic">
+         <obj_property name="ElementShortName">pclk</obj_property>
+         <obj_property name="ObjectShortName">pclk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/rst" type="logic">
+         <obj_property name="ElementShortName">rst</obj_property>
+         <obj_property name="ObjectShortName">rst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/enable" type="logic">
+         <obj_property name="ElementShortName">enable</obj_property>
+         <obj_property name="ObjectShortName">enable</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/arm_capture" type="logic">
+         <obj_property name="ElementShortName">arm_capture</obj_property>
+         <obj_property name="ObjectShortName">arm_capture</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/cam_vsync" type="logic">
+         <obj_property name="ElementShortName">cam_vsync</obj_property>
+         <obj_property name="ObjectShortName">cam_vsync</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/cam_href" type="logic">
+         <obj_property name="ElementShortName">cam_href</obj_property>
+         <obj_property name="ObjectShortName">cam_href</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group8" type="group">
+      <obj_property name="label">2. Extraccion de luminancia Y</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_capture_storage_integration_top/cam_data" type="array">
+         <obj_property name="ElementShortName">cam_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">cam_data[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/pixel_y" type="array">
+         <obj_property name="ElementShortName">pixel_y[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pixel_y[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/pixel_valid" type="logic">
+         <obj_property name="ElementShortName">pixel_valid</obj_property>
+         <obj_property name="ObjectShortName">pixel_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/pixel_x" type="array">
+         <obj_property name="ElementShortName">pixel_x[9:0]</obj_property>
+         <obj_property name="ObjectShortName">pixel_x[9:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/pixel_y_pos" type="array">
+         <obj_property name="ElementShortName">pixel_y_pos[9:0]</obj_property>
+         <obj_property name="ObjectShortName">pixel_y_pos[9:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/frame_active" type="logic">
+         <obj_property name="ElementShortName">frame_active</obj_property>
+         <obj_property name="ObjectShortName">frame_active</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/frame_done" type="logic">
+         <obj_property name="ElementShortName">frame_done</obj_property>
+         <obj_property name="ObjectShortName">frame_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/pixel_count" type="other">
+         <obj_property name="ElementShortName">pixel_count</obj_property>
+         <obj_property name="ObjectShortName">pixel_count</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/uut/u_capture/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group18" type="group">
+      <obj_property name="label">3. Escritura espacial BRAM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_capture_storage_integration_top/wr_en" type="logic">
+         <obj_property name="ElementShortName">wr_en</obj_property>
+         <obj_property name="ObjectShortName">wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/wr_addr" type="array">
+         <obj_property name="ElementShortName">wr_addr[14:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_addr[14:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/wr_data" type="array">
+         <obj_property name="ElementShortName">wr_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_data[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/write_count" type="other">
+         <obj_property name="ElementShortName">write_count</obj_property>
+         <obj_property name="ObjectShortName">write_count</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/capture_busy" type="logic">
+         <obj_property name="ElementShortName">capture_busy</obj_property>
+         <obj_property name="ObjectShortName">capture_busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/frame_ready" type="logic">
+         <obj_property name="ElementShortName">frame_ready</obj_property>
+         <obj_property name="ObjectShortName">frame_ready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/frame_ready_toggle" type="logic">
+         <obj_property name="ElementShortName">frame_ready_toggle</obj_property>
+         <obj_property name="ObjectShortName">frame_ready_toggle</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/uut/u_store/state" type="other">
+         <obj_property name="ElementShortName">state</obj_property>
+         <obj_property name="ObjectShortName">state</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group27" type="group">
+      <obj_property name="label">4. Lectura y resultado</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_capture_storage_integration_top/rd_addr" type="array">
+         <obj_property name="ElementShortName">rd_addr[14:0]</obj_property>
+         <obj_property name="ObjectShortName">rd_addr[14:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/rd_data" type="array">
+         <obj_property name="ElementShortName">rd_data[7:0]</obj_property>
+         <obj_property name="ObjectShortName">rd_data[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/capture_overflow" type="logic">
+         <obj_property name="ElementShortName">capture_overflow</obj_property>
+         <obj_property name="ObjectShortName">capture_overflow</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_capture_storage_integration_top/store_overflow" type="logic">
+         <obj_property name="ElementShortName">store_overflow</obj_property>
+         <obj_property name="ObjectShortName">store_overflow</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
