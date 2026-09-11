@@ -90,9 +90,8 @@ begin
                     dump_done_toggle_prev <= dump_done_toggle;
                     state <= IDLE;
                     frame_ready_reg <= '0';
-                end if;
-
-                case state is
+                else
+                    case state is
 
                     when IDLE =>
 
@@ -134,7 +133,8 @@ begin
 
                         state <= IDLE;
 
-                end case;
+                    end case;
+                end if;
 
             end if;
 

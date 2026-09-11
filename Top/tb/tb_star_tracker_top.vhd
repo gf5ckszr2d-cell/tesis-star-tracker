@@ -6,6 +6,9 @@ library std;
 use std.env.all;
 
 entity tb_star_tracker_top is
+    generic (
+        DIAGNOSTIC_MODE : boolean := true
+    );
 end entity;
 
 architecture sim of tb_star_tracker_top is
@@ -139,8 +142,27 @@ architecture sim of tb_star_tracker_top is
 
     function expected_y(pixel_index : integer) return std_logic_vector is
         variable value : integer;
+        variable pixel_x_value : integer;
+        variable pixel_y_value : integer;
     begin
-        value := (pixel_index * 5 + 17) mod 256;
+        if DIAGNOSTIC_MODE then
+            value := (pixel_index * 5 + 17) mod 256;
+        else
+            pixel_x_value := pixel_index mod FRAME_WIDTH;
+            pixel_y_value := pixel_index / FRAME_WIDTH;
+
+            if (pixel_x_value = 10 and pixel_y_value = 10) or
+               (pixel_x_value = 11 and pixel_y_value = 10) or
+               (pixel_x_value = 10 and pixel_y_value = 11) or
+               (pixel_x_value = 11 and pixel_y_value = 11) then
+                value := 180;
+            elsif (pixel_x_value = 80 and pixel_y_value = 60) or
+                  (pixel_x_value = 81 and pixel_y_value = 61) then
+                value := 200;
+            else
+                value := 0;
+            end if;
+        end if;
         return std_logic_vector(to_unsigned(value, 8));
     end function;
 
@@ -252,7 +274,11 @@ begin
     begin
         report "============================================================";
         report "TEST GLOBAL: star_tracker_top";
-        report "Flujo: SCCB/I2C -> OV7670 -> captura Y -> BRAM -> UART";
+        if DIAGNOSTIC_MODE then
+            report "Flujo: SCCB/I2C -> OV7670 -> captura Y -> BRAM -> UART";
+        else
+            report "Flujo: SCCB/I2C -> OV7670 -> captura Y -> BRAM -> detector";
+        end if;
         report "============================================================";
         report "[FASE 1/5] Aplicando reset e iniciando configuracion OV7670";
 
@@ -260,6 +286,9 @@ begin
         start_btn <= '0';
         btn_config <= '0';
         sw <= (others => '0');
+        if DIAGNOSTIC_MODE then
+            sw(8) <= '1';
+        end if;
         cam_vsync <= '1';
         cam_href <= '0';
         cam_data <= (others => '0');
@@ -292,6 +321,9 @@ begin
         report "[FASE 2/5] Verificando configuracion manual en operacion";
 
         sw <= (others => '0');
+        if DIAGNOSTIC_MODE then
+            sw(8) <= '1';
+        end if;
         sw(14 downto 13) <= "00";
         sw(7 downto 0) <= x"60";
         pulse_config_button;
@@ -374,31 +406,76 @@ begin
             severity failure;
 
         report "[OK 3/5] Captura: 160x120, 19200 pixeles Y correctos";
-        report "[FASE 4/5] Leyendo BRAM y transmitiendo paquete UART";
 
-        wait until ok = '1' or fail = '1' for 60 ms;
+        if DIAGNOSTIC_MODE then
+            report "[FASE 4/5] Leyendo BRAM y transmitiendo paquete UART";
 
-        assert fail = '0'
-            report "ERROR: fail se activo durante dump UART"
-            severity failure;
+            wait until ok = '1' or fail = '1' for 60 ms;
 
-        assert ok = '1'
-            report "ERROR: ok no se activo despues del dump UART"
-            severity failure;
+            assert fail = '0'
+                report "ERROR: fail se activo durante dump UART"
+                severity failure;
 
-        assert uart_done_seen = '1'
-            report "ERROR: no se recibio el paquete UART completo"
-            severity failure;
+            assert ok = '1'
+                report "ERROR: ok no se activo despues del dump UART"
+                severity failure;
 
-        assert pixel_after_frame_done = '0'
-            report "ERROR: se observaron pixeles validos despues de frame_done"
-            severity failure;
+            assert uart_done_seen = '1'
+                report "ERROR: no se recibio el paquete UART completo"
+                severity failure;
 
-        report "[OK 4/5] BRAM: frame completo almacenado y leido sin overflow";
-        report "[OK 5/5] UART: STY1, 160x120, 19200 bytes y checksum correctos";
-        report "============================================================";
-        report "PASS_TOP_UART_FULL: TODAS LAS PRUEBAS PASARON";
-        report "============================================================";
+            assert pixel_after_frame_done = '0'
+                report "ERROR: se observaron pixeles validos despues de frame_done"
+                severity failure;
+
+            start_btn <= '0';
+            wait for 1 us;
+            start_btn <= '1';
+            wait until busy = '1' for 1 ms;
+            assert busy = '1'
+                report "ERROR: el modo UART no permitio rearmar otra captura"
+                severity failure;
+
+            report "[OK 4/5] BRAM: frame completo almacenado y leido sin overflow";
+            report "[OK 5/5] UART: STY1, 160x120, 19200 bytes y checksum correctos";
+            report "============================================================";
+            report "PASS_TOP_UART_FULL: TODAS LAS PRUEBAS PASARON";
+            report "============================================================";
+        else
+            report "[FASE 4/5] Recorriendo BRAM con detector VHDL";
+
+            wait until ok = '1' or fail = '1' for 60 ms;
+
+            assert fail = '0'
+                report "ERROR: fail se activo durante deteccion post-BRAM"
+                severity failure;
+
+            assert ok = '1'
+                report "ERROR: ok no se activo despues del detector"
+                severity failure;
+
+            assert uart_done_seen = '0'
+                report "ERROR: el UART se activo con SW8=0"
+                severity failure;
+
+            assert pixel_after_frame_done = '0'
+                report "ERROR: se observaron pixeles validos despues de frame_done"
+                severity failure;
+
+            start_btn <= '0';
+            wait for 1 us;
+            start_btn <= '1';
+            wait until busy = '1' for 1 ms;
+            assert busy = '1'
+                report "ERROR: el detector no permitio rearmar otra captura"
+                severity failure;
+
+            report "[OK 4/5] BRAM: frame completo procesado sin overflow";
+            report "[OK 5/5] SW8=0: detector finalizo y UART permanecio inactivo";
+            report "============================================================";
+            report "PASS_TOP_DETECTOR_BRAM: TODAS LAS PRUEBAS PASARON";
+            report "============================================================";
+        end if;
         finish;
     end process;
 

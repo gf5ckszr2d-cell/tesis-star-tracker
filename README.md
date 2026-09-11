@@ -1,6 +1,6 @@
 # tesis-star-tracker
 
-Repositorio de tesis para un prototipo de star tracker en FPGA. El alcance actual no incluye todavia deteccion de estrellas, centroides ni determinacion de actitud; esta etapa valida la configuracion de la camara OV7670, la captura de luminancia `Y`, el almacenamiento de un frame en BRAM y el envio por UART hacia la PC.
+Repositorio de tesis para un prototipo de star tracker en FPGA. El alcance actual llega hasta la captura de luminancia `Y` en BRAM y su procesamiento posterior, tambien en VHDL, para detectar componentes brillantes y calcular sus centroides. La identificacion estelar y la determinacion de actitud aun no forman parte de esta etapa. Python se reserva para pruebas auxiliares de capturas, no para el pipeline operativo.
 
 ## Estado oficial
 
@@ -16,13 +16,14 @@ Repositorio de tesis para un prototipo de star tracker en FPGA. El alcance actua
 - Proyecto GUI regenerable: `Top/vivado_projects/star_tracker_top/star_tracker_top.xpr`.
 - Bitstream oficial: `Top/bitstreams/star_tracker_top_nexys.bit`.
 
-Flujo validado:
+Flujos implementados:
 
 ```text
-init SCCB/I2C -> OV7670 -> XCLK/PCLK -> captura Y -> BRAM -> frame_uart_dump -> uart_tx USB
+SW8=0: OV7670 -> captura Y -> BRAM -> umbral -> componentes 8-conectados -> centroides
+SW8=1: OV7670 -> captura Y -> BRAM -> frame_uart_dump -> uart_tx USB -> fin
 ```
 
-El test global esperado valida paquete UART con `STY1`, ancho `160`, alto `120`, payload `19200` bytes, payload Y correcto y checksum correcto.
+La BRAM es la frontera: primero se almacena el frame completo y solo despues lo recorre el consumidor seleccionado. El modo UART conserva el paquete `STY1` ya validado y no transmite resultados del detector.
 
 ## Estructura
 
@@ -41,7 +42,9 @@ El test global esperado valida paquete UART con `STY1`, ancho `160`, alto `120`,
 |   |   |-- ov7670_capture_y_stream.vhd
 |   |   |-- frame_capture_store.vhd
 |   |   |-- framebuffer_y_bram.vhd
-|   |   `-- frame_uart_dump.vhd
+|   |   |-- frame_uart_dump.vhd
+|   |   |-- unsigned_iterative_divider.vhd
+|   |   `-- frame_star_centroid.vhd
 |   |-- tb/
 |   `-- scripts/
 |-- Top/
@@ -66,7 +69,9 @@ El test global esperado valida paquete UART con `STY1`, ancho `160`, alto `120`,
 - `frame_capture_store`: arma una captura unica, escribe pixeles en direccion row-major y marca frame listo.
 - `framebuffer_y_bram`: framebuffer dual-clock para `19200` bytes.
 - `frame_uart_dump`: lee la BRAM y genera el paquete binario UART.
-- `star_tracker_top`: integra inicializacion, captura, almacenamiento y envio UART.
+- `unsigned_iterative_divider`: divisor secuencial usado por el calculo de centroides.
+- `frame_star_centroid`: recorre un frame completo, aplica umbral, etiqueta componentes 8-conectados y emite centroides ponderados en Q8.8.
+- `star_tracker_top`: integra inicializacion, captura y almacenamiento; despues dirige la lectura de BRAM al detector o al volcado UART segun `SW8`.
 
 ## Mapeo Nexys A7-100T y OV7670
 
@@ -90,9 +95,11 @@ Entradas/salidas de usuario:
 
 - `start_btn`: inicia la configuracion; despues de una captura y envio completo puede armar una nueva captura.
 - `rst`: reset general activo en alto.
-- `ok`: indica inicializacion/captura/envio completados.
-- `fail`: indica error de inicializacion, captura o almacenamiento.
-- `busy`: indica actividad de init, I2C, captura, dump o UART.
+- `SW8=0`: modo normal; ejecuta deteccion y centroides en el FPGA despues de capturar el frame.
+- `SW8=1`: modo diagnostico; corta el pipeline despues de captura y envia solo el frame por UART.
+- `ok`: indica inicializacion y consumidor del frame completados.
+- `fail`: indica error de inicializacion, captura, almacenamiento o desborde de etiquetas.
+- `busy`: indica actividad de init, I2C, captura, detector, dump o UART.
 - `led_read_data[7:0]`: muestra el ultimo byte `Y` capturado.
 
 ## Calibracion manual de camara
@@ -121,10 +128,26 @@ vivado -mode batch -source "Protocolo de comunicacion/scripts/xsim_i2c_master.tc
 vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_init_config.tcl"
 vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_xclk_gen.tcl"
 vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_capture_y_stream.tcl"
+vivado -mode batch -source "Scripts/xsim_frame_star_centroid.tcl"
+vivado -mode batch -source "Scripts/xsim_top_detector_bram.tcl"
 vivado -mode batch -source "Scripts/xsim_top_uart_full.tcl"
+vivado -mode batch -source "Scripts/vivado_synth_check.tcl"
 ```
 
 El test global `Scripts/xsim_top_uart_full.tcl` elabora `Top/tb/tb_star_tracker_top.vhd` y genera `sim_build/xsim_top_uart_full/xsim_top_uart_full.wdb`.
+
+La prueba del detector usa un frame sintetico pequeno con dos estrellas conocidas y comprueba numero de objetos, area, intensidad y centroides ponderados Q8.8. Los detalles del algoritmo y sus limites estan en `Docs/deteccion_centroides_bram.md`.
+
+## Deteccion y centroides post-BRAM
+
+La configuracion inicial del top usa umbral de luminancia `Y >= 45`, conectividad de 8 vecinos, area valida entre 2 y 500 pixeles y hasta 64 etiquetas provisionales. Para cada componente valido se produce un pulso `star_valid` con indice, area, intensidad acumulada y:
+
+```text
+centroid_x_q8_8 = (sum(x * Y) << 8) / sum(Y)
+centroid_y_q8_8 = (sum(y * Y) << 8) / sum(Y)
+```
+
+Estos resultados permanecen como interfaz interna para la siguiente etapa VHDL y estan preservados para depuracion ILA. No se conectan al UART, de modo que el hito de captura `STY1` queda congelado.
 
 ## Proyecto Vivado y bitstream
 
@@ -166,9 +189,7 @@ El frame se transmite por `uart_tx` a `921600` baud, 8N1, como paquete binario:
 
 ## Trabajo futuro
 
-- Validacion fisica de camara y UART en placa.
-- Recepcion/visualizacion del frame en PC.
-- Preprocesamiento de imagen.
-- Deteccion de estrellas.
-- Calculo de centroides.
+- Validacion fisica del modo normal de deteccion y centroides en placa.
+- Ajuste experimental del umbral y filtros de area con imagenes reales.
+- Conectar la interfaz interna de centroides a la siguiente etapa VHDL.
 - Identificacion estelar y estimacion de actitud.

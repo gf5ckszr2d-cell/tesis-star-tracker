@@ -15,6 +15,8 @@ set rtl_files [list \
     [file join $repo_root "Configuracion camara" "rtl" "frame_capture_store.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "framebuffer_y_bram.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_uart_dump.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "unsigned_iterative_divider.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "frame_star_centroid.vhd"] \
     [file join $repo_root "Top" "rtl" "star_tracker_top.vhd"] \
 ]
 
@@ -25,6 +27,8 @@ synth_design -top star_tracker_top -part xc7a100tcsg324-1
 
 report_utilization -file [file join $report_dir "utilization_synth.rpt"]
 report_timing_summary -max_paths 10 -file [file join $report_dir "timing_synth.rpt"]
+set worst_setup_path [get_timing_paths -delay_type max -max_paths 1]
+set worst_hold_path [get_timing_paths -delay_type min -max_paths 1]
 set cdc_report [report_cdc -details -return_string]
 set methodology_report [report_methodology -return_string]
 
@@ -53,7 +57,18 @@ if {[regexp -line {CDC-[0-9]+[ \t]+(Warning|Critical)} $cdc_report]} {
     error "Unsafe CDC result detected; inspect $report_dir/cdc_synth.rpt"
 }
 
+if {[llength $worst_setup_path] == 0 || [llength $worst_hold_path] == 0} {
+    error "Timing paths were not found; inspect $report_dir/timing_synth.rpt"
+}
+
+set worst_setup_slack [get_property SLACK [lindex $worst_setup_path 0]]
+set worst_hold_slack [get_property SLACK [lindex $worst_hold_path 0]]
+if {$worst_setup_slack < 0.0 || $worst_hold_slack < 0.0} {
+    error "Timing failed: WNS=$worst_setup_slack ns, WHS=$worst_hold_slack ns"
+}
+
 puts "SYNTH_CHECK_PASS: [llength $async_regs] ASYNC_REG registers"
+puts "SYNTH_TIMING_PASS: WNS=$worst_setup_slack ns, WHS=$worst_hold_slack ns"
 puts "SYNTH_REPORTS: $report_dir"
 
 exit 0

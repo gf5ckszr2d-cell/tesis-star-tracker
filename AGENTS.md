@@ -11,7 +11,8 @@ Estas reglas aplican a cualquier sesion de Codex que trabaje en este repositorio
 - No borrar `frame_uart_dump`.
 - No cambiar QQVGA `160x120` sin instruccion explicita.
 - No cambiar YUV `4:2:2` sin justificacion tecnica.
-- No avanzar a deteccion de estrellas, centroides o actitud hasta que el usuario lo indique.
+- La deteccion y los centroides post-BRAM ya estan autorizados e implementados en VHDL.
+- No avanzar a identificacion estelar ni determinacion de actitud hasta que el usuario lo indique.
 - Antes de modificar RTL, explicar que archivo se tocara y por que.
 - Mantener cambios minimos y verificables.
 - Distinguir claramente cambios de simulacion y cambios que afectan hardware real.
@@ -20,18 +21,23 @@ Estas reglas aplican a cualquier sesion de Codex que trabaje en este repositorio
 
 ## Flujo actual del sistema
 
-Flujo validado:
+Flujo normal implementado:
 
 ```text
-init SCCB/I2C -> XCLK -> captura OV7670 -> extraccion Y -> BRAM -> UART
+init SCCB/I2C -> XCLK -> captura OV7670 -> extraccion Y -> BRAM
+-> umbral -> componentes 8-conectados -> centroides Q8.8
 ```
 
-Flujo detallado:
+Flujo de diagnostico de captura:
 
 ```text
-init SCCB/I2C -> camara OV7670 simulada -> captura QQVGA 160x120 en YUV 4:2:2
--> extraccion de Y -> BRAM -> frame_uart_dump -> uart_tx -> receptor UART en testbench
+SW8=1 -> captura QQVGA 160x120 en YUV 4:2:2 -> extraccion de Y -> BRAM
+-> frame_uart_dump -> uart_tx -> receptor UART en testbench -> fin
 ```
+
+Con `SW8=0` no se usa UART. La BRAM es la frontera entre captura y procesamiento; no convertir
+la deteccion a streaming sin instruccion explicita. El UART termina siempre en la captura y no debe
+ampliarse para transportar centroides.
 
 El PASS esperado del test global UART incluye:
 
@@ -51,6 +57,10 @@ El PASS esperado del test global UART incluye:
 - `Protocolo de comunicacion/rtl/i2c_master.vhd`: maestro SCCB/I2C.
 - `Configuracion camara/rtl/ov7670_capture_y_stream.vhd`: capturador oficial por FSM sincronizado con VSYNC.
 - `Configuracion camara/rtl/frame_uart_dump.vhd`: volcado de frame por UART.
+- `Configuracion camara/rtl/frame_star_centroid.vhd`: deteccion y centroides post-BRAM.
+- `Configuracion camara/rtl/unsigned_iterative_divider.vhd`: division secuencial para Q8.8.
+- `Scripts/xsim_frame_star_centroid.tcl`: prueba reproducible del detector.
+- `Scripts/xsim_top_detector_bram.tcl`: prueba integrada del modo normal con `SW8=0`.
 
 Antes de modificar modulos RTL, consultar primero `README.md`, `Docs/` y los scripts TCL existentes
 para entender interfaces, maquinas de estado y flujo de datos.

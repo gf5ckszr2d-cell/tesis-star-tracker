@@ -45,6 +45,10 @@ architecture rtl of star_tracker_top is
 
     constant OV7670_ADDR  : std_logic_vector(6 downto 0) := "0100001";
     constant FRAME_PIXELS : integer := FRAME_WIDTH * FRAME_HEIGHT;
+    constant STAR_THRESHOLD : std_logic_vector(7 downto 0) := x"2D";
+    constant STAR_MAX_LABELS : integer := 64;
+    constant STAR_MIN_AREA : integer := 2;
+    constant STAR_MAX_AREA : integer := 500;
 
     signal i2c_start    : std_logic;
     signal i2c_rw       : std_logic;
@@ -110,6 +114,8 @@ architecture rtl of star_tracker_top is
     signal fb_wr_data : std_logic_vector(7 downto 0);
     signal fb_rd_addr : unsigned(ADDR_WIDTH - 1 downto 0);
     signal fb_rd_data : std_logic_vector(7 downto 0);
+    signal uart_fb_rd_addr : unsigned(ADDR_WIDTH - 1 downto 0);
+    signal detector_fb_rd_addr : unsigned(ADDR_WIDTH - 1 downto 0);
 
     signal store_capture_busy       : std_logic;
     signal store_frame_ready        : std_logic;
@@ -118,13 +124,35 @@ architecture rtl of star_tracker_top is
 
     signal frame_ready_toggle_meta : std_logic := '0';
     signal frame_ready_toggle_sys  : std_logic := '0';
+    signal frame_ready_toggle_prev_sys : std_logic := '0';
+    signal uart_frame_ready_toggle : std_logic := '0';
+    signal detector_frame_ready_toggle : std_logic := '0';
+
+    signal sw8_pclk_meta : std_logic := '0';
+    signal sw8_pclk_sync : std_logic := '0';
+    signal capture_diag_mode_pclk : std_logic := '0';
+    signal capture_diag_mode_meta : std_logic := '0';
+    signal capture_diag_mode_sys : std_logic := '0';
 
     signal dump_done_toggle      : std_logic;
-    signal dump_done_toggle_meta : std_logic := '0';
-    signal dump_done_toggle_pclk : std_logic := '0';
     signal dump_busy             : std_logic;
     signal dump_done             : std_logic;
-    signal dump_done_latched     : std_logic := '0';
+    signal pipeline_done_latched : std_logic := '0';
+    signal consumer_done_toggle_sys : std_logic := '0';
+    signal consumer_done_toggle_meta : std_logic := '0';
+    signal consumer_done_toggle_pclk : std_logic := '0';
+
+    signal detector_busy : std_logic;
+    signal detector_done : std_logic;
+    signal detector_done_toggle : std_logic;
+    signal detector_overflow : std_logic;
+    signal detector_star_valid : std_logic;
+    signal detector_star_index : unsigned(7 downto 0);
+    signal detector_centroid_x_q8_8 : unsigned(17 downto 0);
+    signal detector_centroid_y_q8_8 : unsigned(17 downto 0);
+    signal detector_star_area : unsigned(14 downto 0);
+    signal detector_star_intensity : unsigned(23 downto 0);
+    signal detector_star_count : unsigned(7 downto 0);
 
     signal uart_start : std_logic;
     signal uart_data  : std_logic_vector(7 downto 0);
@@ -139,10 +167,26 @@ architecture rtl of star_tracker_top is
     attribute ASYNC_REG of init_done_pclk : signal is "TRUE";
     attribute ASYNC_REG of start_btn_pclk_meta : signal is "TRUE";
     attribute ASYNC_REG of start_btn_pclk : signal is "TRUE";
-    attribute ASYNC_REG of dump_done_toggle_meta : signal is "TRUE";
-    attribute ASYNC_REG of dump_done_toggle_pclk : signal is "TRUE";
+    attribute ASYNC_REG of sw8_pclk_meta : signal is "TRUE";
+    attribute ASYNC_REG of sw8_pclk_sync : signal is "TRUE";
+    attribute ASYNC_REG of capture_diag_mode_meta : signal is "TRUE";
+    attribute ASYNC_REG of capture_diag_mode_sys : signal is "TRUE";
+    attribute ASYNC_REG of consumer_done_toggle_meta : signal is "TRUE";
+    attribute ASYNC_REG of consumer_done_toggle_pclk : signal is "TRUE";
     attribute ASYNC_REG of frame_ready_toggle_meta : signal is "TRUE";
     attribute ASYNC_REG of frame_ready_toggle_sys : signal is "TRUE";
+
+    -- Los resultados permanecen dentro del FPGA hasta integrar la siguiente
+    -- etapa del star tracker. MARK_DEBUG evita que síntesis los elimine y deja
+    -- disponible una verificación con ILA sin reutilizar ni ampliar el UART.
+    attribute MARK_DEBUG : string;
+    attribute MARK_DEBUG of detector_star_valid : signal is "TRUE";
+    attribute MARK_DEBUG of detector_star_index : signal is "TRUE";
+    attribute MARK_DEBUG of detector_centroid_x_q8_8 : signal is "TRUE";
+    attribute MARK_DEBUG of detector_centroid_y_q8_8 : signal is "TRUE";
+    attribute MARK_DEBUG of detector_star_area : signal is "TRUE";
+    attribute MARK_DEBUG of detector_star_intensity : signal is "TRUE";
+    attribute MARK_DEBUG of detector_star_count : signal is "TRUE";
 
     component ov7670_xclk_gen
         port (
@@ -309,6 +353,40 @@ architecture rtl of star_tracker_top is
         );
     end component;
 
+    component frame_star_centroid
+        generic (
+            FRAME_WIDTH  : positive := 160;
+            FRAME_HEIGHT : positive := 120;
+            ADDR_WIDTH   : positive := 15;
+            MAX_LABELS   : positive := 64;
+            MIN_AREA     : positive := 2;
+            MAX_AREA     : positive := 500
+        );
+        port (
+            clk : in std_logic;
+            rst : in std_logic;
+
+            frame_ready_toggle : in std_logic;
+            threshold          : in std_logic_vector(7 downto 0);
+
+            rd_addr : out unsigned(ADDR_WIDTH - 1 downto 0);
+            rd_data : in std_logic_vector(7 downto 0);
+
+            star_valid      : out std_logic;
+            star_index      : out unsigned(7 downto 0);
+            centroid_x_q8_8 : out unsigned(17 downto 0);
+            centroid_y_q8_8 : out unsigned(17 downto 0);
+            star_area       : out unsigned(14 downto 0);
+            star_intensity  : out unsigned(23 downto 0);
+            star_count      : out unsigned(7 downto 0);
+
+            process_busy        : out std_logic;
+            process_done        : out std_logic;
+            process_done_toggle : out std_logic;
+            overflow            : out std_logic
+        );
+    end component;
+
     component ov7670_runtime_config
         port (
             clk : in std_logic;
@@ -341,6 +419,7 @@ begin
     cam_pwdn  <= '0';
     cam_reset <= not rst;
     uart_tx   <= uart_tx_line;
+    fb_rd_addr <= uart_fb_rd_addr when capture_diag_mode_sys = '1' else detector_fb_rd_addr;
 
     xclk_ready <= '1' when SIM_BYPASS_XCLK_LOCK else xclk_locked;
     init_start <= start_btn_sys and xclk_ready and not init_done_latched;
@@ -354,9 +433,11 @@ begin
     i2c_tx_count <= runtime_i2c_tx_count when i2c_runtime_owner = '1' else init_i2c_tx_count;
 
     led_read_data <= capture_pixel_y;
-    busy          <= init_busy or runtime_busy or i2c_busy or store_capture_busy or dump_busy or uart_busy;
-    ok            <= init_done_latched and dump_done_latched;
-    fail          <= init_error_latched or runtime_error_latched or capture_overflow or store_overflow;
+    busy          <= init_busy or runtime_busy or i2c_busy or store_capture_busy or
+                     dump_busy or uart_busy or detector_busy;
+    ok            <= init_done_latched and pipeline_done_latched;
+    fail          <= init_error_latched or runtime_error_latched or capture_overflow or
+                     store_overflow or detector_overflow;
     pixel_valid   <= capture_pixel_valid;
     frame_done    <= capture_frame_done;
 
@@ -425,7 +506,8 @@ begin
                 init_done_latched  <= '0';
                 init_error_latched <= '0';
                 runtime_error_latched <= '0';
-                dump_done_latched  <= '0';
+                pipeline_done_latched <= '0';
+                consumer_done_toggle_sys <= '0';
             else
                 start_btn_sys_meta <= start_btn;
                 start_btn_sys      <= start_btn_sys_meta;
@@ -442,8 +524,9 @@ begin
                     runtime_error_latched <= '1';
                 end if;
 
-                if dump_done = '1' then
-                    dump_done_latched <= '1';
+                if dump_done = '1' or detector_done = '1' then
+                    pipeline_done_latched <= '1';
+                    consumer_done_toggle_sys <= not consumer_done_toggle_sys;
                 end if;
             end if;
         end if;
@@ -483,8 +566,11 @@ begin
                 start_btn_pclk      <= '0';
                 start_btn_pclk_prev <= '0';
                 capture_arm_pulse   <= '0';
-                dump_done_toggle_meta <= '0';
-                dump_done_toggle_pclk <= '0';
+                sw8_pclk_meta <= '0';
+                sw8_pclk_sync <= '0';
+                capture_diag_mode_pclk <= '0';
+                consumer_done_toggle_meta <= '0';
+                consumer_done_toggle_pclk <= '0';
             else
                 init_done_pclk_meta <= init_done_latched;
                 init_done_pclk      <= init_done_pclk_meta;
@@ -494,8 +580,15 @@ begin
                 start_btn_pclk      <= start_btn_pclk_meta;
                 start_btn_pclk_prev <= start_btn_pclk;
 
-                dump_done_toggle_meta <= dump_done_toggle;
-                dump_done_toggle_pclk <= dump_done_toggle_meta;
+                sw8_pclk_meta <= sw(8);
+                sw8_pclk_sync <= sw8_pclk_meta;
+
+                consumer_done_toggle_meta <= consumer_done_toggle_sys;
+                consumer_done_toggle_pclk <= consumer_done_toggle_meta;
+
+                if capture_arm_pulse = '1' then
+                    capture_diag_mode_pclk <= sw8_pclk_sync;
+                end if;
 
                 capture_arm_pulse <= '0';
 
@@ -543,7 +636,7 @@ begin
             rst  => rst,
 
             arm_capture      => capture_arm_pulse,
-            dump_done_toggle => dump_done_toggle_pclk,
+            dump_done_toggle => consumer_done_toggle_pclk,
 
             pixel_y      => capture_pixel_y,
             pixel_valid  => capture_pixel_valid,
@@ -584,9 +677,25 @@ begin
             if rst = '1' then
                 frame_ready_toggle_meta <= '0';
                 frame_ready_toggle_sys  <= '0';
+                frame_ready_toggle_prev_sys <= '0';
+                capture_diag_mode_meta <= '0';
+                capture_diag_mode_sys <= '0';
+                uart_frame_ready_toggle <= '0';
+                detector_frame_ready_toggle <= '0';
             else
                 frame_ready_toggle_meta <= store_frame_ready_toggle;
                 frame_ready_toggle_sys  <= frame_ready_toggle_meta;
+                capture_diag_mode_meta <= capture_diag_mode_pclk;
+                capture_diag_mode_sys <= capture_diag_mode_meta;
+
+                if frame_ready_toggle_sys /= frame_ready_toggle_prev_sys then
+                    frame_ready_toggle_prev_sys <= frame_ready_toggle_sys;
+                    if capture_diag_mode_sys = '1' then
+                        uart_frame_ready_toggle <= not uart_frame_ready_toggle;
+                    else
+                        detector_frame_ready_toggle <= not detector_frame_ready_toggle;
+                    end if;
+                end if;
             end if;
         end if;
     end process;
@@ -601,9 +710,9 @@ begin
             clk => clk,
             rst => rst,
 
-            frame_ready_toggle => frame_ready_toggle_sys,
+            frame_ready_toggle => uart_frame_ready_toggle,
 
-            rd_addr => fb_rd_addr,
+            rd_addr => uart_fb_rd_addr,
             rd_data => fb_rd_data,
 
             uart_busy  => uart_busy,
@@ -614,6 +723,35 @@ begin
             dump_busy        => dump_busy,
             dump_done        => dump_done,
             dump_done_toggle => dump_done_toggle
+        );
+
+    u_frame_star_centroid : frame_star_centroid
+        generic map (
+            FRAME_WIDTH => FRAME_WIDTH,
+            FRAME_HEIGHT => FRAME_HEIGHT,
+            ADDR_WIDTH => ADDR_WIDTH,
+            MAX_LABELS => STAR_MAX_LABELS,
+            MIN_AREA => STAR_MIN_AREA,
+            MAX_AREA => STAR_MAX_AREA
+        )
+        port map (
+            clk => clk,
+            rst => rst,
+            frame_ready_toggle => detector_frame_ready_toggle,
+            threshold => STAR_THRESHOLD,
+            rd_addr => detector_fb_rd_addr,
+            rd_data => fb_rd_data,
+            star_valid => detector_star_valid,
+            star_index => detector_star_index,
+            centroid_x_q8_8 => detector_centroid_x_q8_8,
+            centroid_y_q8_8 => detector_centroid_y_q8_8,
+            star_area => detector_star_area,
+            star_intensity => detector_star_intensity,
+            star_count => detector_star_count,
+            process_busy => detector_busy,
+            process_done => detector_done,
+            process_done_toggle => detector_done_toggle,
+            overflow => detector_overflow
         );
 
     uart_tx_block : block

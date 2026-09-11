@@ -24,6 +24,7 @@ proc run_cmd {cmd_list} {
     if {$result != 0} {
         error "Command failed: $cmd_list"
     }
+    return $output
 }
 
 set rtl_files [list \
@@ -36,6 +37,8 @@ set rtl_files [list \
     [file join $repo_root "Configuracion camara" "rtl" "frame_capture_store.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "framebuffer_y_bram.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_uart_dump.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "unsigned_iterative_divider.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "frame_star_centroid.vhd"] \
     [file join $repo_root "Top" "rtl" "star_tracker_top.vhd"] \
 ]
 
@@ -74,6 +77,11 @@ foreach signal {
     /tb_star_tracker_top/uut/fb_rd_data /tb_star_tracker_top/uut/capture_frame_done
     /tb_star_tracker_top/uut/store_frame_ready /tb_star_tracker_top/uut/store_frame_ready_toggle
     /tb_star_tracker_top/uut/capture_overflow /tb_star_tracker_top/uut/store_overflow
+    /tb_star_tracker_top/uut/capture_diag_mode_sys
+    /tb_star_tracker_top/uut/uart_frame_ready_toggle
+    /tb_star_tracker_top/uut/detector_frame_ready_toggle
+    /tb_star_tracker_top/uut/detector_busy /tb_star_tracker_top/uut/detector_done
+    /tb_star_tracker_top/uut/detector_star_valid /tb_star_tracker_top/uut/detector_star_count
     /tb_star_tracker_top/uut/dump_busy /tb_star_tracker_top/uut/dump_done
     /tb_star_tracker_top/uut/uart_start /tb_star_tracker_top/uut/uart_data
     /tb_star_tracker_top/uut/uart_busy /tb_star_tracker_top/uut/uart_done
@@ -93,13 +101,18 @@ puts $fh {set g5 [add_wave_group {5. Framebuffer BRAM}]}
 puts $fh {add_wave -into $g5 /tb_star_tracker_top/uut/fb_wr_en /tb_star_tracker_top/uut/fb_wr_addr /tb_star_tracker_top/uut/fb_wr_data /tb_star_tracker_top/uut/capture_frame_done /tb_star_tracker_top/uut/store_frame_ready /tb_star_tracker_top/uut/fb_rd_addr /tb_star_tracker_top/uut/fb_rd_data /tb_star_tracker_top/uut/capture_overflow /tb_star_tracker_top/uut/store_overflow}
 puts $fh {set g6 [add_wave_group {6. Paquete UART}]}
 puts $fh {add_wave -into $g6 /tb_star_tracker_top/uut/dump_busy /tb_star_tracker_top/uut/dump_done /tb_star_tracker_top/uut/uart_start /tb_star_tracker_top/uut/uart_data /tb_star_tracker_top/uut/uart_busy /tb_star_tracker_top/uut/uart_done /tb_star_tracker_top/uart_tx_line /tb_star_tracker_top/uart_done_seen}
+puts $fh {set g7 [add_wave_group {7. Seleccion de consumidor post BRAM}]}
+puts $fh {add_wave -into $g7 /tb_star_tracker_top/uut/capture_diag_mode_sys /tb_star_tracker_top/uut/uart_frame_ready_toggle /tb_star_tracker_top/uut/detector_frame_ready_toggle /tb_star_tracker_top/uut/detector_busy /tb_star_tracker_top/uut/detector_done /tb_star_tracker_top/uut/detector_star_valid /tb_star_tracker_top/uut/detector_star_count}
 puts $fh {save_wave_config $wave_cfg}
 puts $fh {run all}
 puts $fh {save_wave_config $wave_cfg}
 puts $fh {quit}
 close $fh
 
-run_cmd [list cmd /c $xsim $snapshot -tclbatch $run_tcl -wdb $wdb_file]
+set sim_output [run_cmd [list cmd /c $xsim $snapshot -tclbatch $run_tcl -wdb $wdb_file]]
+if {![regexp {PASS_TOP_UART_FULL} $sim_output]} {
+    error "PASS_TOP_UART_FULL not found in simulator output"
+}
 
 puts ""
 puts "============================================================"
