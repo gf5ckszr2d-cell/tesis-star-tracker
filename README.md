@@ -12,7 +12,8 @@ Repositorio de tesis para un prototipo de star tracker en FPGA. El alcance actua
 - Resolucion actual: QQVGA `160x120`.
 - Formato de entrada de camara: YUV `4:2:2`.
 - Top global oficial: `Top/rtl/star_tracker_top.vhd`.
-- Proyecto Vivado oficial: `Top/vivado_projects/star_tracker_top/star_tracker_top.xpr`.
+- Fuente reproducible oficial de Vivado: scripts TCL y archivos RTL/XDC versionados.
+- Proyecto GUI regenerable: `Top/vivado_projects/star_tracker_top/star_tracker_top.xpr`.
 - Bitstream oficial: `Top/bitstreams/star_tracker_top_nexys.bit`.
 
 Flujo validado:
@@ -76,14 +77,14 @@ Mapeo fisico ordenado para el header 2x9 de la OV7670:
 | Fila OV7670 | Lado izquierdo | Nexys | Lado derecho | Nexys |
 |---:|---|---|---|---|
 | 1 | 3.3V | 3.3V | GND | GND |
-| 2 | SCL | JA1 | SDA | JA7 |
-| 3 | VS | JA2 | HS/HREF | JA8 |
-| 4 | PCLK | JA3 | XCLK | JA9 |
-| 5 | D7 | JA4 | D6 | JA10 |
-| 6 | D5 | JB1 | D4 | JB7 |
-| 7 | D3 | JB2 | D2 | JB8 |
-| 8 | D1 | JB3 | D0 | JB9 |
-| 9 | RESET | JB4 | PWDN | JB10 |
+| 2 | SCL | JA1 | SDA | JB1 |
+| 3 | VS | JA2 | HS/HREF | JB2 |
+| 4 | PCLK | JB10 | XCLK | JB3 |
+| 5 | D7 | JA4 | D6 | JB4 |
+| 6 | D5 | JA7 | D4 | JB7 |
+| 7 | D3 | JA8 | D2 | JB8 |
+| 8 | D1 | JA9 | D0 | JB9 |
+| 9 | RESET | JA10 | PWDN | JA3 |
 
 Entradas/salidas de usuario:
 
@@ -133,7 +134,7 @@ Para recrear el proyecto oficial:
 vivado -mode batch -source "Top/vivado_projects/create_star_tracker_top_project.tcl"
 ```
 
-Para generar el bitstream oficial:
+Para generar el bitstream oficial directamente desde RTL/XDC, sin depender del estado local del `.xpr`:
 
 ```powershell
 vivado -mode batch -source "Top/vivado_projects/build_star_tracker_top_bitstream.tcl"
@@ -144,6 +145,11 @@ El resultado se copia a:
 ```text
 Top/bitstreams/star_tracker_top_nexys.bit
 ```
+
+Antes de programar la placa con este bitstream, intercambiar fisicamente `PCLK` y `PWDN`:
+`PCLK` pasa a `JB10/H16` y `PWDN` a `JA3/E18`; `HS/HREF` permanece en `JB2/F16`.
+`JB10/H16` es el lado P de un par `MRCC`; por eso el reloj de pixel ya no necesita
+`CLOCK_DEDICATED_ROUTE FALSE`.
 
 ## Formato UART
 

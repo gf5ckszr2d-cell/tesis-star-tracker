@@ -85,6 +85,8 @@ architecture rtl of star_tracker_top is
     signal init_error_latched : std_logic := '0';
     signal init_current_step  : unsigned(4 downto 0);
     signal init_start         : std_logic;
+    signal start_btn_sys_meta : std_logic := '0';
+    signal start_btn_sys      : std_logic := '0';
 
     signal capture_rst          : std_logic;
     signal capture_pixel_y      : std_logic_vector(7 downto 0);
@@ -129,6 +131,18 @@ architecture rtl of star_tracker_top is
     signal uart_busy  : std_logic;
     signal uart_done  : std_logic;
     signal uart_tx_line : std_logic;
+
+    attribute ASYNC_REG : string;
+    attribute ASYNC_REG of start_btn_sys_meta : signal is "TRUE";
+    attribute ASYNC_REG of start_btn_sys : signal is "TRUE";
+    attribute ASYNC_REG of init_done_pclk_meta : signal is "TRUE";
+    attribute ASYNC_REG of init_done_pclk : signal is "TRUE";
+    attribute ASYNC_REG of start_btn_pclk_meta : signal is "TRUE";
+    attribute ASYNC_REG of start_btn_pclk : signal is "TRUE";
+    attribute ASYNC_REG of dump_done_toggle_meta : signal is "TRUE";
+    attribute ASYNC_REG of dump_done_toggle_pclk : signal is "TRUE";
+    attribute ASYNC_REG of frame_ready_toggle_meta : signal is "TRUE";
+    attribute ASYNC_REG of frame_ready_toggle_sys : signal is "TRUE";
 
     component ov7670_xclk_gen
         port (
@@ -329,7 +343,7 @@ begin
     uart_tx   <= uart_tx_line;
 
     xclk_ready <= '1' when SIM_BYPASS_XCLK_LOCK else xclk_locked;
-    init_start <= start_btn and xclk_ready and not init_done_latched;
+    init_start <= start_btn_sys and xclk_ready and not init_done_latched;
     capture_rst <= rst or not init_done_pclk or not store_capture_busy;
     i2c_runtime_owner <= init_done_latched and runtime_busy;
 
@@ -406,11 +420,16 @@ begin
     begin
         if rising_edge(clk) then
             if rst = '1' then
+                start_btn_sys_meta <= '0';
+                start_btn_sys      <= '0';
                 init_done_latched  <= '0';
                 init_error_latched <= '0';
                 runtime_error_latched <= '0';
                 dump_done_latched  <= '0';
             else
+                start_btn_sys_meta <= start_btn;
+                start_btn_sys      <= start_btn_sys_meta;
+
                 if init_done = '1' then
                     init_done_latched <= '1';
                 end if;

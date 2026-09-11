@@ -1,6 +1,10 @@
 ## Nexys A7-100T constraints for star_tracker_top.
 ## Main hardware flow: OV7670 -> Y capture -> BRAM -> USB UART.
 
+## Nexys A7 configuration bank voltage (Digilent board: 3.3 V configuration I/O).
+set_property CFGBVS VCCO [current_design]
+set_property CONFIG_VOLTAGE 3.3 [current_design]
+
 ## 100 MHz system clock
 set_property -dict { PACKAGE_PIN E3 IOSTANDARD LVCMOS33 } [get_ports { clk }]
 create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports { clk }]
@@ -34,8 +38,8 @@ set_property -dict { PACKAGE_PIN R17 IOSTANDARD LVCMOS33 } [get_ports { sw[4] }]
 set_property -dict { PACKAGE_PIN T18 IOSTANDARD LVCMOS33 } [get_ports { sw[5] }]
 set_property -dict { PACKAGE_PIN U18 IOSTANDARD LVCMOS33 } [get_ports { sw[6] }]
 set_property -dict { PACKAGE_PIN R13 IOSTANDARD LVCMOS33 } [get_ports { sw[7] }]
-set_property -dict { PACKAGE_PIN T8  IOSTANDARD LVCMOS33 } [get_ports { sw[8] }]
-set_property -dict { PACKAGE_PIN U8  IOSTANDARD LVCMOS33 } [get_ports { sw[9] }]
+set_property -dict { PACKAGE_PIN T8  IOSTANDARD LVCMOS18 } [get_ports { sw[8] }]
+set_property -dict { PACKAGE_PIN U8  IOSTANDARD LVCMOS18 } [get_ports { sw[9] }]
 set_property -dict { PACKAGE_PIN R16 IOSTANDARD LVCMOS33 } [get_ports { sw[10] }]
 set_property -dict { PACKAGE_PIN T13 IOSTANDARD LVCMOS33 } [get_ports { sw[11] }]
 set_property -dict { PACKAGE_PIN H6  IOSTANDARD LVCMOS33 } [get_ports { sw[12] }]
@@ -48,7 +52,7 @@ set_property -dict { PACKAGE_PIN V10 IOSTANDARD LVCMOS33 } [get_ports { sw[15] }
 ## JA row pairs: JA1/JA7, JA2/JA8, JA3/JA9, JA4/JA10.
 set_property -dict { PACKAGE_PIN C17 IOSTANDARD LVCMOS33 } [get_ports { SCL }]          ;# JA1  -> SCL
 set_property -dict { PACKAGE_PIN D18 IOSTANDARD LVCMOS33 } [get_ports { cam_vsync }]    ;# JA2  -> VS
-set_property -dict { PACKAGE_PIN E18 IOSTANDARD LVCMOS33 } [get_ports { cam_pclk }]     ;# JA3  -> PCLK/PLK
+set_property -dict { PACKAGE_PIN E18 IOSTANDARD LVCMOS33 } [get_ports { cam_pwdn }]     ;# JA3  -> PWDN
 set_property -dict { PACKAGE_PIN G17 IOSTANDARD LVCMOS33 } [get_ports { cam_data[7] }]  ;# JA4  -> D7
 set_property -dict { PACKAGE_PIN D17 IOSTANDARD LVCMOS33 } [get_ports { cam_data[5] }]  ;# JA7  -> D5
 set_property -dict { PACKAGE_PIN E17 IOSTANDARD LVCMOS33 } [get_ports { cam_data[3] }]  ;# JA8  -> D3
@@ -64,14 +68,20 @@ set_property -dict { PACKAGE_PIN H14 IOSTANDARD LVCMOS33 } [get_ports { cam_data
 set_property -dict { PACKAGE_PIN E16 IOSTANDARD LVCMOS33 } [get_ports { cam_data[4] }]  ;# JB7  -> D4
 set_property -dict { PACKAGE_PIN F13 IOSTANDARD LVCMOS33 } [get_ports { cam_data[2] }]  ;# JB8  -> D2
 set_property -dict { PACKAGE_PIN G13 IOSTANDARD LVCMOS33 } [get_ports { cam_data[0] }]  ;# JB9  -> D0
-set_property -dict { PACKAGE_PIN H16 IOSTANDARD LVCMOS33 } [get_ports { cam_pwdn }]     ;# JB10 -> PWDN
+set_property -dict { PACKAGE_PIN H16 IOSTANDARD LVCMOS33 } [get_ports { cam_pclk }]     ;# JB10 -> PCLK/PLK (P-side MRCC)
 create_clock -add -name cam_pclk_pin -period 41.667 -waveform {0 20.833} [get_ports { cam_pclk }]
-set_clock_groups -asynchronous -group [get_clocks { sys_clk_pin }] -group [get_clocks { cam_pclk_pin }]
 
-## OV7670 PCLK enters through a PMOD pin, which may not be clock-capable on this
-## Nexys A7 package. The camera cable already uses this pinout, so the prototype
-## accepts a non-dedicated route for this external pixel clock.
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets cam_pclk_IBUF]
+## Virtual launch clock: its rising edge is the physical PCLK falling edge.
+create_clock -name cam_pclk_source -period 41.667 -waveform {20.833 41.667}
+set_clock_groups -asynchronous \
+    -group [get_clocks { sys_clk_pin }] \
+    -group [get_clocks { cam_pclk_pin cam_pclk_source }]
+
+## OV7670 outputs change after PCLK falling edge and are captured on the next
+## rising edge. Datasheet limits are 0..5 ns; +/-1 ns includes PMOD cable skew.
+set camera_input_ports [get_ports {cam_data[*] cam_href cam_vsync}]
+set_input_delay -clock [get_clocks { cam_pclk_source }] -min -1.000 $camera_input_ports
+set_input_delay -clock [get_clocks { cam_pclk_source }] -max  6.000 $camera_input_ports
 
 ## USB-RS232 UART TX
 set_property -dict { PACKAGE_PIN D4 IOSTANDARD LVCMOS33 } [get_ports { uart_tx }]

@@ -72,6 +72,10 @@ architecture rtl of ov7670_runtime_config is
     signal done_reg  : std_logic := '0';
     signal error_reg : std_logic := '0';
 
+    attribute ASYNC_REG : string;
+    attribute ASYNC_REG of btn_meta : signal is "TRUE";
+    attribute ASYNC_REG of btn_sync : signal is "TRUE";
+
     function write_count_for_param(sel : std_logic_vector(1 downto 0)) return integer is
     begin
         if sel = "01" or sel = "10" then
