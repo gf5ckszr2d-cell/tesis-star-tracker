@@ -26,6 +26,7 @@ Flujo normal implementado:
 ```text
 init SCCB/I2C -> XCLK -> captura OV7670 -> extraccion Y -> BRAM
 -> umbral -> componentes 8-conectados -> centroides Q8.8
+-> lista indexada de hasta 64 estrellas
 ```
 
 Flujo de diagnostico de captura:
@@ -58,8 +59,10 @@ El PASS esperado del test global UART incluye:
 - `Configuracion camara/rtl/ov7670_capture_y_stream.vhd`: capturador oficial por FSM sincronizado con VSYNC.
 - `Configuracion camara/rtl/frame_uart_dump.vhd`: volcado de frame por UART.
 - `Configuracion camara/rtl/frame_star_centroid.vhd`: deteccion y centroides post-BRAM.
+- `Configuracion camara/rtl/star_list_buffer.vhd`: almacenamiento RTL inferido de estrellas por frame.
 - `Configuracion camara/rtl/unsigned_iterative_divider.vhd`: division secuencial para Q8.8.
 - `Scripts/xsim_frame_star_centroid.tcl`: prueba reproducible del detector.
+- `Scripts/xsim_star_list_buffer.tcl`: prueba unitaria reproducible de la lista.
 - `Scripts/xsim_top_detector_bram.tcl`: prueba integrada del modo normal con `SW8=0`.
 
 Antes de modificar modulos RTL, consultar primero `README.md`, `Docs/` y los scripts TCL existentes

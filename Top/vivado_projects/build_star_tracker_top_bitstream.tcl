@@ -22,6 +22,7 @@ set rtl_files [list \
     [file join $repo_root "Configuracion camara" "rtl" "frame_uart_dump.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "unsigned_iterative_divider.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_star_centroid.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "star_list_buffer.vhd"] \
     [file join $repo_root "Top" "rtl" "star_tracker_top.vhd"] \
 ]
 

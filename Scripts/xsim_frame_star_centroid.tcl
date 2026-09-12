@@ -29,6 +29,7 @@ proc run_cmd {cmd_list} {
 set rtl_files [list \
     [file join $repo_root "Configuracion camara" "rtl" "unsigned_iterative_divider.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_star_centroid.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "star_list_buffer.vhd"] \
 ]
 set tb_file [file join $repo_root "Configuracion camara" "tb" "tb_frame_star_centroid.vhd"]
 

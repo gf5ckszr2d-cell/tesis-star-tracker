@@ -47,6 +47,7 @@ architecture rtl of star_tracker_top is
     constant FRAME_PIXELS : integer := FRAME_WIDTH * FRAME_HEIGHT;
     constant STAR_THRESHOLD : std_logic_vector(7 downto 0) := x"2D";
     constant STAR_MAX_LABELS : integer := 64;
+    constant STAR_MAX_STARS : integer := 64;
     constant STAR_MIN_AREA : integer := 2;
     constant STAR_MAX_AREA : integer := 500;
 
@@ -154,6 +155,16 @@ architecture rtl of star_tracker_top is
     signal detector_star_intensity : unsigned(23 downto 0);
     signal detector_star_count : unsigned(7 downto 0);
 
+    signal list_rd_index : unsigned(7 downto 0) := (others => '0');
+    signal list_rd_valid : std_logic;
+    signal list_centroid_x_q8_8 : unsigned(17 downto 0);
+    signal list_centroid_y_q8_8 : unsigned(17 downto 0);
+    signal list_star_area : unsigned(14 downto 0);
+    signal list_star_intensity : unsigned(23 downto 0);
+    signal list_star_count : unsigned(7 downto 0);
+    signal list_ready : std_logic;
+    signal list_overflow : std_logic;
+
     signal uart_start : std_logic;
     signal uart_data  : std_logic_vector(7 downto 0);
     signal uart_busy  : std_logic;
@@ -187,6 +198,15 @@ architecture rtl of star_tracker_top is
     attribute MARK_DEBUG of detector_star_area : signal is "TRUE";
     attribute MARK_DEBUG of detector_star_intensity : signal is "TRUE";
     attribute MARK_DEBUG of detector_star_count : signal is "TRUE";
+    attribute MARK_DEBUG of list_rd_index : signal is "TRUE";
+    attribute MARK_DEBUG of list_rd_valid : signal is "TRUE";
+    attribute MARK_DEBUG of list_centroid_x_q8_8 : signal is "TRUE";
+    attribute MARK_DEBUG of list_centroid_y_q8_8 : signal is "TRUE";
+    attribute MARK_DEBUG of list_star_area : signal is "TRUE";
+    attribute MARK_DEBUG of list_star_intensity : signal is "TRUE";
+    attribute MARK_DEBUG of list_star_count : signal is "TRUE";
+    attribute MARK_DEBUG of list_ready : signal is "TRUE";
+    attribute MARK_DEBUG of list_overflow : signal is "TRUE";
 
     component ov7670_xclk_gen
         port (
@@ -387,6 +407,32 @@ architecture rtl of star_tracker_top is
         );
     end component;
 
+    component star_list_buffer
+        generic (
+            MAX_STARS : positive := 64
+        );
+        port (
+            clk : in std_logic;
+            rst : in std_logic;
+            frame_start_toggle : in std_logic;
+            frame_done : in std_logic;
+            star_valid : in std_logic;
+            centroid_x_q8_8 : in unsigned(17 downto 0);
+            centroid_y_q8_8 : in unsigned(17 downto 0);
+            star_area : in unsigned(14 downto 0);
+            star_intensity : in unsigned(23 downto 0);
+            rd_index : in unsigned(7 downto 0);
+            rd_valid : out std_logic;
+            rd_centroid_x_q8_8 : out unsigned(17 downto 0);
+            rd_centroid_y_q8_8 : out unsigned(17 downto 0);
+            rd_star_area : out unsigned(14 downto 0);
+            rd_star_intensity : out unsigned(23 downto 0);
+            star_count : out unsigned(7 downto 0);
+            list_ready : out std_logic;
+            overflow : out std_logic
+        );
+    end component;
+
     component ov7670_runtime_config
         port (
             clk : in std_logic;
@@ -435,9 +481,10 @@ begin
     led_read_data <= capture_pixel_y;
     busy          <= init_busy or runtime_busy or i2c_busy or store_capture_busy or
                      dump_busy or uart_busy or detector_busy;
-    ok            <= init_done_latched and pipeline_done_latched;
+    ok            <= init_done_latched and pipeline_done_latched and
+                     (capture_diag_mode_sys or list_ready);
     fail          <= init_error_latched or runtime_error_latched or capture_overflow or
-                     store_overflow or detector_overflow;
+                     store_overflow or detector_overflow or list_overflow;
     pixel_valid   <= capture_pixel_valid;
     frame_done    <= capture_frame_done;
 
@@ -753,6 +800,46 @@ begin
             process_done_toggle => detector_done_toggle,
             overflow => detector_overflow
         );
+
+    u_star_list_buffer : star_list_buffer
+        generic map (
+            MAX_STARS => STAR_MAX_STARS
+        )
+        port map (
+            clk => clk,
+            rst => rst,
+            frame_start_toggle => detector_frame_ready_toggle,
+            frame_done => detector_done,
+            star_valid => detector_star_valid,
+            centroid_x_q8_8 => detector_centroid_x_q8_8,
+            centroid_y_q8_8 => detector_centroid_y_q8_8,
+            star_area => detector_star_area,
+            star_intensity => detector_star_intensity,
+            rd_index => list_rd_index,
+            rd_valid => list_rd_valid,
+            rd_centroid_x_q8_8 => list_centroid_x_q8_8,
+            rd_centroid_y_q8_8 => list_centroid_y_q8_8,
+            rd_star_area => list_star_area,
+            rd_star_intensity => list_star_intensity,
+            star_count => list_star_count,
+            list_ready => list_ready,
+            overflow => list_overflow
+        );
+
+    -- Recorre continuamente las entradas validas para dejarlas observables
+    -- en ILA y conservar una interfaz RTL real para la siguiente etapa.
+    process(clk)
+    begin
+        if rising_edge(clk) then
+            if rst = '1' or list_ready = '0' or list_star_count = 0 then
+                list_rd_index <= (others => '0');
+            elsif to_integer(list_rd_index) + 1 < to_integer(list_star_count) then
+                list_rd_index <= list_rd_index + 1;
+            else
+                list_rd_index <= (others => '0');
+            end if;
+        end if;
+    end process;
 
     uart_tx_block : block
         component uart_tx

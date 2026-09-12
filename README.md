@@ -19,7 +19,7 @@ Repositorio de tesis para un prototipo de star tracker en FPGA. El alcance actua
 Flujos implementados:
 
 ```text
-SW8=0: OV7670 -> captura Y -> BRAM -> umbral -> componentes 8-conectados -> centroides
+SW8=0: OV7670 -> captura Y -> BRAM -> umbral -> componentes 8-conectados -> centroides -> lista de estrellas
 SW8=1: OV7670 -> captura Y -> BRAM -> frame_uart_dump -> uart_tx USB -> fin
 ```
 
@@ -44,7 +44,8 @@ La BRAM es la frontera: primero se almacena el frame completo y solo despues lo 
 |   |   |-- framebuffer_y_bram.vhd
 |   |   |-- frame_uart_dump.vhd
 |   |   |-- unsigned_iterative_divider.vhd
-|   |   `-- frame_star_centroid.vhd
+|   |   |-- frame_star_centroid.vhd
+|   |   `-- star_list_buffer.vhd
 |   |-- tb/
 |   `-- scripts/
 |-- Top/
@@ -71,6 +72,7 @@ La BRAM es la frontera: primero se almacena el frame completo y solo despues lo 
 - `frame_uart_dump`: lee la BRAM y genera el paquete binario UART.
 - `unsigned_iterative_divider`: divisor secuencial usado por el calculo de centroides.
 - `frame_star_centroid`: recorre un frame completo, aplica umbral, etiqueta componentes 8-conectados y emite centroides ponderados en Q8.8.
+- `star_list_buffer`: almacena hasta 64 resultados por frame en memoria RTL inferida y permite leerlos por indice.
 - `star_tracker_top`: integra inicializacion, captura y almacenamiento; despues dirige la lectura de BRAM al detector o al volcado UART segun `SW8`.
 
 ## Mapeo Nexys A7-100T y OV7670
@@ -98,7 +100,7 @@ Entradas/salidas de usuario:
 - `SW8=0`: modo normal; ejecuta deteccion y centroides en el FPGA despues de capturar el frame.
 - `SW8=1`: modo diagnostico; corta el pipeline despues de captura y envia solo el frame por UART.
 - `ok`: indica inicializacion y consumidor del frame completados.
-- `fail`: indica error de inicializacion, captura, almacenamiento o desborde de etiquetas.
+- `fail`: indica error de inicializacion, captura, almacenamiento, etiquetas o capacidad de la lista.
 - `busy`: indica actividad de init, I2C, captura, detector, dump o UART.
 - `led_read_data[7:0]`: muestra el ultimo byte `Y` capturado.
 
@@ -128,6 +130,7 @@ vivado -mode batch -source "Protocolo de comunicacion/scripts/xsim_i2c_master.tc
 vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_init_config.tcl"
 vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_xclk_gen.tcl"
 vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_capture_y_stream.tcl"
+vivado -mode batch -source "Scripts/xsim_star_list_buffer.tcl"
 vivado -mode batch -source "Scripts/xsim_frame_star_centroid.tcl"
 vivado -mode batch -source "Scripts/xsim_top_detector_bram.tcl"
 vivado -mode batch -source "Scripts/xsim_top_uart_full.tcl"
@@ -147,7 +150,18 @@ centroid_x_q8_8 = (sum(x * Y) << 8) / sum(Y)
 centroid_y_q8_8 = (sum(y * Y) << 8) / sum(Y)
 ```
 
-Estos resultados permanecen como interfaz interna para la siguiente etapa VHDL y estan preservados para depuracion ILA. No se conectan al UART, de modo que el hito de captura `STY1` queda congelado.
+Cada pulso `star_valid` se guarda en `star_list_buffer`. Cada entrada ocupa 75 bits:
+
+```text
+[74:57] centroide X Q8.8 (18 bits)
+[56:39] centroide Y Q8.8 (18 bits)
+[38:24] area               (15 bits)
+[23:0]  intensidad         (24 bits)
+```
+
+La lista tiene 64 entradas y lectura sincrona por indice, con un ciclo de latencia. Un nuevo frame pone `star_count=0` y hace no validas las entradas anteriores sin imponer un borrado masivo de la memoria. Al finalizar, `list_ready` valida `star_count` y las lecturas. Si llega una estrella 65, `overflow` se activa y no se escribe fuera de rango.
+
+Los resultados permanecen como interfaz interna para la siguiente etapa VHDL y estan preservados para depuracion ILA. No se conectan al UART, de modo que el hito de captura `STY1` queda congelado.
 
 ## Proyecto Vivado y bitstream
 
@@ -191,5 +205,5 @@ El frame se transmite por `uart_tx` a `921600` baud, 8N1, como paquete binario:
 
 - Validacion fisica del modo normal de deteccion y centroides en placa.
 - Ajuste experimental del umbral y filtros de area con imagenes reales.
-- Conectar la interfaz interna de centroides a la siguiente etapa VHDL.
+- Consumir la lista indexada desde la futura etapa de identificacion VHDL.
 - Identificacion estelar y estimacion de actitud.

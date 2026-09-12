@@ -13,7 +13,7 @@
    </zoom_setting>
    <column_width_setting>
    </column_width_setting>
-   <WVObjectSize size="7" />
+   <WVObjectSize size="8" />
    <wvobject fp_name="group1" type="group">
       <obj_property name="label">1. Control y resultado</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -260,6 +260,46 @@
       <wvobject fp_name="/tb_star_tracker_top/uut/detector_star_count" type="array">
          <obj_property name="ElementShortName">detector_star_count[7:0]</obj_property>
          <obj_property name="ObjectShortName">detector_star_count[7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group63" type="group">
+      <obj_property name="label">8. Lista de estrellas</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_rd_index" type="array">
+         <obj_property name="ElementShortName">list_rd_index[7:0]</obj_property>
+         <obj_property name="ObjectShortName">list_rd_index[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_rd_valid" type="logic">
+         <obj_property name="ElementShortName">list_rd_valid</obj_property>
+         <obj_property name="ObjectShortName">list_rd_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_centroid_x_q8_8" type="array">
+         <obj_property name="ElementShortName">list_centroid_x_q8_8[17:0]</obj_property>
+         <obj_property name="ObjectShortName">list_centroid_x_q8_8[17:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_centroid_y_q8_8" type="array">
+         <obj_property name="ElementShortName">list_centroid_y_q8_8[17:0]</obj_property>
+         <obj_property name="ObjectShortName">list_centroid_y_q8_8[17:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_star_area" type="array">
+         <obj_property name="ElementShortName">list_star_area[14:0]</obj_property>
+         <obj_property name="ObjectShortName">list_star_area[14:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_star_intensity" type="array">
+         <obj_property name="ElementShortName">list_star_intensity[23:0]</obj_property>
+         <obj_property name="ObjectShortName">list_star_intensity[23:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_star_count" type="array">
+         <obj_property name="ElementShortName">list_star_count[7:0]</obj_property>
+         <obj_property name="ObjectShortName">list_star_count[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_ready" type="logic">
+         <obj_property name="ElementShortName">list_ready</obj_property>
+         <obj_property name="ObjectShortName">list_ready</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_star_tracker_top/uut/list_overflow" type="logic">
+         <obj_property name="ElementShortName">list_overflow</obj_property>
+         <obj_property name="ObjectShortName">list_overflow</obj_property>
       </wvobject>
    </wvobject>
 </wave_config>

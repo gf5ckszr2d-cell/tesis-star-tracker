@@ -39,6 +39,7 @@ set rtl_files [list \
     [file join $repo_root "Configuracion camara" "rtl" "frame_uart_dump.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "unsigned_iterative_divider.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_star_centroid.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "star_list_buffer.vhd"] \
     [file join $repo_root "Top" "rtl" "star_tracker_top.vhd"] \
 ]
 
@@ -82,6 +83,11 @@ foreach signal {
     /tb_star_tracker_top/uut/detector_frame_ready_toggle
     /tb_star_tracker_top/uut/detector_busy /tb_star_tracker_top/uut/detector_done
     /tb_star_tracker_top/uut/detector_star_valid /tb_star_tracker_top/uut/detector_star_count
+    /tb_star_tracker_top/uut/list_rd_index /tb_star_tracker_top/uut/list_rd_valid
+    /tb_star_tracker_top/uut/list_centroid_x_q8_8 /tb_star_tracker_top/uut/list_centroid_y_q8_8
+    /tb_star_tracker_top/uut/list_star_area /tb_star_tracker_top/uut/list_star_intensity
+    /tb_star_tracker_top/uut/list_star_count /tb_star_tracker_top/uut/list_ready
+    /tb_star_tracker_top/uut/list_overflow
     /tb_star_tracker_top/uut/dump_busy /tb_star_tracker_top/uut/dump_done
     /tb_star_tracker_top/uut/uart_start /tb_star_tracker_top/uut/uart_data
     /tb_star_tracker_top/uut/uart_busy /tb_star_tracker_top/uut/uart_done
@@ -103,6 +109,8 @@ puts $fh {set g6 [add_wave_group {6. Paquete UART}]}
 puts $fh {add_wave -into $g6 /tb_star_tracker_top/uut/dump_busy /tb_star_tracker_top/uut/dump_done /tb_star_tracker_top/uut/uart_start /tb_star_tracker_top/uut/uart_data /tb_star_tracker_top/uut/uart_busy /tb_star_tracker_top/uut/uart_done /tb_star_tracker_top/uart_tx_line /tb_star_tracker_top/uart_done_seen}
 puts $fh {set g7 [add_wave_group {7. Seleccion de consumidor post BRAM}]}
 puts $fh {add_wave -into $g7 /tb_star_tracker_top/uut/capture_diag_mode_sys /tb_star_tracker_top/uut/uart_frame_ready_toggle /tb_star_tracker_top/uut/detector_frame_ready_toggle /tb_star_tracker_top/uut/detector_busy /tb_star_tracker_top/uut/detector_done /tb_star_tracker_top/uut/detector_star_valid /tb_star_tracker_top/uut/detector_star_count}
+puts $fh {set g8 [add_wave_group {8. Lista de estrellas}]}
+puts $fh {add_wave -into $g8 /tb_star_tracker_top/uut/list_rd_index /tb_star_tracker_top/uut/list_rd_valid /tb_star_tracker_top/uut/list_centroid_x_q8_8 /tb_star_tracker_top/uut/list_centroid_y_q8_8 /tb_star_tracker_top/uut/list_star_area /tb_star_tracker_top/uut/list_star_intensity /tb_star_tracker_top/uut/list_star_count /tb_star_tracker_top/uut/list_ready /tb_star_tracker_top/uut/list_overflow}
 puts $fh {save_wave_config $wave_cfg}
 puts $fh {run all}
 puts $fh {save_wave_config $wave_cfg}

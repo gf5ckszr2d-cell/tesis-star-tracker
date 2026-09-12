@@ -50,6 +50,15 @@ architecture sim of tb_frame_star_centroid is
     signal process_done_toggle : std_logic;
     signal overflow : std_logic;
     signal observed_stars : integer range 0 to 2 := 0;
+    signal list_rd_index : unsigned(7 downto 0) := (others => '0');
+    signal list_rd_valid : std_logic;
+    signal list_rd_centroid_x_q8_8 : unsigned(17 downto 0);
+    signal list_rd_centroid_y_q8_8 : unsigned(17 downto 0);
+    signal list_rd_star_area : unsigned(14 downto 0);
+    signal list_rd_star_intensity : unsigned(23 downto 0);
+    signal stored_star_count : unsigned(7 downto 0);
+    signal list_ready : std_logic;
+    signal list_overflow : std_logic;
 
 begin
 
@@ -82,6 +91,31 @@ begin
             process_done => process_done,
             process_done_toggle => process_done_toggle,
             overflow => overflow
+        );
+
+    u_star_list_buffer : entity work.star_list_buffer
+        generic map (
+            MAX_STARS => 8
+        )
+        port map (
+            clk => clk,
+            rst => rst,
+            frame_start_toggle => frame_ready_toggle,
+            frame_done => process_done,
+            star_valid => star_valid,
+            centroid_x_q8_8 => centroid_x_q8_8,
+            centroid_y_q8_8 => centroid_y_q8_8,
+            star_area => star_area,
+            star_intensity => star_intensity,
+            rd_index => list_rd_index,
+            rd_valid => list_rd_valid,
+            rd_centroid_x_q8_8 => list_rd_centroid_x_q8_8,
+            rd_centroid_y_q8_8 => list_rd_centroid_y_q8_8,
+            rd_star_area => list_rd_star_area,
+            rd_star_intensity => list_rd_star_intensity,
+            star_count => stored_star_count,
+            list_ready => list_ready,
+            overflow => list_overflow
         );
 
     bram_read_model : process(clk)
@@ -173,7 +207,40 @@ begin
             report "ERROR: process_done_toggle no cambio"
             severity failure;
 
-        report "PASS_FRAME_STAR_CENTROID: umbral, componentes 8-conectados y centroides Q8.8 correctos";
+        wait until list_ready = '1' for 1 us;
+        assert list_ready = '1'
+            report "ERROR: la lista de estrellas no quedo lista"
+            severity failure;
+        assert list_overflow = '0'
+            report "ERROR: la lista de estrellas marco overflow"
+            severity failure;
+        assert stored_star_count = to_unsigned(2, stored_star_count'length)
+            report "ERROR: star_count almacenado incorrecto"
+            severity failure;
+
+        list_rd_index <= to_unsigned(0, list_rd_index'length);
+        wait until rising_edge(clk);
+        wait for 1 ns;
+        assert list_rd_valid = '1' and
+               list_rd_centroid_x_q8_8 = to_unsigned(426, list_rd_centroid_x_q8_8'length) and
+               list_rd_centroid_y_q8_8 = to_unsigned(384, list_rd_centroid_y_q8_8'length) and
+               list_rd_star_area = to_unsigned(4, list_rd_star_area'length) and
+               list_rd_star_intensity = to_unsigned(720, list_rd_star_intensity'length)
+            report "ERROR: registro 0 de la lista incorrecto"
+            severity failure;
+
+        list_rd_index <= to_unsigned(1, list_rd_index'length);
+        wait until rising_edge(clk);
+        wait for 1 ns;
+        assert list_rd_valid = '1' and
+               list_rd_centroid_x_q8_8 = to_unsigned(1280, list_rd_centroid_x_q8_8'length) and
+               list_rd_centroid_y_q8_8 = to_unsigned(896, list_rd_centroid_y_q8_8'length) and
+               list_rd_star_area = to_unsigned(2, list_rd_star_area'length) and
+               list_rd_star_intensity = to_unsigned(400, list_rd_star_intensity'length)
+            report "ERROR: registro 1 de la lista incorrecto"
+            severity failure;
+
+        report "PASS_FRAME_STAR_CENTROID: deteccion, centroides Q8.8 y lista persistente correctos";
         finish;
     end process;
 

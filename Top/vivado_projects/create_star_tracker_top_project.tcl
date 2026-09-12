@@ -42,6 +42,7 @@ set rtl_files [list \
     [file join $repo_root "Configuracion camara" "rtl" "frame_uart_dump.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "unsigned_iterative_divider.vhd"] \
     [file join $repo_root "Configuracion camara" "rtl" "frame_star_centroid.vhd"] \
+    [file join $repo_root "Configuracion camara" "rtl" "star_list_buffer.vhd"] \
     [file join $repo_root "Top" "rtl" "star_tracker_top.vhd"] \
 ]
 
@@ -54,6 +55,7 @@ set tb_files [list \
     [file join $repo_root "Configuracion camara" "tb" "tb_ov7670_capture_y_stream.vhd"] \
     [file join $repo_root "Configuracion camara" "tb" "tb_framebuffer_y_bram.vhd"] \
     [file join $repo_root "Configuracion camara" "tb" "tb_frame_star_centroid.vhd"] \
+    [file join $repo_root "Configuracion camara" "tb" "tb_star_list_buffer.vhd"] \
     [file join $repo_root "Top" "tb" "tb_star_tracker_top.vhd"] \
 ]
 
