@@ -7,9 +7,9 @@ process.env.RUNTIME_NODE=runtime+'/node/bin/node.exe';
 const {Presentation,PresentationFile}=await import(pathToFileURL(runtime+'/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs'));
 const skill='C:/Users/alexa/.codex/plugins/cache/openai-primary-runtime/presentations/26.1105.12137/skills/presentations';
 const root='C:/Users/alexa/tesis-star-tracker/pruebas_arty_z7/captura_ov7670_qvga';
-const build=root+'/build/ppt_lap',out=root+'/output/LAP_20261110';
+const build=root+'/build/ppt_lap_anexos',out=root+'/output/LAP_20261110';
 await fs.mkdir(out,{recursive:true});await fs.mkdir(build+'/render',{recursive:true});
-const a=JSON.parse(await fs.readFile(build+'/resultados.json','utf8'));
+const a=JSON.parse(await fs.readFile(root+'/build/ppt_lap/resultados.json','utf8'));
 const prior=JSON.parse(await fs.readFile(root+'/build/ensayos_doe/20261110_135729_autonomo/measurements.json','utf8'));
 const photos='C:/Users/alexa/.codex/codex-remote-attachments/01a1c467-ef83-73d0-9580-b977281a3853/6894A6E5-73CC-4CDC-AAB3-59226C56B530';
 const P=Presentation.create({slideSize:{width:1280,height:720}});
@@ -69,10 +69,35 @@ s=slide('Cierre del alcance presentado','Concluyo la caracterización inicial de
 text(s,'D1 · Perfil seleccionado con evidencia física\n\nD2 · Tamaños y centroides caracterizados en PC\n\nD3 · Campo de cinco fuentes separables\n\nD4–D5 · Metas definidas, sin resultados atribuidos\n\nLAP · Criterios y decisiones trazables',64,170,1150,440,32,'#FFFFFF');
 s=slide('Referencias y paquete de evidencias','El paquete adjunto conserva las fotos originales del montaje, las capturas y sus datos sin mejorar artificialmente las imágenes. Incluye el análisis usado en esta presentación y un índice de evidencia. El guion sigue exactamente el orden de las diapositivas. Las referencias bibliográficas apoyan la metodología, mientras que los límites numéricos de aceptación se trazan al archivo de requisitos del proyecto.',Object.values(refs).join('\n')+'\n'+req);
 para(s,'Schulz et al. (2021) · doi:10.3390/s21030907\n\nSun, Xing y You (2013) · doi:10.3390/s130404598\n\nLou et al. (2026) · doi:10.5194/isprs-archives-XLIX-B1-2026-279-2026\n\nProyecto Star Tracker · matrices de requisitos y logs del banco\n\nAdjuntos: guion por diapositiva y evidencias originales',64,165,1152,445,27);
+const annexSamples=[];
+async function mosaic(title,entries,script){
+ const page=slide(title,script,'Recortes centrales a igual escala. Capturas existentes. Originales completos e IDs en el ZIP.');
+ for(let i=0;i<entries.length;i++){
+  const row=entries[i],col=i%3,line=Math.floor(i/3),x=64+392*col,y=132+174*line;
+  const bytes=await fs.readFile(root+'/build/ensayos_doe/20261110_135729_autonomo/'+row.image);
+  const label=row.stage==='D1'?`${row.condition.split('_').at(-1)} · E${row.exposure_code} G${row.gain_code} · T${row.repeat}`:
+    `${row.diameter_monitor_px} px · ${row.offset_monitor_px?'desplazada':'centro'} · T${row.repeat}`;
+  page.images.add({blob:bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),contentType:'image/png',alt:row.id,fit:'cover',position:{left:x,top:y,width:344,height:142}});
+  text(page,label,x,y+144,344,28,23);
+  annexSamples.push({slide:P.slides.items.length,cell:i+1,id:row.id,condition:row.condition,repeat:row.repeat,image:row.image,raw_sha256:row.raw_sha256});
+ }
+ page.speakerNotes.text+='\n\nCapturas originales, celda por celda:\n'+entries.map((r,i)=>`${i+1}. ${r.id} | ${r.image} | SHA256 RAW ${r.raw_sha256}`).join('\n');
+}
+const pick=(condition,repeat)=>{const row=prior.find(r=>r.condition===condition&&r.repeat===repeat);if(!row)throw new Error('Missing original '+condition+' repeat '+repeat);return row;};
+await mosaic('Anexo A · Muestras de captura D1',[
+ ...['01','02','03','04','05','06'].map(n=>pick('A1_D1A1_C'+n,1)),
+ ...[2,3,4].map(r=>pick('A1_D1A1_C06',r))
+],'Este mosaico reúne nueve capturas originales ya utilizadas en el análisis. Las primeras seis muestran los perfiles C01 a C06 y las últimas tres son repeticiones del perfil seleccionado C06. El recorte central y la escala son iguales en todas las celdas. Los archivos originales completos permanecen en el paquete de evidencias.');
+await mosaic('Anexo B · Muestras de fuente aislada D2',[
+ pick('A1_P01',1),pick('A1_P01',2),pick('A1_P02',1),
+ pick('A1_P02',2),pick('A1_P03',1),pick('A1_P03',2),
+ pick('A1_P04',1),pick('A1_P04',2),pick('A1_P04',3)
+],'Este segundo mosaico presenta nueve ejemplos de las series existentes de D2, con tamaños de cuatro y ocho píxeles de diseño y posiciones central o desplazada. Las etiquetas identifican la condición y la toma. Estas imágenes ilustran la repetibilidad observada y no añaden nuevas adquisiciones ni nuevos resultados al informe.');
+await fs.writeFile(build+'/annex_samples.json',JSON.stringify(annexSamples,null,2));
 for(let i=0;i<P.slides.items.length;i++){const png=await P.export({slide:P.slides.items[i],format:'png',scale:1});await fs.writeFile(build+`/render/slide-${String(i+1).padStart(2,'0')}.png`,new Uint8Array(await png.arrayBuffer()));}
 const candidate=build+'/candidate.pptx';await(await PresentationFile.exportPptx(P)).save(candidate);
 const {finalizePresentation}=await import(pathToFileURL(skill+'/container_tools/artifact_tool_utils.mjs'));
-await finalizePresentation({workspaceDir:root,candidatePath:candidate,finalPath:out+'/Star_Tracker_D1_D5_LAP.pptx',pythonExecutable:runtime+'/python/python.exe',integrityValidatorPath:skill+'/container_tools/inspect_presentation_package_integrity.py',layoutValidatorPath:skill+'/container_tools/inspect_presentation_layout_geometry.py',layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-heading-fit'],explicitTotalSlideCount:20,fontPolicy:{basis:'design',families:['Arial']},verifyArtifactToolImport:true,receiptPath:build+'/validation.json'});
+await finalizePresentation({workspaceDir:root,candidatePath:candidate,finalPath:out+'/Star_Tracker_D1_D5_LAP_con_anexos.pptx',pythonExecutable:runtime+'/python/python.exe',integrityValidatorPath:skill+'/container_tools/inspect_presentation_package_integrity.py',layoutValidatorPath:skill+'/container_tools/inspect_presentation_layout_geometry.py',layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-heading-fit'],explicitTotalSlideCount:22,fontPolicy:{basis:'design',families:['Arial']},verifyArtifactToolImport:true,receiptPath:build+'/validation.json'});
 let guion='# Guion de exposición · Star Tracker y LAP\n\nAlexander Bolívar Huachaca · 10/11/2026\n\nDuración orientativa: 9 a 12 minutos. Los centroides de esta entrega se calculan en PC. D3 reanaliza cinco fotos de D1, no una campaña independiente.\n\n';for(const p of scripts)guion+=`## Diapositiva ${p.n}. ${p.title}\n\n${p.script}\n\n`;
 guion+='## Respuestas breves para preguntas\n\n- **¿D3 encuentra la separación mínima?** No. Confirma separabilidad en el campo observado, con distancia mínima entre sus fuentes de unos 44,3 px de cámara. No se ejecutó el barrido 8/16/24 px con ruido.\n- **¿Se cumple RMS de 0,2 px en FPGA?** No se evaluó. Los centroides son de PC y el mapa es empírico.\n- **¿Cuántas fotos independientes sustentan D1–D3?** D1 usa 30 y D2 20 cuadros completos. D3 reutiliza 5 de los 30 de D1. No suman 55 fotos independientes.\n- **¿El enlace quedó aceptado?** Los archivos recibidos son íntegros. Hubo una transferencia incompleta y una interrupción de visualización. La estabilidad continua no queda aceptada.\n- **¿Los papers fijan esos límites numéricos?** No. Respaldan la metodología. Los valores de aceptación proceden de los requisitos documentados del proyecto.\n';
-await fs.writeFile(out+'/Guion_por_diapositiva.md',guion);await fs.writeFile(build+'/slides.json',JSON.stringify(scripts,null,2));console.log('DELIVERED '+out);
+await fs.writeFile(out+'/Guion_por_diapositiva_con_anexos.md',guion);await fs.writeFile(build+'/slides.json',JSON.stringify(scripts,null,2));console.log('DELIVERED '+out);

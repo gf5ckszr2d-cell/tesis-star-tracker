@@ -115,3 +115,17 @@ requestAnimationFrame. Estas mitigaciones NO se validaron físicamente después
 de la petición de detener pruebas. `pc/doe_lap_cierre.py` quedó como ruta
 experimental de cierre rápido, sin campaña completa ejecutada. No se declara
 el banco autónomo listo ni el enlace estable. No hubo cambios RTL ni ARM.
+
+### Anexos de muestras
+
+Se agregó una revisión de 22 diapositivas: las 20 anteriores conservan sus
+renders idénticos, comprobados por SHA-256, y se anexaron dos mosaicos 3×3 de
+capturas existentes. El anexo A reúne nueve muestras D1 y el B nueve muestras
+D2. Los recortes centrales usan la misma escala y no alteran los PNG/RAW
+originales. Cada celda tiene condición y número de toma, y el ZIP incorpora
+el índice con ID y hash de cada muestra. No se tomaron fotografías nuevas.
+
+La revisión local es `Star_Tracker_D1_D5_LAP_con_anexos.pptx`, acompañada del
+guion y las evidencias con el mismo sufijo. Se actualizaron los tres archivos
+ya subidos a Mi unidad conservando sus IDs y enlaces. La versión local de
+20 diapositivas permanece disponible.
