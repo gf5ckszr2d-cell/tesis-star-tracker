@@ -159,3 +159,33 @@ evaluados. D4 y D5 permanecen como etapas posteriores por iterar. Las
 referencias ahora incluyen los títulos completos. El guion y el ZIP se
 actualizaron en los mismos archivos de Drive. No se operó la cámara ni la
 FPGA para esta revisión y no se inventaron mediciones.
+
+### Versión vigente: planificación DoE y LAP en 16 diapositivas
+
+El usuario corrigió el propósito de la exposición: debe ser planificación,
+no un informe de validación. La versión `DoE_final_planificacion_16_v2.pptx`
+reemplaza el contenido del mismo archivo de Drive `DoE final.pptx` y conserva
+las versiones anteriores localmente. Las diapositivas 1–11 planifican el DoE
+y las 12–16 planifican el LAP. No presentan resultados medidos ni decisiones
+de conformidad ya obtenidas. El guion se reescribió en el mismo sentido.
+
+Las matrices propuestas son D1: 3 exposiciones × 2 ganancias; D2: 3 tamaños
+× 2 posiciones; D3: 3 separaciones × 2 ruidos. Cinco bloques con una captura
+por condición producen 30 capturas por etapa y 90 de matrices. Se proponen
+57 auxiliares (piloto 5, niveles Y 15, geometría 27 y confirmación D2 10),
+para 147 del DoE. El LAP reservará 20 capturas nuevas en cuatro lotes de 5,
+compartidas entre requisitos sin duplicar su conteo: total planificado 167.
+Dos casos de corrupción digital de L01 no cuentan como capturas físicas.
+
+Los umbrales del LAP son propuestas previas al ensayo, no resultados ni
+límites impuestos por los papers. Se documentan variables de control,
+aleatorización por bloques, referencia geométrica por establecer, métodos,
+evidencias esperadas y tratamiento de desviaciones. La muestra de cinco
+repeticiones es una decisión exploratoria, no una regla universal del DoE.
+
+El generador editable es `scripts/crear_plan_doe_lap.mjs`. Las 16 diapositivas
+se renderizaron y revisaron; se verificaron tablas editables y cuatro
+contratos aritméticos para los subtotales y totales. El archivo documental
+de Drive ahora contiene `planificacion_actual/` y conserva el paquete de
+resultados anterior separado en `historial/`. No se tomaron nuevas fotos ni
+se operó hardware.
