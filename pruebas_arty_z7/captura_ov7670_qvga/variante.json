@@ -1,0 +1,11 @@
+{
+  "name": "captura_ov7670_qvga",
+  "resolution": [
+    320,
+    240
+  ],
+  "payload_bytes": 76800,
+  "vivado_project": "build/proyecto/captura_ov7670_qvga.xpr",
+  "vitis_workspace": "vitis",
+  "canonical_arm_sources": "arm/src"
+}
