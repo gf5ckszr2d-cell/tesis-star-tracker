@@ -390,7 +390,7 @@ class Bench:
             if row['stage'] in ('D1','D2','D3') and row['repeat']==1:
                 if row.get('expected_camera_px'):
                     drawing=[f'<svg width="640" height="480" viewBox="0 0 320 240"><image href="{row["image"]}" width="320" height="240" style="image-rendering:pixelated"/>']
-                    for color,points in [('lime',row['expected_camera_px']),('magenta',[[b['x'],b['y']] for b in row['blobs_pc'] if b['accepted']])]:
+                    for color,points in [('lime',row['expected_camera_px']),('magenta',[[b['x'],b['y']] for b in row.get('blobs_pc',[]) if b['accepted']])]:
                         for x,y in points:
                             drawing.append(f'<path d="M {x-3} {y} h 6 M {x} {y-3} v 6" fill="none" stroke="{color}" stroke-width="0.5"/>')
                     drawing.append('</svg>'); picture=''.join(drawing)

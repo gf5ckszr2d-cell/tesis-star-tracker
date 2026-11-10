@@ -13,13 +13,13 @@ document.addEventListener('visibilitychange',beat);addEventListener('resize',bea
 async function tick(){
  if(busy)return;busy=true;
  try{
-  const state=await (await fetch('/api/state',{cache:'no-store'})).json();
+  const state=await (await fetch('/api/state',{cache:'no-store',signal:AbortSignal.timeout(3000)})).json();
   if(state.scene&&state.scene.id!==current){
    const im=new Image();im.src='/scene.png?id='+state.scene.id;await im.decode();
-   ctx.drawImage(im,0,0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));current=state.scene.id;
+   ctx.drawImage(im,0,0);current=state.scene.id;
   }
   await beat();
  }catch(e){current=null;await beat()}finally{busy=false}
 }
-setInterval(tick,250);tick();
+setInterval(tick,250);setInterval(beat,1000);tick();
 </script></html>

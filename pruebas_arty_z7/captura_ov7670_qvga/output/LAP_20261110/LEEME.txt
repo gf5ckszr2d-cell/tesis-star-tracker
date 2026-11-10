@@ -1,0 +1,11 @@
+EVIDENCIAS LAP · STAR TRACKER · 10/11/2026
+
+El PPT usa 30 cuadros de D1 y 20 cuadros completos de D2. D3 reanaliza 5 de los 30 de D1: no son 5 adquisiciones nuevas y no deben sumarse como datos independientes.
+
+D3 demuestra separabilidad del campo fijo (25/25 fuentes, sin fusiones, omisiones ni falsas aceptadas). No se ejecutó el barrido de separación 8/16/24 px ni el ruido RGB sigma 8. La distancia mínima entre fuentes observadas es aproximadamente 44,34 px de cámara; no representa el límite mínimo de resolución.
+
+La carpeta campaña_original conserva los 132 PNG/RAW archivados, patrones y registros. Los intentos interrumpidos también se conservan, identificados en indice_capturas.csv. Hubo una transferencia incompleta y una interrupción del visualizador. El estado del controlador quedó en recuperación por un fallo del generador de reportes; cierre_analisis.json registra el cierre analítico real sin alterar esos logs históricos.
+
+Todos los centroides aquí son PC_OFFLINE_Y8. Las metas de RMS FPGA 0,2 px, identificación, actitud y tiempo no se declaran cumplidas. El informe mantiene D4 y D5 como alcance definido sin ejecución.
+
+montaje contiene las dos fotografías originales aportadas por Alexander. analisis contiene los resultados usados en las diapositivas. requisitos conserva las matrices fuente del proyecto. El PPT incluye DOI completos en notas. La nomenclatura LAP corresponde a la indicación del docente comunicada por Alexander, no a una norma inferida de los papers.

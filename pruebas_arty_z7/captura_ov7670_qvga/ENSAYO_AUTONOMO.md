@@ -1,0 +1,117 @@
+# Ejecución local D1–D3, 10 de noviembre de 2026
+
+El usuario autorizó evaluar automáticamente D1, D2 y separación D3, conservar el
+enfoque actual y usar la ventana del generador escalada. No se modifica el PPT
+original en esta fase. No se suben cambios ni fotografías a GitHub.
+
+## Cambios de software PC
+
+`pc/doe_autonomo.py` utiliza el transporte existente, sin modificar RTL ni ARM.
+Conserva QVGA 320×240, YUV422 y STY1. Los centroides evaluados se calculan en PC
+sobre Y8; esta ejecución no valida el detector FPGA ni su exactitud absoluta.
+
+- D1: cinco fuentes iguales y separadas, seis perfiles de exposición/ganancia,
+  cinco cuadros por condición. Se ensayan diámetros de diseño 8, 12 y 16 si el
+  anterior no produce un candidato válido.
+- Negro–blanco: niveles RGB 0, 64, 128, 192 y 255, tres cuadros por nivel; se
+  conserva la curva RGB→Y. Son códigos digitales, no luminancia física absoluta.
+- D2: fuentes aisladas, tamaños y umbral exploratorios, geometría afín local
+  con posiciones reservadas para comprobar el ajuste, confirmación en cuadros
+  nuevos. La repetibilidad temporal no equivale a exactitud absoluta.
+- D3: separaciones de diseño 8, 16 y 24, ruido RGB 0 y 8, cinco cuadros por
+  condición. Una fusión es un límite observado, no un error que deba ocultarse.
+
+La ventana debe permanecer visible y con las mismas dimensiones durante cada
+ejecución. Se registra `display_geometry` en el manifiesto: el patrón de diseño
+2560×1440 se estira al viewport, con escalas X/Y independientes. Por ejemplo,
+2560×1384 con DPR 1 implica sx=1 y sy=1384/1440; los tamaños indicados por el
+generador son píxeles de diseño, no tamaños nativos verificados del monitor.
+
+Cada adquisición guarda PNG y RAW originales, checksum verificado, registros,
+condición, repetición y metadatos del patrón. `commands.jsonl` y `uart.bin`
+conservan el control. Las decisiones se guardan en `decisions.json` y los
+resultados en `measurements.json`, CSV y `report.html`.
+
+## Incidencias observadas y límites
+
+Una fotografía inicial correspondía al fondo de Google porque la pestaña se
+había cerrado; está descartada explícitamente en su JSON. Tras abrir y conservar
+la pestaña del generador se obtuvo `campo_generador_abierto.png`: cinco fuentes
+detectadas, sin pico >=250. Es un piloto, no la aceptación de toda la serie D1.
+
+Se observó `ERROR DOE SCCB 3` después de lecturas correctas. Aumentar solamente
+la pausa a 0,8 s no lo eliminó. Después del error, tres lecturas del PID
+respondieron sin reiniciar la placa: el fallo observado fue transitorio. El
+cliente ahora reintenta hasta dos veces únicamente errores SCCB 2/3 de accesos
+a registros, con pausa de 1 s y registro explícito. Las escrituras de perfil son
+idempotentes y mantienen la comprobación por lectura. No se reintenta ni duplica
+silenciosamente una captura fallida. La causa del fallo de control no está
+establecida y no se declara reparado el hardware.
+
+Se corrigió la invocación local de XSCT desde el controlador de recuperación:
+PowerShell con rutas explícitas en vez de argumentos de `cmd` que produjeron
+«La sintaxis del comando no es correcta». La recarga manual de los mismos
+artefactos sí devolvió `ARM_RUNNING`; esto no prueba aún toda la recuperación
+automática. No se cambiaron los artefactos BIT/ELF.
+
+Verificación del cliente: seis pruebas pasan, incluyendo aceptación
+de cinco fuentes, rechazo por fuente ausente/saturada y ventana visible escalada
+con rechazo al cambiar escala u ocultarse y ejecución completa con cámara
+sintética. Esta última detecta errores de integración del controlador; no
+reemplaza el ensayo físico. Se corrigió un conflicto entre el atributo `d1`
+heredado del controlador original y el método D1 autónomo, observado después de
+completar la primera calibración física. Aquellas 15 referencias se conservan,
+pero ese intento no aprobó D1. La evidencia física y las pruebas sintéticas se
+mantienen separadas. Si los discos de diseño se solapan en D3, el resultado se
+etiqueta `STIMULUS_OVERLAP` y no se atribuye a resolución óptica.
+
+## Rutas de evidencia
+
+- `build/ensayos_doe/20261110_132742_autonomo`: foto descartada y piloto correcto
+  `campo_generador_abierto.png`, RAW y JSON.
+- `build/ensayos_doe/20261110_134632_autonomo`: primer intento detenido por
+  control, diagnóstico de lecturas y recuperación; no es un DoE aprobado.
+- `build/ensayos_doe/20261110_135145_autonomo`: ejecución posterior con control
+  acotado. Consultar su manifiesto y decisiones para el resultado real; la
+  existencia de la carpeta no significa que D1–D3 hayan pasado.
+
+## Cierre solicitado y entrega LAP
+
+El usuario pidió detener las pruebas y terminar el PPT y un guion por
+diapositiva. Se cerró el análisis con los datos existentes, sin fabricar el
+barrido D3 que no llegó a ejecutarse.
+
+La campaña `build/ensayos_doe/20261110_135729_autonomo` archivó 132 cuadros.
+Todos los PNG coinciden con su RAW de 76 800 bytes y su SHA-256 registrado.
+La primera rama completó D1 (seis perfiles por cinco cuadros), dos tamaños de
+D2 en dos posiciones (20 cuadros completos), 27 cuadros geométricos y dos
+curvas de referencia de 15 cuadros. Una transferencia incompleta en D2
+provocó el retorno a D1. La segunda rama se interrumpió por falta de
+confirmación del navegador. Los registros conservan esos fallos.
+
+El análisis de D2 usa únicamente los 20 cuadros completos de diámetros 4 y 8
+de la primera rama. La dispersión radial está entre 0,0090 y 0,0169 px de
+cámara. Los RMS frente al mapa local están entre 0,0276 y 0,1296 px. Son
+resultados PC y no aceptación de RS-05 del centroide FPGA.
+
+El cierre D3 consiste en reanalizar cinco cuadros C06 del campo fijo de D1:
+25/25 asociaciones, cero fusiones, omisiones y falsas aceptadas. La menor
+distancia observada entre fuentes es aproximadamente 44,34 px de cámara.
+Estas cinco fotos NO son independientes de D1. No se ejecutó el barrido
+8/16/24 px ni ruido RGB sigma 8. No se obtuvo un límite mínimo de resolución.
+
+El PPT nuevo es `output/LAP_20261110/Star_Tracker_D1_D5_LAP.pptx`, con 20
+diapositivas editables, notas de exposición y fotos reales del montaje. D4 y
+D5 incluyen metas sin atribuir resultados. El LAP traza requisitos y criterios
+y limita la conformidad a la evidencia disponible. El guion y el ZIP con
+originales, matrices fuente e índice acompañan el PPT. Se preservó el PPT
+original. La revisión estructural y visual se realizó sobre las 20 diapositivas.
+
+El controlador de reportes se corrigió para tolerar filas que tienen una
+referencia pero aún no tienen componentes calculados, caso observado tras la
+interrupción. También se prepararon una cola RX PC de 262 144 bytes, timeout
+de captura de 60 s y una actualización del generador sin espera indefinida de
+requestAnimationFrame. Estas mitigaciones NO se validaron físicamente después
+de la petición de detener pruebas. `pc/doe_lap_cierre.py` quedó como ruta
+experimental de cierre rápido, sin campaña completa ejecutada. No se declara
+el banco autónomo listo ni el enlace estable. No hubo cambios RTL ni ARM.
