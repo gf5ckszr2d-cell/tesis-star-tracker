@@ -129,3 +129,33 @@ La revisión local es `Star_Tracker_D1_D5_LAP_con_anexos.pptx`, acompañada del
 guion y las evidencias con el mismo sufijo. Se actualizaron los tres archivos
 ya subidos a Mi unidad conservando sus IDs y enlaces. La versión local de
 20 diapositivas permanece disponible.
+
+### Revisión documental de geometría, condiciones y LAP
+
+La revisión `Star_Tracker_LAP_revisado_v3.pptx` contiene 26 diapositivas.
+Incluye un flujo editable D1–D2–D3 en la diapositiva 3, después del alcance,
+y elimina las referencias históricas a 160×120 y la expresión «distancia
+declarada». Presenta distancia 250 mm y explica la comparación geométrica
+mediante la matriz afín ya obtenida de 9 posiciones (6 ajuste y 3 reservadas),
+la escala de ventana y el centroide ponderado por Y.
+
+Se calculó documentalmente el parámetro equivalente de proyección
+f_eq=s·D/p=562,65 px a partir de s=0,524612 px de cámara/px de diseño,
+D=250 mm y p=596,736/2560=0,2331 mm/px de pantalla. Es una equivalencia del
+modelo local, no una medición óptica independiente de la focal ni una nueva
+calibración física. El enfoque fijo se caracteriza mediante FWHM.
+
+D2 incluye códigos C01–C06 y conserva la distinción de las cuatro series
+completas frente a C05 incompleta y C06 sin datos. D3-C01–C04 son clases de
+pares del mismo campo: centro–esquina, vertical, horizontal y diagonal
+exterior. Las 5 imágenes compartidas proporcionan 20, 10, 10 y 10 distancias
+respectivamente, con medias de 44,49, 50,26, 73,44 y 88,99 px de cámara.
+No constituyen nuevas adquisiciones ni cuatro experimentos independientes.
+
+El LAP se simplificó a integridad, calidad de captura, repetibilidad de
+centroide PC y separación observada. Se retiraron del protocolo los
+requisitos de identificación, actitud, latencia y centroide FPGA no
+evaluados. D4 y D5 permanecen como etapas posteriores por iterar. Las
+referencias ahora incluyen los títulos completos. El guion y el ZIP se
+actualizaron en los mismos archivos de Drive. No se operó la cámara ni la
+FPGA para esta revisión y no se inventaron mediciones.
