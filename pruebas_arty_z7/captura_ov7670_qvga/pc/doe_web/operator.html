@@ -1,0 +1,37 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Banco Arty D1-D3</title>
+<style>body{font:16px system-ui;background:#f6f7fa;color:#202733;max-width:1200px;margin:30px auto;padding:20px}section{background:white;padding:24px;margin:20px 0;border-radius:12px}label{display:block;margin:10px 0}button,select,input,textarea{font:inherit;padding:7px}button{cursor:pointer}img{image-rendering:pixelated;width:640px;height:480px;max-width:100%;object-fit:contain;background:#000}.card{border-top:1px solid #ccc;padding:14px 0}#error{color:#a00020;white-space:pre-wrap}#status{font-size:21px}textarea{width:95%;min-height:50px}</style>
+<h1>Banco Arty QVGA: captura y separacion</h1><p>Centroides y medidas en PC. Limite: D3. El PPT se completara con los resultados despues del ensayo.</p>
+<p><a href="/patron" target="_blank" onclick="window.open('/patron','patronG5','popup,width=1000,height=700');return false">Abrir patron en el G5</a>. Mueve esa ventana al G5 y activa pantalla completa. Usa este panel en otra pantalla o desde Codex. Si usas una sola pantalla, vuelve al patron despues de confirmar cada pausa.</p>
+<div id="status"></div><div id="error"></div><button id="stop">Detener ensayo</button>
+<section id="setup"><h2>Condiciones iniciales</h2>
+<label><input type="checkbox" id="fixed_mount">Soporte fijo y camara conectada con el cableado QVGA</label>
+<label><input type="checkbox" id="focus_ready">Lente lista para ajustar el enfoque visual</label>
+<label><input type="checkbox" id="hdr_off">HDR, brillo adaptativo y filtros de color desactivados</label>
+<label><input type="checkbox" id="native_resolution">G5 a 2560 x 1440 y patron a pantalla completa</label>
+<label><input type="checkbox" id="monitor_brightness_zero">Brillo del monitor = 0, fijo durante el ensayo</label>
+<label><input type="checkbox" id="monitor_confirmed">Confirmo que la pantalla del patron es el Samsung G5</label>
+<label>Refresco utilizado (Hz) <input id="hz" type="number" min="1" value="60"></label>
+<label>Distancia real lente-centro del panel (mm) <input id="distance" type="number" min="1" value="250"></label>
+<label>Observaciones de luz y montaje <textarea id="notes"></textarea></label>
+<button id="start">Iniciar adquisicion</button></section>
+<section id="focus" hidden><h2>Enfoque visual</h2><img id="preview"><p>Evalua el punto a ampliacion fija 2x con vecinos cercanos. Ajusta fisicamente la lente si hace falta. Una nueva vista tarda aproximadamente 7 segundos.</p><button id="newpreview">Nueva vista del enfoque</button> <button id="focusok">Confirmar enfoque y continuar</button></section>
+<section id="visual" hidden><h2>Evaluacion visual D1</h2><p>Selecciona Si o No en cada criterio de las 30 imagenes. Todos los originales se muestran a la misma ampliacion 2x. Los numeros no sustituyen tu juicio visual.</p><div id="cards"></div>
+<label>Condicion seleccionada <select id="selected"><option value="">Elegir</option><option>C01</option><option>C02</option><option>C03</option><option>C04</option><option>C05</option><option>C06</option></select></label>
+<label>Justificacion y consistencia entre capturas <textarea id="reason"></textarea></label><button id="submit">Guardar criterio y continuar D2-D3</button></section>
+<script>
+let state={},built=false,focusLoaded=false;
+const $=s=>document.querySelector(s);
+async function post(path,body){$('#error').textContent='';try{const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json','X-Bench-Token':state.token},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw Error(d.error);return d}catch(e){$('#error').textContent=e.message;return null}}
+$('#start').onclick=()=>{const d={};for(const k of ['fixed_mount','focus_ready','hdr_off','native_resolution','monitor_brightness_zero','monitor_confirmed'])d[k]=$('#'+k).checked;d.refresh_hz=+$('#hz').value;d.distance_mm=+$('#distance').value;d.notes=$('#notes').value;post('/api/start',d)};
+$('#stop').onclick=()=>post('/api/stop',{});
+$('#focusok').onclick=()=>post('/api/visual',{focus_confirmed:true});
+$('#newpreview').onclick=async()=>{await post('/api/preview',{});setTimeout(()=>$('#preview').src='/initial_auto.png?t='+Date.now(),8500)};
+$('#submit').onclick=()=>{const records=state.visual_images.map(row=>{const d={id:row.id};for(const k of ['complete','distinct','contour']){const v=document.getElementById(row.id+'_'+k).value;d[k]=v===''?null:v==='yes'}d.notes=document.getElementById(row.id+'_notes').value;return d});post('/api/visual',{records,selected:$('#selected').value,reason:$('#reason').value})};
+async function tick(){try{
+ state=await(await fetch('/api/state')).json();$('#status').textContent=state.phase+': '+state.message+' ('+state.rows+' capturas guardadas)';
+ $('#setup').hidden=state.phase!=='ESPERANDO_MONTAJE';$('#focus').hidden=state.phase!=='ENFOQUE_VISUAL';$('#visual').hidden=state.phase!=='CRITERIO_VISUAL_D1';
+ if(state.phase==='ENFOQUE_VISUAL'&&!focusLoaded){focusLoaded=true;$('#preview').src='/initial_auto.png?t='+Date.now()}
+ if(state.visual_images.length&&!built){built=true;for(const r of [...state.visual_images].sort((a,b)=>a.id.localeCompare(b.id))){const card=document.createElement('div');card.className='card';const title=document.createElement('p');title.textContent=r.condition+' / '+r.id+' / AEC '+r.exposure+' / AGC '+r.gain;card.append(title);const im=document.createElement('img');im.src='/'+r.image;card.append(im);for(const [k,label]of [['complete','Imagen completa sin cortes'],['distinct','Punto distinguible del fondo'],['contour','Contorno reconocible']]){const l=document.createElement('label');l.textContent=label+' ';const s=document.createElement('select');s.id=r.id+'_'+k;for(const [v,t]of [['','Elegir'],['yes','Si'],['no','No']]){const o=document.createElement('option');o.value=v;o.textContent=t;s.append(o)}l.append(s);card.append(l)}const ta=document.createElement('textarea');ta.id=r.id+'_notes';ta.placeholder='Observaciones de esta imagen';card.append(ta);$('#cards').append(card)}}
+ }catch(e){$('#error').textContent=e.message}}
+setInterval(tick,1000);tick();
+</script></html>

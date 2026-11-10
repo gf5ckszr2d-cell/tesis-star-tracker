@@ -1,0 +1,25 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Patron de ensayo G5</title>
+<style>html,body{margin:0;background:#000;overflow:hidden;width:100%;height:100%}canvas{position:fixed;inset:0;width:100vw;height:100vh;image-rendering:pixelated;cursor:none}button{position:fixed;z-index:2;top:30px;left:30px;font:24px system-ui;padding:20px}body.ready button{display:none}</style>
+<canvas width="2560" height="1440"></canvas><button>Activar pantalla completa en el G5</button>
+<script>
+const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d',{alpha:false});
+let current=null,busy=false;
+document.querySelector('button').onclick=()=>document.documentElement.requestFullscreen();
+document.addEventListener('fullscreenchange',()=>{document.body.classList.toggle('ready',!!document.fullscreenElement);beat()});
+async function beat(){
+ try{await fetch('/api/display',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:current,width:innerWidth,height:innerHeight,dpr:devicePixelRatio,fullscreen:!!document.fullscreenElement,visible:!document.hidden})})}catch{}
+}
+document.addEventListener('visibilitychange',beat);addEventListener('resize',beat);
+async function tick(){
+ if(busy)return;busy=true;
+ try{
+  const state=await (await fetch('/api/state',{cache:'no-store'})).json();
+  if(state.scene&&state.scene.id!==current){
+   const im=new Image();im.src='/scene.png?id='+state.scene.id;await im.decode();
+   ctx.drawImage(im,0,0);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));current=state.scene.id;
+  }
+  await beat();
+ }catch(e){current=null;await beat()}finally{busy=false}
+}
+setInterval(tick,250);tick();
+</script></html>

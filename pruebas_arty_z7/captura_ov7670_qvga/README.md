@@ -1,4 +1,6 @@
 **Entrada vigente:** [PROYECTO.md](PROYECTO.md): captura_ov7670_qvga, 320x240, Vivado y Vitis independientes.
+Banco automatizado de captura y separacion D1-D3: [BANCO_DOE.md](BANCO_DOE.md).
+Revision DOE1 preparada y verificada en software; prueba fisica pendiente.
 Las revisiones anteriores de este README se conservan como historial.
 
 # Hito 1: captura OV7670 por UART, VHDL independiente

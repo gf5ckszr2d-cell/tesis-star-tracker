@@ -4,6 +4,9 @@ set pname [file tail $root]
 set pdir [file join $root build proyecto]
 if {[info exists ::env(CAPTURA_PROJECT_DIR)]} {set pdir [file normalize $::env(CAPTURA_PROJECT_DIR)]}
 open_project [file join $pdir ${pname}.xpr]
+if {![llength [get_files -quiet */sccb_runtime_bridge.vhd]]} {
+    add_files -norecurse [file join $root rtl sccb_runtime_bridge.vhd]
+}
 set_property board_part_repo_paths [list [file join $::env(APPDATA) Xilinx Vivado 2025.2 xhub board_store xilinx_board_store XilinxBoardStore Vivado 2025.2 boards]] [current_project]
 set bd [get_files -filter {NAME =~ */sistema_captura_arm.bd}]
 if {[llength $bd] != 1} {error "No se encontro el block design sistema_captura_arm"}

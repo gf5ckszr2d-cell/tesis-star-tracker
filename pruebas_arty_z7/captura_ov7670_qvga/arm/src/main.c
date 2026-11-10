@@ -23,6 +23,12 @@ static volatile u32 head, tail, rx_fault;
 static Sty1 packet;
 static u64 ticks_per_ms;
 static u64 last_capture_status;
+static u32 software_control;
+static void gpio_control(u32 value)
+{
+    software_control=value;
+    Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_DATA_OFFSET + 8U, value);
+}
 static void numero(u32 value)
 {
     char digits[10]; unsigned used=0;
@@ -40,6 +46,71 @@ static u64 timer_now(void)
 static void texto(const char *s)
 {
     while (*s) XUartPs_SendByte(UART_PC, (u8)*s++);
+}
+static void hexbyte(u32 value)
+{
+    static const char digits[]="0123456789ABCDEF";
+    XUartPs_SendByte(UART_PC, digits[(value>>4)&15U]);
+    XUartPs_SendByte(UART_PC, digits[value&15U]);
+}
+static int hexdigit(char c)
+{
+    if (c>='0' && c<='9') return c-'0';
+    if (c>='a' && c<='f') return c-'a'+10;
+    if (c>='A' && c<='F') return c-'A'+10;
+    return -1;
+}
+/* Runtime SCCB is available only after the first completed capture. */
+static int sensor_access(unsigned reg, unsigned *value, int read)
+{
+    const UINTPTR base=XPAR_XGPIOPS_0_BASEADDR;
+    u32 low, high;
+    u64 deadline=timer_now()+100U*ticks_per_ms;
+    gpio_control((software_control & 2U) | 8U);
+    do {
+        low=Xil_In32(base+XGPIOPS_DATA_RO_OFFSET+8U);
+        high=Xil_In32(base+XGPIOPS_DATA_RO_OFFSET+12U);
+        /* Allow the PS->EMIO->PL status-page selection to propagate. */
+        if ((low>>24)==0xD3U && (high&3U)==3U && !(low&2U)) break;
+    } while (timer_now()<deadline);
+    if ((low>>24)!=0xD3U) { gpio_control(software_control&2U); return -1; }
+    if ((high&3U)!=3U || (low&2U)) { gpio_control(software_control&2U); return -2; }
+    gpio_control(((software_control^2U)&2U) | 8U | (read?4U:0U) | (reg<<8) | (*value<<16));
+    deadline=timer_now()+100U*ticks_per_ms;
+    do {
+        low=Xil_In32(base+XGPIOPS_DATA_RO_OFFSET+8U);
+        if ((low&1U)==((software_control>>1)&1U) && !(low&2U)) break;
+    } while (timer_now()<deadline);
+    gpio_control(software_control&2U);
+    if ((low&1U)!=((software_control>>1)&1U) || (low&2U)) return -3;
+    if (low&12U) return -4;
+    *value=(low>>8)&255U;
+    return 0;
+}
+static int writable_register(unsigned reg)
+{
+    /* No format, window, clock, reset or test-pattern register is writable. */
+    return reg==0x00U || reg==0x01U || reg==0x02U || reg==0x03U ||
+           reg==0x04U || reg==0x07U || reg==0x10U || reg==0x13U || reg==0x3BU;
+}
+static void sensor_command(const char *line, unsigned length)
+{
+    int a,b,c,d,result; unsigned reg,value=0;
+    if (length==1U && line[0]=='v') { texto("ARM DOE1 READY\r\n"); return; }
+    if (!((length==3U && line[0]=='r') || (length==5U && line[0]=='w'))) {
+        texto("ERROR DOE comando\r\n"); return;
+    }
+    a=hexdigit(line[1]); b=hexdigit(line[2]);
+    if (a<0 || b<0) { texto("ERROR DOE hexadecimal\r\n"); return; }
+    reg=(unsigned)(16*a+b);
+    if (line[0]=='w') {
+        c=hexdigit(line[3]); d=hexdigit(line[4]);
+        if (c<0 || d<0 || !writable_register(reg)) { texto("ERROR DOE escritura\r\n"); return; }
+        value=(unsigned)(16*c+d);
+    }
+    result=sensor_access(reg,&value,line[0]=='r');
+    if (result) { texto("ERROR DOE SCCB "); numero((u32)-result); texto("\r\n"); return; }
+    texto("ARM REG "); hexbyte(reg); texto(" "); hexbyte(value); texto("\r\n");
 }
 static void diagnostico_captura(void)
 {
@@ -119,6 +190,7 @@ static int configurar_irq(void)
 }
 int main(void)
 {
+    char command_line[8]; unsigned command_used=0;
     u64 last_byte, frame_start = 0, last_diag = 0, trigger_end = 0;
     u32 timer_ctrl = Xil_In32(TIMER_CTRL);
     Xil_Out32(TIMER_CTRL, timer_ctrl | 1U);
@@ -134,24 +206,32 @@ int main(void)
     last_byte = timer_now();
     /* EMIO inputs carry status. Output bit 0 pulses the debounced start path.
        GPIO_I is separately wired to PL status, with no external I/O buffer. */
-    Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_DATA_OFFSET + 8U, 0);
-    Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_DIRM_OFFSET + 2U*0x40U, 1);
-    Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_OUTEN_OFFSET + 2U*0x40U, 1);
+    gpio_control(0);
+    Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_DIRM_OFFSET + 2U*0x40U, 0x00FFFF0FU);
+    Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_OUTEN_OFFSET + 2U*0x40U, 0x00FFFF0FU);
     Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_DIRM_OFFSET + 3U*0x40U, 0);
     Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_OUTEN_OFFSET + 3U*0x40U, 0);
     texto("Receptor OV7670 listo; esperando BTN1\r\n");
+    texto("ARM DOE1 READY\r\n");
     for (;;) {
         u64 now = timer_now();
         if (trigger_end && now >= trigger_end) {
-            Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_DATA_OFFSET + 8U, 0);
+            gpio_control(software_control & ~1U);
             trigger_end=0;
         }
         if (XUartPs_IsReceiveData(UART_PC)) {
             u8 command=(u8)XUartPs_ReadReg(UART_PC, XUARTPS_FIFO_OFFSET);
-            if ((command=='c' || command=='C') && !trigger_end) {
-                Xil_Out32(XPAR_XGPIOPS_0_BASEADDR + XGPIOPS_DATA_OFFSET + 8U, 1);
+            if ((command=='c' || command=='C') && !command_used && !trigger_end) {
+                gpio_control(software_control | 1U);
                 trigger_end=now+30U*ticks_per_ms;
                 texto("ARM solicitud de captura por COM3\r\n");
+            } else if (command=='\n' || command=='\r') {
+                if (command_used) sensor_command(command_line,command_used);
+                command_used=0;
+            } else if (command_used<sizeof(command_line)) {
+                command_line[command_used++]=(char)command;
+            } else {
+                command_used=0; texto("ERROR DOE comando largo\r\n");
             }
         }
         if (now-last_diag > 10U*ticks_per_ms) {

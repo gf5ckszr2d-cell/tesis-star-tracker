@@ -54,6 +54,12 @@ architecture rtl of captura_uart_top is
     signal i2c_start, i2c_rw, i2c_done, i2c_error : std_logic;
     signal byte0, byte1 : std_logic_vector(7 downto 0);
     signal byte_count : unsigned(1 downto 0);
+    signal rt_active, rt_available, rt_start, rt_rw, master_busy : std_logic;
+    signal master_start, master_rw : std_logic;
+    signal rt_byte0, rt_byte1, master_byte0, master_byte1, master_rx : std_logic_vector(7 downto 0);
+    signal rt_count, master_count : unsigned(1 downto 0);
+    signal rt_status : std_logic_vector(31 downto 0);
+    signal frame_status : std_logic_vector(63 downto 0);
     signal request_toggle : std_logic := '0';
     signal request_meta, request_sync, request_seen, arm : std_logic := '0';
     signal dump_done_toggle, dump_done : std_logic;
@@ -180,7 +186,7 @@ begin
                 elsif stage_count < STAGE_TIMEOUT_CYCLES then stage_count <= stage_count+1; end if;
                 case state is
                     when IDLE =>
-                        if press = '1' then
+                        if press = '1' and rt_active='0' and software_control(1)=rt_status(0) then
                             if configured = '1' then state <= ARM_FRAME;
                             else state <= WAIT_LOCK; end if;
                         end if;
@@ -243,15 +249,30 @@ begin
             i2c_start => i2c_start, i2c_rw => i2c_rw,
             i2c_tx_byte0 => byte0, i2c_tx_byte1 => byte1, i2c_tx_count => byte_count,
             busy => open, done => init_done, error => init_error, current_step => open);
+    rt_available <= '1' when state=IDLE and configured='1' else '0';
+    -- Status page selected only while ARM configures the sensor. Image diagnostics
+    -- retain their original layout and latch when software_control(3)=0.
+    capture_status <= x"0000000" & "00" & rt_available & configured & rt_status
+                      when software_control(3)='1' else frame_status;
+    runtime : entity work.sccb_runtime_bridge
+        port map(clk=>clk, rst=>sys_rst, available=>rt_available, control=>software_control,
+            status=>rt_status, active=>rt_active, bus_start=>rt_start, bus_rw=>rt_rw,
+            byte0=>rt_byte0, byte1=>rt_byte1, count=>rt_count,
+            bus_busy=>master_busy, bus_done=>i2c_done, bus_error=>i2c_error, bus_rx=>master_rx);
+    master_start <= rt_start when rt_active='1' else i2c_start;
+    master_rw <= rt_rw when rt_active='1' else i2c_rw;
+    master_byte0 <= rt_byte0 when rt_active='1' else byte0;
+    master_byte1 <= rt_byte1 when rt_active='1' else byte1;
+    master_count <= rt_count when rt_active='1' else byte_count;
     sccb : entity work.i2c_master
         generic map (CLK_FREQ_HZ => CLK_FREQ_HZ)
-        port map (clk => clk, rst => sys_rst, start => i2c_start, slave_addr => "0100001",
-            rw => i2c_rw, tx_byte0 => byte0, tx_byte1 => byte1, tx_count => byte_count,
-            rx_data => open,
+        port map (clk => clk, rst => sys_rst, start => master_start, slave_addr => "0100001",
+            rw => master_rw, tx_byte0 => master_byte0, tx_byte1 => master_byte1, tx_count => master_count,
+            rx_data => master_rx,
             sda_i   => sda_i,
             sda_t   => sda_t,
             SCL     => SCL,
-            busy    => open,
+            busy    => master_busy,
             done    => i2c_done,
             ack_error => i2c_error);
     capture : entity work.ov7670_capture_y_stream
@@ -265,7 +286,7 @@ begin
         port map(pclk=>cam_pclk, rst=>pixel_rst, enable=>capture_busy,
             vsync=>cam_vsync, href=>cam_href, pixel_valid=>pixel_valid,
             frame_done=>capture_done, capture_error=>capture_error,
-            store_error=>store_error, status=>capture_status);
+            store_error=>store_error, status=>frame_status);
     store : entity work.frame_capture_store
         generic map (FRAME_WIDTH=>FRAME_WIDTH, FRAME_HEIGHT=>FRAME_HEIGHT, ADDR_WIDTH=>ADDR_WIDTH)
         port map (pclk => cam_pclk, rst => pixel_rst, arm_capture => arm,

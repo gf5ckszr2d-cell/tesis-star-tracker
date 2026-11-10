@@ -1,5 +1,18 @@
 # captura_ov7670_qvga: 320x240
 
+## Banco automatizado D1-D3 - 2026-11-10
+
+La entrada para las pruebas con soporte es [BANCO_DOE.md](BANCO_DOE.md).
+Se preparo control SCCB desde ARM para leer y fijar exposicion/ganancia,
+patrones nativos G5, adquisicion automatica, fichas visuales D1 y analisis PC
+hasta separacion D3. Vivado/XSim, Vitis y pruebas de software pasaron. Esta
+revision aun no se cargo ni se probo fisicamente. El preflight verifica hashes.
+
+Los centroides de este banco son calculados en PC. El bitstream Arty sigue
+siendo de captura y no acredita el detector VHDL ni FAT F02. Se conservan la
+ROM inicial, el protocolo STY1, QVGA y YUV422. Los cambios y su impacto en
+hardware se detallan en BANCO_DOE.md. No se avanza a identificacion ni actitud.
+
 ## Reparacion del proyecto Vivado - 2026-11-07
 
 El `sistema_captura_arm.bd` encontrado estaba vacio (`design_tree` sin

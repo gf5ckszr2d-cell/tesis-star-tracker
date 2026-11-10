@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-10",
+  "version": "DOE1",
+  "physical_capture_verified": false,
+  "connected_serial_ports_at_preparation": [],
+  "python_tests_passed": 17,
+  "d1_d3_synthetic_frames": 90,
+  "centroid_source": "PC_OFFLINE_Y8",
+  "fpga_centroid_FAT_measured": false,
+  "hardware": {
+    "part": "xc7z010clg400-1",
+    "wns_ns": 2.727,
+    "whs_ns": 0.043,
+    "tns_ns": 0,
+    "ths_ns": 0,
+    "lut": 536,
+    "registers": 707,
+    "bram36": 24,
+    "dsp": 1,
+    "missing_io_delay_warnings": 20
+  },
+  "ppt_sha256": "02b17af9cfea07074596cfa9ac83f48f4180bb4a09030f4aa969e5e694e92da1",
+  "checks": {
+    "runtime_bridge": {
+      "file": "build/banco_doe_runtime_test.log",
+      "sha256": "fbcf3b9a23cb764b738fefbf423ab3e24f9e612afdefc79d6bae3ea7f0c42c43",
+      "result": "PASS"
+    },
+    "top_runtime_integrated": {
+      "file": "build/banco_doe_top_runtime_test.log",
+      "sha256": "dd48a0575d505d146a4a0ac665a29f2a236b41cf37bd496367e9023dc2ccb7c1",
+      "result": "PASS"
+    },
+    "sccb_bit_level": {
+      "file": "build/banco_doe_sccb_test.log",
+      "sha256": "f9e181547794fe8ada2ac1e3fb5d6f287fb66a8695ca985b8b175cd5ad676561",
+      "result": "PASS"
+    },
+    "vivado": {
+      "file": "build/banco_doe_build.log",
+      "sha256": "d5f559d278308d504648386bd5c154036b8c166bf6dccc5f2bfd191289e87941",
+      "result": "PASS"
+    },
+    "vitis": {
+      "file": "build/banco_doe_vitis.log",
+      "sha256": "4129020faaefc426231c85cc00c73be34e8d61f57c7e884ea38140a6123e05c2",
+      "result": "PASS"
+    },
+    "python": {
+      "file": "build/banco_doe_python_tests.log",
+      "sha256": "15d68698995d3755289496dfd33a6690b1a53db1a482e978e29c2bfa378ced5c",
+      "result": "PASS"
+    },
+    "browser": {
+      "result": "PASS_BROWSER_DOE",
+      "synthetic_only": true,
+      "visual_cards": 30,
+      "incomplete_form_rejected": true,
+      "complete_form_accepted": true,
+      "display": {
+        "width": 2560,
+        "height": 1440,
+        "dpr": 1,
+        "fullscreen": true,
+        "visible": true,
+        "center": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      "javascript_errors": []
+    }
+  },
+  "artifacts": {
+    "ps7_init.tcl": "2da8096216e7089a05ce5335c4fecbf36428a132013c541d2a621bf19c569ee3",
+    "receptor_ov7670_test.elf": "999a65f635eaba75d4b5c679271974c74d536b2daa3628ece52b47cb70c86099",
+    "sistema_captura_arm_wrapper.bit": "a8bfd9d69dfaf2a1593e39eab79e6a2aa3625637fd20e45a8d2644c2fb15a706",
+    "sistema_captura_arm_wrapper.xsa": "6461911d0e06aea0624922d9a5f5bdc56285610d2f172b446eb58127d902de07"
+  },
+  "limitations": [
+    "DOE1 not programmed on board yet",
+    "No physical optical measurements",
+    "No FPGA centroid result",
+    "No identification or attitude",
+    "Existing external IO timing not fully characterized"
+  ]
+}

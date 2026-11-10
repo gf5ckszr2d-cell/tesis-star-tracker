@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use std.env.all;
 entity tb_captura_uart is
-    generic (CLK_FREQ_HZ : positive := 100000000);
+    generic (CLK_FREQ_HZ : positive := 100000000; TEST_RUNTIME : boolean := false);
 end entity;
 architecture sim of tb_captura_uart is
     constant CLK_PERIOD : time := 1 sec / CLK_FREQ_HZ;
@@ -45,6 +45,7 @@ architecture sim of tb_captura_uart is
     signal sda_t : std_logic;
     signal leds : std_logic_vector(3 downto 0);
     signal status : std_logic_vector(63 downto 0);
+    signal software_control : std_logic_vector(63 downto 0) := (others=>'0');
     signal sda_slave_drive : std_logic := 'Z';
     signal cam_pclk, cam_href : std_logic := '0';
     signal cam_vsync : std_logic := '1';
@@ -70,6 +71,7 @@ begin
         port map (clk => clk, rst => rst, start => start, tx => tx,
             sda_i => to_x01(SDA), sda_t => sda_t, diag_led => leds,
             capture_status => status,
+            software_control => software_control,
             SCL => SCL, cam_xclk => cam_xclk,
             cam_pclk => cam_pclk, cam_vsync => cam_vsync, cam_href => cam_href,
             cam_data => cam_data, cam_reset => cam_reset, cam_pwdn => cam_pwdn);
@@ -141,6 +143,27 @@ begin
             and unsigned(status(35 downto 24))=640
             and unsigned(status(51 downto 36))=11264 and status(23)='1'
             report "Frame diagnostic counters incorrect for two full images" severity failure;
+        if TEST_RUNTIME then
+            software_control(3)<='1'; wait for 1 us;
+            assert status(31 downto 24)=x"D3" and status(33 downto 32)="11"
+                report "Runtime status page/configured/idle mapping" severity failure;
+            software_control(15 downto 8)<=x"10";
+            software_control(23 downto 16)<=x"A5"; software_control(1)<='1';
+            wait until status(0)='1' for 1 ms;
+            assert status(0)='1' and status(3 downto 1)="000" and status(15 downto 8)=x"A5"
+                report "Runtime write through top failed" severity failure;
+            wait for 400 us;
+            assert writes=22 report "Runtime held command repeated" severity failure;
+            software_control(2)<='1'; software_control(1)<='0';
+            wait until status(0)='0' for 1 ms;
+            assert status(0)='0' and status(3 downto 1)="000" and status(15 downto 8)=x"A5"
+                report "Runtime pointer/read through top failed" severity failure;
+            software_control(3)<='0'; wait for 1 us;
+            assert status(63)='1' and unsigned(status(11 downto 4))=240
+                and status(3 downto 0)="0000" and writes=24
+                report "Runtime changed latched image diagnostic" severity failure;
+            report "PASS_TOP_RUNTIME: two QVGA frames, EMIO page, actual SCCB write/pointer/read, preserved image diagnostic";
+        end if;
         rst <= '1'; wait for 1 us; rst <= '0'; wait for 10 us;
         assert tx = '1' report "UART no vuelve a idle con reset" severity failure;
         report "PASS_CAPTURA_UART: 21 registros, XCLK 24 MHz, dos STY1 320x240, payload y checksum, botones y reset";
@@ -239,6 +262,29 @@ begin
 
         i2c_config_done <= '1';
         report "Modelo SCCB/I2C recibio toda la configuracion esperada";
+
+        if TEST_RUNTIME then
+            receive_expected_write(x"10",x"A5","DOE runtime");
+            wait_start;
+            receive_master_byte(received_byte);
+            assert received_byte=x"42" report "Runtime pointer address" severity failure;
+            send_ack;
+            receive_master_byte(received_byte);
+            assert received_byte=x"10" report "Runtime pointer register" severity failure;
+            send_ack;
+            wait_start;
+            receive_master_byte(received_byte);
+            assert received_byte=x"43" report "Runtime read address" severity failure;
+            send_ack;
+            received_byte:=x"A5";
+            for i in 7 downto 0 loop
+                wait for 100 ns;
+                if received_byte(i)='0' then sda_slave_drive<='0'; else sda_slave_drive<='Z'; end if;
+                wait until rising_edge(SCL); wait until falling_edge(SCL);
+            end loop;
+            sda_slave_drive<='Z'; wait until rising_edge(SCL);
+            assert sda_to_bit(SDA)='1' report "Runtime read missing final NACK" severity failure;
+        end if;
 
         wait;
     end process;
