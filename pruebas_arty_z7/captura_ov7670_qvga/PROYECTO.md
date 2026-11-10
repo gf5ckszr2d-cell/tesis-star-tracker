@@ -5,8 +5,12 @@
 La entrada para las pruebas con soporte es [BANCO_DOE.md](BANCO_DOE.md).
 Se preparo control SCCB desde ARM para leer y fijar exposicion/ganancia,
 patrones nativos G5, adquisicion automatica, fichas visuales D1 y analisis PC
-hasta separacion D3. Vivado/XSim, Vitis y pruebas de software pasaron. Esta
-revision aun no se cargo ni se probo fisicamente. El preflight verifica hashes.
+hasta separacion D3. Vivado/XSim, Vitis y pruebas de software pasaron.
+Posteriormente se cargo esta revision y se recibio una foto fisica QVGA integra
+para revisar orientacion. Estaba desenfocada y no permite confirmar giro/espejo.
+La lectura posterior de registros encontro un timeout tras ocho lecturas
+correctas: resolverlo antes del DoE. Ver evidencia y detalles en BANCO_DOE.md.
+El preflight verifica hashes; no sustituye esa validacion fisica.
 
 Los centroides de este banco son calculados en PC. El bitstream Arty sigue
 siendo de captura y no acredita el detector VHDL ni FAT F02. Se conservan la

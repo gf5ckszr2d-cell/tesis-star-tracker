@@ -1,9 +1,29 @@
 # Banco automatizado Arty QVGA, D1 a D3
 
 Preparacion del 10 de noviembre de 2026. La implementacion y las pruebas de
-software estan realizadas. La carga de esta revision y las mediciones opticas
-quedan pendientes de conectar Arty, camara y soporte. No se detecto un puerto
-serie durante la preparacion.
+software estan realizadas. Durante la preparacion inicial no se detecto un
+puerto serie. Posteriormente se conecto el Arty por COM3 y se cargo DOE1.
+La primera foto fisica se describe a continuacion. El DoE sigue pendiente.
+
+## Primera foto fisica, sin iniciar DoE
+
+Se solicito y recibio exactamente una foto el 10 de noviembre de 2026.
+La captura dio 240 lineas, 640 bytes YUV por linea, 76800 muestras Y y checksum
+correcto. El original esta en
+`evidencias/orientacion_20261110/frame_y.png`, junto con RAW, UART y reporte.
+Y observado: 7..244, sin muestras >=250. Esto acredita esa captura y transporte,
+sin caracterizar aun el banco optico.
+
+La imagen muestra un objeto claro con un orificio oscuro, bastante desenfocado.
+No se confirma giro ni espejo sin compararlo con una referencia fisica conocida.
+No se cambio enfoque, exposicion ni ganancia desde software, ni se tomo otra foto.
+
+La lectura posterior de registros funciono para 0A,0B,00,01,02,03,04,07 y dio
+`ERROR DOE SCCB 3` (timeout de finalizacion) al solicitar 10. El reporte conserva
+las lecturas observadas y el UART completo. La causa permanece sin determinar.
+**Corregir y verificar ese control antes de iniciar el DoE automatizado.**
+No se modifico RTL para esta foto. Se conserva el resultado de simulacion como
+evidencia separada de esta incidencia fisica.
 
 La referencia es `Star_Tracker_DoE_FAT_Actualizado.pptx`, 26 diapositivas,
 aportada en `C:/Users/alexa/OneDrive/Documentos/ChatGPT/Tesis/entrega_doe/`.
@@ -196,7 +216,8 @@ No asumir que los archivos de `build/` viajan por Git.
 
 Los logs y capturas de verificacion estan en `build/banco_doe_*`. Las pruebas
 sinteticas se identifican como tales y sus carpetas temporales se eliminan al
-terminar. Estas verificaciones no son una toma fisica de la revision DOE1.
+terminar. La foto fisica posterior y el timeout de registros se registran aparte
+en `evidencias/orientacion_20261110/`; no equivalen a ejecutar D1-D3.
 
 Comandos reproducibles:
 

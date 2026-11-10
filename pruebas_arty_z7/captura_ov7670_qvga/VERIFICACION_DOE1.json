@@ -1,7 +1,7 @@
 {
   "date": "2026-11-10",
   "version": "DOE1",
-  "physical_capture_verified": false,
+  "physical_capture_verified": true,
   "connected_serial_ports_at_preparation": [],
   "python_tests_passed": 17,
   "d1_d3_synthetic_frames": 90,
@@ -80,10 +80,23 @@
     "sistema_captura_arm_wrapper.xsa": "6461911d0e06aea0624922d9a5f5bdc56285610d2f172b446eb58127d902de07"
   },
   "limitations": [
-    "DOE1 not programmed on board yet",
-    "No physical optical measurements",
+    "Only one physical frame; no optical DoE performed",
+    "Orientation/mirroring not confirmed; subject out of focus",
+    "Runtime SCCB register access timeout after partial successful reads; fix before DoE",
     "No FPGA centroid result",
     "No identification or attitude",
     "Existing external IO timing not fully characterized"
-  ]
+  ],
+  "first_physical_orientation_capture": {
+    "report": "evidencias/orientacion_20261110/report.json",
+    "image": "evidencias/orientacion_20261110/frame_y.png",
+    "frames": 1,
+    "checksum_verified": true,
+    "width": 320,
+    "height": 240,
+    "payload_bytes": 76800,
+    "orientation_confirmed": false,
+    "focus_acceptable_for_DoE": false,
+    "runtime_register_access": "Partial success: 8 register reads, then ERROR DOE SCCB 3 at r10; unresolved"
+  }
 }
