@@ -189,3 +189,46 @@ contratos aritméticos para los subtotales y totales. El archivo documental
 de Drive ahora contiene `planificacion_actual/` y conserva el paquete de
 resultados anterior separado en `historial/`. No se tomaron nuevas fotos ni
 se operó hardware.
+
+## Planificación ampliada hasta la entrega final de tesis (2026-11-10)
+
+La revisión vigente es `output/LAP_20261110/DoE_final_plan_tesis_completa_16_v3.pptx`.
+Sustituye el alcance de planificación D1–D3 de la revisión anterior. Conserva
+16 diapositivas: DoE 1–11 y LAP 12–16. Incluye D1 captura, D2 tamaño/centroide,
+D3 separación/ruido, D4 identificación HIP, D5 actitud/tiempo, integración
+operativa en VHDL/FPGA, aceptación de laboratorio y entrega final de tesis.
+No implementa identificación ni actitud y no modifica RTL ni hardware.
+
+Cada etapa tendrá una matriz propuesta de seis condiciones con cinco
+repeticiones, 30 capturas por etapa y 150 en D1–D5. D4 propone tres sectores
+de catálogo por dos condiciones (nominal y una fuente falsa). D5 propone
+tres ejes por dos giros virtuales de referencia de ±5°. Los sectores reales,
+la geometría, calibración y niveles se comprobarán antes de congelar el plan.
+Los rótulos H01–H03 son etiquetas de sectores por seleccionar, no HIP ficticios.
+
+Se mantienen 57 auxiliares: piloto 5, niveles digitales Y 15, geometría 27 y
+confirmación D2 10. El DoE base será de 207 capturas. El LAP reservará 200
+nuevas: diez posiciones por diez repeticiones para centroides y diez escenas
+por diez para el sistema completo. Total base: 407. La extensión dinámica
+deseable de cinco tasas por tres ejes y cinco repeticiones agrega 75, total
+482 si se incluye. Reintentos y registros adicionales de calibración se
+contabilizarán aparte. Las cantidades son propuestas exploratorias, no un
+cálculo de potencia estadística ni capturas ya realizadas.
+
+Los métodos y metas del LAP se vinculan con `Documentacion/control/requisitos.csv`:
+capacidad de fuentes, centroide FPGA, identificación, actitud, validez,
+latencia, integración y evidencia reproducible. Se conservan como metas por
+cerrar los requisitos TBR. Una referencia PC no sustituye la función FPGA.
+La exactitud óptica, el error numérico del estimador y el residuo de
+calibración tienen métricas y verificaciones distintas.
+
+Fuentes reproducibles: `scripts/crear_plan_tesis_completa.mjs` y
+`scripts/empaquetar_plan_tesis.py`. Guion:
+`output/LAP_20261110/Guion_plan_tesis_completa_16.md`. Paquete:
+`output/LAP_20261110/Documentacion_DoE_tesis_completa.zip`, con el plan actual
+y el archivo histórico de evidencias conservado en `historial/`.
+Se revisaron las 16 imágenes de las diapositivas y se corrigió el ajuste de
+las tablas. La validación final verifica estructura, 16 diapositivas,
+tablas editables, sumas y geometría sin hallazgos ni advertencias de ajuste.
+Esta edición es exclusivamente documental. No se tomaron nuevas capturas
+ni se conectó o programó la FPGA. No se publicó código en GitHub.
