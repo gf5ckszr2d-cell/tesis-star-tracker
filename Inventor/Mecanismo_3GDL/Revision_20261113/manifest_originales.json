@@ -1,0 +1,114 @@
+[
+  {
+    "relative_path": "Base_Z.ipt",
+    "bytes": 253440,
+    "sha256": "690B07A95FF85B437B120D3D256CDC5C328CA1289F79324F24904B7B64008705",
+    "source_last_write_utc": "2026-09-26T06:50:55.2540000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "base.ipt",
+    "bytes": 152576,
+    "sha256": "C37C1B9CC9121BADD438F9BBEC3AAB3A6BF5DA86D8DD17AA8A3AB94D986E6635",
+    "source_last_write_utc": "2026-09-26T06:50:55.1490000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "cajita.ipt",
+    "bytes": 226816,
+    "sha256": "CC90AE61C4725A971EE9948C2AFDDD90656132ED0E0511459C6544046D0E30CA",
+    "source_last_write_utc": "2026-09-26T06:50:55.0520000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "EjeY.ipt",
+    "bytes": 139264,
+    "sha256": "2EA2C86D423CD47314F20D6DD987F13482BAB09FA29618D8E2E29EFCD8BECF22",
+    "source_last_write_utc": "2026-09-13T13:33:00.3940000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "Ejez.ipt",
+    "bytes": 147456,
+    "sha256": "6BDCCF1EEF077AB977B0DD35787C708DCD1673EBB416BADEE5114220CC0F551D",
+    "source_last_write_utc": "2026-09-13T13:33:00.5250000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "mecanismo compoleto.iam",
+    "bytes": 635904,
+    "sha256": "BA1AB98DB60AC2F2A6BA48E286DBEEFBCD81D2C74F2664F7C948F9369CEE93C9",
+    "source_last_write_utc": "2026-09-26T08:21:02.5850000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "mecanismo compoleto.ipn",
+    "bytes": 204288,
+    "sha256": "6B6AA26F1753793BEED1262D244F1ABD4AAFF6A260251D67738F4A08945A338B",
+    "source_last_write_utc": "2026-09-26T07:52:32.9530000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "Pieza6.ipt",
+    "bytes": 222208,
+    "sha256": "4DB2A082C6197F9F7B2E27919CA86CCA954202DA51CB33999016E98F976D3370",
+    "source_last_write_utc": "2026-09-26T07:31:39.5470000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "PLANITOS.pdf",
+    "bytes": 586687,
+    "sha256": "3C99453855F6E791C084A671086CD47653A508EC452E29157C257B7C2292FF8B",
+    "source_last_write_utc": "2026-09-26T08:44:26.2548567Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "OldVersions\\Base_Z.0002.ipt",
+    "bytes": 177664,
+    "sha256": "B0E85F2835B3AEBFFC9AB78FC916D7617328DEE19AC046BFB89CA95C5CEB9353",
+    "source_last_write_utc": "2026-09-18T10:19:26.6220000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "OldVersions\\base.0002.ipt",
+    "bytes": 149504,
+    "sha256": "7C8607C2FC77EB5ECDE2AE748C7E2E9AB2DD3E7BC0C007AAF3ECDF62FEEFC0AB",
+    "source_last_write_utc": "2026-09-18T11:53:37.5060000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "OldVersions\\cajita.0001.ipt",
+    "bytes": 185856,
+    "sha256": "D98CF426B7B968AD0C6CE27463861B7F9FF65CDEB402145789D2E72E6604ACA1",
+    "source_last_write_utc": "2026-09-18T10:19:26.1190000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "OldVersions\\Ejez.0003.ipt",
+    "bytes": 187392,
+    "sha256": "1C6E9E86171CAB513121EEFEA1C0D71F80A09789894BE1D437D040260BC2E571",
+    "source_last_write_utc": "2026-09-13T11:08:16.6910000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "OldVersions\\mecanismo compoleto.0001.ipn",
+    "bytes": 181760,
+    "sha256": "AB803FB7D00B0BD942D7CA071A77E553E90856BD8916313DAF761EB7C3253F2A",
+    "source_last_write_utc": "2026-09-26T07:31:39.8990000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "OldVersions\\mecanismo compoleto.0004.iam",
+    "bytes": 660992,
+    "sha256": "9E881E838B04CF0B1087A02C11B8DF3433A701FBB7B7FFD4873FD85819408786",
+    "source_last_write_utc": "2026-09-18T11:53:37.8130000Z",
+    "verified_equal": true
+  },
+  {
+    "relative_path": "OldVersions\\Pieza6.0002.ipt",
+    "bytes": 219136,
+    "sha256": "173B8B79618284F697E305881BA95A31CB7A62CE97FF7465BBB0CF4F8057B2F7",
+    "source_last_write_utc": "2026-09-18T09:42:34.8790000Z",
+    "verified_equal": true
+  }
+]

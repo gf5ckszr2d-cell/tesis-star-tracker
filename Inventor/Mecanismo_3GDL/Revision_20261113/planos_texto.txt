@@ -1,0 +1,263 @@
+PAGINA 1
+CAMARA ELECTRONICACamera OV767018
+PETGPorta camara17
+ALUMINIO SERIE 6000Disco metálico 25t36
+SERVO MOTORServo MG996R35
+SAE 1010Perno M3x5164
+PETGSoporte lateral23
+SAE 1010Perno M3x10122
+PETGBase11
+LISTA DE COMPONENTES
+DESCRIPCIÓNNOMBRECANTIDADITEM
+Fecha:
+Creado: 12/09/2026
+Revisado:
+Aprobado:
+26/09/27 L. Huacasi
+Bolivar A.
+Nombre:Anotaciones
+complementarias.
+
+Todas las medidas
+en milímetros.
+
+Escuela Profesional:
+Departamento:
+INGENIERÍA MECATRÓNICA
+INGENIERÍA ELÉCTRICA Y ELECTRÓNICA Universidad CatólicaSan Pablo
+Tolerancia `0.01
+Acabado N6
+Plano:
+Documento:
+Modificación:
+MECANISMO STAR TRACKER
+Revisión A
+MEC-2027-1
+Hoja:
+1 : 2
+Formato: A4
+1/5
+Escala:
+STAR TRAKCER
+Proyecto:
+1
+2
+4
+3
+8
+5
+6
+7
+
+PAGINA 2
+CAMARA ELECTRONICACamera OV767018
+PETGPorta camara17
+ALUMINIO SERIE 6000Disco metálico 25t36
+SERVO MOTORServo MG996R35
+SAE 1010Perno M3x5164
+PETGSoporte lateral23
+SAE 1010Perno M3x10122
+PETGBase11
+LISTA DE PIEZAS
+DESCRIPCIÓNNOMBRECTDADITEM
+Fecha:
+Creado: 12/09/2026
+Revisado:
+Aprobado:
+26/09/27 L. Huacasi
+Bolivar A.
+Nombre:Anotaciones
+complementarias.
+
+Todas las medidas
+en milímetros.
+
+Escuela Profesional:
+Departamento:
+INGENIERÍA MECATRÓNICA
+INGENIERÍA ELÉCTRICA Y ELECTRÓNICA Universidad CatólicaSan Pablo
+Tolerancia `0.01
+Acabado N6
+Plano:
+Documento:
+Modificación:
+MECANISMO STAR TRACKER
+Revisión A
+MEC-2027-1
+Hoja:
+1 : 2
+Formato: A4
+2/5
+Escala:
+STAR TRAKCER
+Proyecto:
+1
+5
+6
+2
+4
+7
+3
+8
+
+PAGINA 3
+Fecha:
+Creado: 18/09/2026
+Revisado:
+Aprobado:
+26/09/27 L. Huacasi
+Bolivar A.
+Nombre:Anotaciones
+complementarias.
+
+Todas las medidas
+en milímetros.
+
+Escuela Profesional:
+Departamento:
+INGENIERÍA MECATRÓNICA
+INGENIERÍA ELÉCTRICA Y ELECTRÓNICA Universidad CatólicaSan Pablo
+Tolerancia `0.01
+Acabado N6
+Plano:
+Documento:
+Modificación:
+Soporte lateral
+Revisión A
+MEC-2027-1
+Hoja:
+1 : 1
+Formato: A4
+3/5
+Escala:
+STAR TRACKER
+Proyecto:
+75
+25
+n3
+3
+R5
+5
+21
+n4
+R1
+59
+15
+R5
+7
+16
+20
+13
+59
+58 R5
+58
+5
+8
+41
+2
+2
+24
+50
+
+PAGINA 4
+Fecha:
+Creado: 17/09/2026
+Revisado:
+Aprobado:
+26/09/27 L. Huacasi
+Bolivar A.
+Nombre:Anotaciones
+complementarias.
+
+Todas las medidas
+en milímetros.
+
+Escuela Profesional:
+Departamento:
+INGENIERÍA MECATRÓNICA
+INGENIERÍA ELÉCTRICA Y ELECTRÓNICA Universidad CatólicaSan Pablo
+Tolerancia `0.01
+Acabado N6
+Plano:
+Documento:
+Modificación:
+Base
+Revisión A
+MEC-2027-1
+Hoja:
+1 : 1
+Formato: A4
+4/5
+Escala:
+STAR TRACKER
+Proyecto:
+70
+R1
+21
+42
+20
+20
+14 2
+2
+50
+2
+1010
+24
+9
+
+PAGINA 5
+Fecha:
+Creado: 18/09/2026
+Revisado:
+Aprobado:
+26/09/27 L. Huacasi
+Bolivar A.
+Nombre:Anotaciones
+complementarias.
+
+Todas las medidas
+en milímetros.
+
+Escuela Profesional:
+Departamento:
+INGENIERÍA MECATRÓNICA
+INGENIERÍA ELÉCTRICA Y ELECTRÓNICA Universidad CatólicaSan Pablo
+Tolerancia `0.01
+Acabado N6
+Plano:
+Documento:
+Modificación:
+Porta camara
+Revisión A
+MEC-2027-1
+Hoja:
+1 : 1
+Formato: A4
+5/5
+Escala:
+Star tracker
+Proyecto:
+17
+7
+2
+29
+30
+5
+R4
+n
+3
+n
+7
+18
+23
+R3
+36
+2
+n
+3
+20
+34
+25
+15 7
+5
+5 7

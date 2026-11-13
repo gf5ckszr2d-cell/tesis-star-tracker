@@ -1,0 +1,30 @@
+[
+  {
+    "source": "C:\\Users\\alexa\\Downloads\\191500883-9-210212-3x5\\210212-3x5.ipt",
+    "relative_path": "CAD_portable/210212-3x5.ipt",
+    "bytes": 243712,
+    "sha256": "7738710AAB1C5A2E51F1AD289F871C4E0B1BCA6A7DCE6170C4F8398B1295760C",
+    "verified_equal": true
+  },
+  {
+    "source": "C:\\Users\\alexa\\Downloads\\191510912-9-210212-3x10\\210212-3x10.ipt",
+    "relative_path": "CAD_portable/210212-3x10.ipt",
+    "bytes": 133120,
+    "sha256": "E1543B79A49C49545E499F249BCFF460954D8A8A25F6044916ECC8B571272781",
+    "verified_equal": true
+  },
+  {
+    "source": "C:\\Users\\alexa\\Downloads\\Camera OV7670\\Camera OV7670.ipt",
+    "relative_path": "CAD_portable/Camera OV7670.ipt",
+    "bytes": 1081344,
+    "sha256": "0D8883678D588A3D258BB98FFEA1B3099F2D5783668E2EDF1B8973C6934920D9",
+    "verified_equal": true
+  },
+  {
+    "source": "C:\\Users\\alexa\\Downloads\\Servo MG996R\\Servo MG996R.ipt",
+    "relative_path": "CAD_portable/Servo MG996R.ipt",
+    "bytes": 301568,
+    "sha256": "D3C1AE7CDF671EAEA021F804A1BA5DB3E0582FEA32AB942E739564AD43082511",
+    "verified_equal": true
+  }
+]

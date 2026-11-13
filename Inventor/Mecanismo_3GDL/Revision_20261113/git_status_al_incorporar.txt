@@ -1,0 +1,122 @@
+ M .gitignore
+D  AGENTS.md
+ D "Configuracion camara/rtl/frame_capture_store.vhd"
+ D "Configuracion camara/rtl/frame_star_centroid.vhd"
+ D "Configuracion camara/rtl/frame_uart_dump.vhd"
+ D "Configuracion camara/rtl/framebuffer_y_bram.vhd"
+ D "Configuracion camara/rtl/ov7670_capture_y_stream.vhd"
+ D "Configuracion camara/rtl/ov7670_init_config.vhd"
+ D "Configuracion camara/rtl/ov7670_runtime_config.vhd"
+ D "Configuracion camara/rtl/ov7670_xclk_gen.vhd"
+ D "Configuracion camara/rtl/star_list_buffer.vhd"
+ D "Configuracion camara/rtl/unsigned_iterative_divider.vhd"
+ D "Configuracion camara/scripts/xsim_ov7670_capture_y_stream.tcl"
+ D "Configuracion camara/scripts/xsim_ov7670_init_config.tcl"
+ D "Configuracion camara/scripts/xsim_ov7670_runtime_config.tcl"
+ D "Configuracion camara/scripts/xsim_ov7670_xclk_gen.tcl"
+ D "Configuracion camara/tb/tb_frame_star_centroid.vhd"
+ D "Configuracion camara/tb/tb_framebuffer_y_bram.vhd"
+ D "Configuracion camara/tb/tb_ov7670_capture_y_stream.vhd"
+ D "Configuracion camara/tb/tb_ov7670_init_config.vhd"
+ D "Configuracion camara/tb/tb_ov7670_runtime_config.vhd"
+ D "Configuracion camara/tb/tb_ov7670_xclk_gen.vhd"
+ D "Configuracion camara/tb/tb_star_list_buffer.vhd"
+ D Docs/Manual_uso_star_tracker_Nexys_A7_OV7670.pdf
+ D Docs/deteccion_centroides_bram.md
+ D Docs/referencias/OV7670_Implementation_Guide_V1_0.pdf
+ D "Protocolo de comunicacion/rtl/i2c_master.vhd"
+ D "Protocolo de comunicacion/rtl/uart_tx.vhd"
+ D "Protocolo de comunicacion/scripts/xsim_i2c_master.tcl"
+ D "Protocolo de comunicacion/tb/tb_i2c_master.vhd"
+ D "Protocolo de comunicacion/tb/tb_uart_tx.vhd"
+ M README.md
+ D Scripts/build_src_rtl_pdf.py
+ D Scripts/open_top_uart_waves.tcl
+ D Scripts/vivado_smoke.tcl
+ D Scripts/vivado_synth_check.tcl
+ D Scripts/waves_i2c_master.wcfg
+ D Scripts/waves_ov7670_capture_y_stream.wcfg
+ D Scripts/waves_ov7670_init_config.wcfg
+ D Scripts/waves_ov7670_runtime_config.wcfg
+ D Scripts/waves_ov7670_xclk_gen.wcfg
+ D Scripts/waves_star_tracker_top.wcfg
+ D Scripts/xsim_frame_star_centroid.tcl
+ D Scripts/xsim_star_list_buffer.tcl
+ D Scripts/xsim_top_detector_bram.tcl
+ D Scripts/xsim_top_uart_full.tcl
+ D Top/bitstreams/releases/README.md
+ D Top/bitstreams/releases/v0.1_historico_funcional/INFO.md
+ D Top/bitstreams/releases/v0.1_historico_funcional/star_tracker_top_nexys.bit
+ D Top/bitstreams/releases/v0.2_clock_cdc_fix/INFO.md
+ D Top/bitstreams/releases/v0.2_clock_cdc_fix/star_tracker_top_nexys.bit
+ D Top/bitstreams/star_tracker_top_nexys.bit
+ D Top/constraints/star_tracker_top_nexys.xdc
+ D Top/rtl/star_tracker_top.vhd
+ D Top/tb/tb_star_tracker_top.vhd
+ D Top/vivado_projects/build_star_tracker_top_bitstream.tcl
+ D Top/vivado_projects/create_star_tracker_top_project.tcl
+ D Top/vivado_projects/star_tracker_top/star_tracker_top.xpr
+ D Verification/capture_storage/rtl/capture_storage_integration_top.vhd
+ D Verification/capture_storage/scripts/open_capture_storage_waves.tcl
+ D Verification/capture_storage/scripts/waves_capture_storage_integration.wcfg
+ D Verification/capture_storage/scripts/xsim_capture_storage_integration.tcl
+ D Verification/capture_storage/tb/tb_capture_storage_integration_top.vhd
+ D Verification/config_camera/rtl/camera_config_integration_top.vhd
+ D Verification/config_camera/scripts/open_camera_config_waves.tcl
+ D Verification/config_camera/scripts/waves_camera_config_integration.wcfg
+ D Verification/config_camera/scripts/xsim_camera_config_integration.tcl
+ D Verification/config_camera/tb/tb_camera_config_integration_top.vhd
+ D artyz7/README.md
+ D artyz7/bitstreams/star_tracker_top_arty_z7_10.bit
+ D artyz7/constraints/star_tracker_top_arty_z7_10.xdc
+ D artyz7/rtl/artyz7_clk_125_to_100.vhd
+ D artyz7/rtl/star_tracker_top_arty_z7_10.vhd
+ D artyz7/vivado_projects/build_star_tracker_top_arty_z7_10_bitstream.tcl
+ D artyz7/vivado_projects/create_star_tracker_top_arty_z7_10_project.tcl
+ D artyz7/vivado_projects/star_tracker_top_arty_z7_10/star_tracker_top_arty_z7_10.xpr
+ D "recepci\303\263n de frame/README.md"
+ D "recepci\303\263n de frame/calibrate_capture.py"
+ D "recepci\303\263n de frame/capturas/frame_y.png"
+ D "recepci\303\263n de frame/capture_frame_uart.py"
+ D "recepci\303\263n de frame/compare_centroids.py"
+ D "recepci\303\263n de frame/detect_stars.py"
+ D "recepci\303\263n de frame/generate_star_pattern.py"
+ D "recepci\303\263n de frame/list_serial_ports.ps1"
+ D "recepci\303\263n de frame/list_serial_ports.py"
+ D "recepci\303\263n de frame/requirements.txt"
+ D "recepci\303\263n de frame/run_calibrate_capture.cmd"
+ D "recepci\303\263n de frame/run_capture_frame_uart.cmd"
+ D "recepci\303\263n de frame/run_capture_frame_uart.ps1"
+ D "recepci\303\263n de frame/run_compare_centroids.cmd"
+ D "recepci\303\263n de frame/run_detect_stars.cmd"
+ D "recepci\303\263n de frame/run_generate_star_pattern.cmd"
+ D "recepci\303\263n de frame/run_list_serial_ports.cmd"
+ D "recepci\303\263n de frame/setup_python.cmd"
+ D "recepci\303\263n de frame/setup_python.ps1"
+ D "recepci\303\263n de frame/star_calibration_lib.py"
+?? Documentacion/
+?? Inventor/
+?? Star_Tracker_FPGA/
+?? Tesis_centroide/
+?? Tesis_definitiva/
+?? output/
+?? "prueba definitiva Star Tracker Arty/"
+?? pruebas_arty_z7/README.md
+?? pruebas_arty_z7/Vitis_Projects/
+?? pruebas_arty_z7/Vitis_captura_uart/
+?? pruebas_arty_z7/captura_ov7670/
+?? pruebas_arty_z7/captura_ov7670_qvga/arm/metadatos_anteriores/
+?? pruebas_arty_z7/captura_ov7670_qvga/output/LAP_20261110/DoE_final_plan_tesis_completa_16.pptx
+?? pruebas_arty_z7/captura_ov7670_qvga/output/LAP_20261110/DoE_final_plan_tesis_completa_16_v2.pptx
+?? pruebas_arty_z7/captura_ov7670_qvga/output/LAP_20261110/DoE_final_planificacion_16.pptx
+?? pruebas_arty_z7/captura_ov7670_qvga/output/LAP_20261110/Star_Tracker_LAP_revisado.pptx
+?? pruebas_arty_z7/configurar_variantes.py
+?? pruebas_arty_z7/referencia_port_anterior/
+?? pruebas_arty_z7/rutas_actualizadas.json
+?? pruebas_arty_z7/separar_variantes.py
+?? pruebas_arty_z7/traslado_verificado.json
+?? pruebas_arty_z7/uart_vhdl_zynq/
+?? pruebas_arty_z7/variantes_captura.json
+?? pruebas_arty_z7/verificacion_separacion.json
+?? result.json
+?? tmp/
