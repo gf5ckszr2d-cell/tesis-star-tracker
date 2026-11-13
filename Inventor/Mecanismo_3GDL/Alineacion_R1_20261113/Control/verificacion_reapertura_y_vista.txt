@@ -1,0 +1,19 @@
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\210212-3x10.ipt
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\210212-3x5.ipt
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\base.ipt
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\Base_Z.ipt
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\cajita.ipt
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\Camera OV7670.ipt
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\Pieza6.ipt
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\Separador_pitch_0p8_R1.ipt
+REFERENCE=C:\Users\alexa\tesis-star-tracker\Inventor\Mecanismo_3GDL\Alineacion_R1_20261113\CAD\Servo MG996R.ipt
+AXIS=Coincidencia:36 POINT_MM=10.15,59.5,-1.44309897365E-11 DIR=5.94559190921E-17,-1,1.73472347598E-16
+AXIS=Coincidencia:38 POINT_MM=-25.35,114.5,-1.49121384638E-11 DIR=-1,1.55477007035E-15,-2.72929826887E-16
+AXIS=Coincidencia:40 POINT_MM=10.15,114.5,-37.5 DIR=5.25715325929E-15,5.4652003936E-14,-1
+LENS_POINT_MM=10.15,114.5,8.36551218215 DIR=-1.83959874012E-14,-5.55089573331E-14,1
+VIEW_LEFT=223 TOP=144 WIDTH=2337 HEIGHT=1200
+PROJECTED_MODEL_MM=10.15,114.5,0 VIEW_XY=1180.01451533,406.551061864
+PROJECTED_MODEL_MM=70.15,114.5,0 VIEW_XY=1472.30605835,479.896630826
+PROJECTED_MODEL_MM=10.15,174.5,0 VIEW_XY=1180.01451533,67.3278054174
+PROJECTED_MODEL_MM=10.15,114.5,60 VIEW_XY=967.438847681,507.401219186
+REOPEN_VERIFIED=true;SCREENSHOT_SOURCE=live Inventor;CAD_ALIGNMENT_ONLY=true

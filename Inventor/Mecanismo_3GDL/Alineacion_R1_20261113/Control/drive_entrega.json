@@ -1,0 +1,21 @@
+{
+  "destination": "My Drive root",
+  "metadata_parent_id": "0AGpjKLnSSRcAUk9PVA",
+  "metadata_readback_verified": true,
+  "files": [
+    {
+      "local_name": "Captura_real_Inventor_Gimbal_R1.jpg",
+      "drive_name": "Gimbal_3GDL_R1_Captura_real_Inventor.jpg",
+      "id": "1p2vUWCpcso_LGCPQLD9N-qw9rfOWun1k",
+      "bytes": 176662,
+      "url": "https://drive.google.com/file/d/1p2vUWCpcso_LGCPQLD9N-qw9rfOWun1k/view?usp=drivesdk"
+    },
+    {
+      "local_name": "Gimbal_R1_ejes_anotados_generada.png",
+      "drive_name": "Gimbal_3GDL_R1_Ejes_alineados_imagen_generada.png",
+      "id": "12W0AYg630zUSrNeJwsVyucaAwNMULdqt",
+      "bytes": 1794865,
+      "url": "https://drive.google.com/file/d/12W0AYg630zUSrNeJwsVyucaAwNMULdqt/view?usp=drivesdk"
+    }
+  ]
+}

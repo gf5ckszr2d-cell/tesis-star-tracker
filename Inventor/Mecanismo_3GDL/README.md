@@ -8,14 +8,16 @@ cámara fija en el manuscrito queda pendiente de una actualización posterior.
 
 ## Abrir y consultar
 
+- **Revisión vigente de alineación:** [Alineacion_R1_20261113](Alineacion_R1_20261113/README.md), con ensamblaje corregido y ambas imágenes.
 - Ensamblaje completo: [CAD_portable/mecanismo compoleto.iam](CAD_portable/mecanismo%20compoleto.iam).
 - Planos originales, cinco hojas: [Original/PLANITOS.pdf](Original/PLANITOS.pdf).
 - Dictamen y acciones necesarias: [REVISION_BANCO.md](REVISION_BANCO.md).
 - Evidencia numérica: [Revision_20261113/verificacion_paquete.json](Revision_20261113/verificacion_paquete.json).
 
-**Dictamen:** aprovechable como prototipo de gimbal 3R; todavía no está validado
-como referencia angular para el banco. Se deben cerrar movilidad, alineación,
-encajes, rigidez y medición independiente del ángulo.
+**Dictamen actualizado:** alineación geométrica corregida en R1; todavía no está
+validado como referencia angular para el banco. Se deben cerrar movilidad,
+encajes, rigidez y medición independiente del ángulo. La revisión inicial y los
+archivos recibidos se conservan como evidencia histórica.
 
 ## Conservación y portabilidad
 
@@ -38,9 +40,10 @@ imagen vacía y fue descartado tras inspección visual; el texto `RENDER_OK=true
 de esos registros solo indica que la llamada terminó, no una imagen aprobada.
 La evidencia visual utilizada son las cinco hojas del PDF original.
 
-No se ha rediseñado ni guardado el ensamblaje durante esta revisión. La liberación
+En la revisión inicial no se rediseñó ni guardó el ensamblaje. La liberación
 de restricciones se ensayó exclusivamente en memoria y se cerró sin guardar.
 No se modificó RTL, configuración de cámara, UART ni hardware físico.
+La corrección posterior solicitada queda documentada en la carpeta R1.
 
 ## Reproducir la inspección
 

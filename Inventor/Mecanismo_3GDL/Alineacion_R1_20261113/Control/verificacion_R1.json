@@ -1,0 +1,63 @@
+{
+  "saved_assembly_reopened": true,
+  "local_direct_references": 9,
+  "tolerance_mm": 1e-05,
+  "common_center_mm": [
+    10.15,
+    114.5,
+    0.0
+  ],
+  "center_to_each_axis_mm": [
+    1.4440531085874156e-11,
+    1.4902551666479725e-11,
+    2.0589102378256897e-12
+  ],
+  "lens_barrel_to_roll_axis_mm": 2.518212602531934e-12,
+  "axis_direction_dot_products_absolute": [
+    1.6142259894421001e-15,
+    5.4825476283598e-14,
+    4.984223432402915e-15
+  ],
+  "original_16_files_preserved": true,
+  "unchanged_copied_parts": [
+    "210212-3x10.ipt",
+    "210212-3x5.ipt",
+    "base.ipt",
+    "Base_Z.ipt",
+    "Camera OV7670.ipt",
+    "EjeY.ipt",
+    "Ejez.ipt",
+    "Pieza6.ipt",
+    "Servo MG996R.ipt"
+  ],
+  "interference_pairs_count": 23,
+  "same_interference_pairs_as_received": true,
+  "new_interference_pairs": [],
+  "spacer_thickness_mm": 0.8,
+  "physical_alignment_measured": false,
+  "full_motion_sweep_verified": false,
+  "images": {
+    "Captura_real_Inventor_Gimbal_R1.jpg": {
+      "bytes": 176662,
+      "sha256": "8EF24A2B3C1558A3238D23D5E43B079D155717E07D198F55B6546A9A47AC558E"
+    },
+    "Gimbal_R1_ejes_anotados_generada.png": {
+      "bytes": 1794865,
+      "sha256": "4BA762F0012778EDD7FAF5269287552EB19D79DB72D98EA7AF3622DDE2DD496E"
+    }
+  },
+  "cad_sha256": {
+    "210212-3x10.ipt": "E1543B79A49C49545E499F249BCFF460954D8A8A25F6044916ECC8B571272781",
+    "210212-3x5.ipt": "7738710AAB1C5A2E51F1AD289F871C4E0B1BCA6A7DCE6170C4F8398B1295760C",
+    "base.ipt": "C37C1B9CC9121BADD438F9BBEC3AAB3A6BF5DA86D8DD17AA8A3AB94D986E6635",
+    "Base_Z.ipt": "690B07A95FF85B437B120D3D256CDC5C328CA1289F79324F24904B7B64008705",
+    "cajita.ipt": "C34A933C6C753AEE11642580E010C3636ED55B9817691EA87E3E17F98688C702",
+    "Camera OV7670.ipt": "0D8883678D588A3D258BB98FFEA1B3099F2D5783668E2EDF1B8973C6934920D9",
+    "EjeY.ipt": "2EA2C86D423CD47314F20D6DD987F13482BAB09FA29618D8E2E29EFCD8BECF22",
+    "Ejez.ipt": "6BDCCF1EEF077AB977B0DD35787C708DCD1673EBB416BADEE5114220CC0F551D",
+    "Gimbal_3GDL_alineado_R1.iam": "8AA12915C61FBE0F0B486D16DCD7138FE9DBA7A3B894C694A20771BB948CC0E7",
+    "Pieza6.ipt": "4DB2A082C6197F9F7B2E27919CA86CCA954202DA51CB33999016E98F976D3370",
+    "Separador_pitch_0p8_R1.ipt": "4F99964FA28666E2B20C2D852F67AF4FC98B51A89C71210BB420F6C22EB7B623",
+    "Servo MG996R.ipt": "D3C1AE7CDF671EAEA021F804A1BA5DB3E0582FEA32AB942E739564AD43082511"
+  }
+}
