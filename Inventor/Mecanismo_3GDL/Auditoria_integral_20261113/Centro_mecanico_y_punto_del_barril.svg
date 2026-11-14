@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="470" viewBox="0 0 1100 470">
+<rect width="1100" height="470" fill="#ffffff"/>
+<g font-family="Arial, sans-serif" fill="#162434">
+<text x="40" y="37" font-size="23">Centro mecánico y punto del barril: referencias distintas</text>
+<text x="40" y="69" font-size="15">Geometría R1 exportada de Inventor. La pupila de entrada real aún no está medida.</text>
+<text x="40" y="113" font-size="18">Giro yaw: vista del plano XZ</text>
+<line x1="80" y1="335" x2="490" y2="335" stroke="#abb7c5"/>
+<line x1="290" y1="140" x2="290" y2="365" stroke="#abb7c5"/>
+<polyline points="434.89,251.34 373.66,190.11 333.30,173.39 290.00,167.69 246.70,173.39 206.34,190.11 145.11,251.34" stroke="#d66c16" stroke-width="3" fill="none"/>
+<line x1="290" y1="335" x2="290.0" y2="167.689756357" stroke="#2571b9" stroke-width="2"/>
+<line x1="290" y1="335" x2="206.3448781782" y2="190.105078692" stroke="#2571b9" stroke-width="2" stroke-dasharray="5 5"/>
+<line x1="290.0" y1="167.689756357" x2="206.3448781782" y2="190.105078692" stroke="#b73445" stroke-width="2"/>
+<circle cx="290" cy="335" r="6" fill="#1a7d52"/>
+<circle cx="290.0" cy="167.689756357" r="5" fill="#2571b9"/>
+<circle cx="206.3448781782" cy="190.105078692" r="5" fill="#d66c16"/>
+<text x="300" y="360" font-size="16">O fijo</text>
+<text x="300" y="163" font-size="16">P a 0°</text>
+<text x="110" y="201" font-size="16">P a 30°</text>
+<text x="151" y="148" font-size="15" fill="#b73445">Desplazamiento: 4,330 mm</text>
+<text x="320" y="265" font-size="15">OP = 8,366 mm</text>
+<text x="40" y="410" font-size="15">O permanece fijo. P describe un arco porque está separado de O.</text>
+<text x="580" y="113" font-size="18">Posición inicial sobre el eje óptico modelado</text>
+<line x1="590" y1="250" x2="1040" y2="250" stroke="#2571b9" stroke-width="2"/>
+<line x1="645" y1="210" x2="645" y2="290" stroke="#7e8997" stroke-width="3"/>
+<circle cx="690" cy="250" r="6" fill="#1a7d52"/>
+<circle cx="940" cy="250" r="6" fill="#2571b9"/>
+<text x="596" y="196" font-size="15">Plano PCB S</text>
+<text x="600" y="315" font-size="15">−1,5 mm</text>
+<text x="678" y="221" font-size="17">O</text>
+<text x="678" y="315" font-size="15">0</text>
+<text x="931" y="221" font-size="17">P</text>
+<text x="902" y="315" font-size="15">+8,366 mm</text>
+<text x="580" y="361" font-size="15">P es un punto geométrico del barril, no la pupila medida.</text>
+<text x="580" y="390" font-size="15">S es una referencia de PCB, no una localización del sensor.</text>
+<text x="580" y="419" font-size="15">La referencia óptica E se debe localizar físicamente.</text>
+</g></svg>

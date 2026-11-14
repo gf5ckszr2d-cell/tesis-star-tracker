@@ -8,16 +8,18 @@ cámara fija en el manuscrito queda pendiente de una actualización posterior.
 
 ## Abrir y consultar
 
+- **Auditoría integral vigente:** [centro óptico, movimiento y colisiones](Auditoria_integral_20261113/README.md), terminada el 14/11/2026; incluye ejes nativos y 125 posturas.
 - **Revisión vigente de alineación:** [Alineacion_R1_20261113](Alineacion_R1_20261113/README.md), con ensamblaje corregido y ambas imágenes.
 - Ensamblaje completo: [CAD_portable/mecanismo compoleto.iam](CAD_portable/mecanismo%20compoleto.iam).
 - Planos originales, cinco hojas: [Original/PLANITOS.pdf](Original/PLANITOS.pdf).
 - Dictamen y acciones necesarias: [REVISION_BANCO.md](REVISION_BANCO.md).
 - Evidencia numérica: [Revision_20261113/verificacion_paquete.json](Revision_20261113/verificacion_paquete.json).
 
-**Dictamen actualizado:** alineación geométrica corregida en R1; todavía no está
-validado como referencia angular para el banco. Se deben cerrar movilidad,
-encajes, rigidez y medición independiente del ángulo. La revisión inicial y los
-archivos recibidos se conservan como evidencia histórica.
+**Dictamen actualizado:** el centro mecánico de R1 permanece fijo en las posturas
+probadas; la pupila de entrada real sigue sin localizarse. Se detectaron choques
+entre carcasas/base en 20 de 125 combinaciones grandes. Todavía no está validado
+como referencia angular para el banco. La revisión inicial y los archivos recibidos
+se conservan como evidencia histórica.
 
 ## Conservación y portabilidad
 

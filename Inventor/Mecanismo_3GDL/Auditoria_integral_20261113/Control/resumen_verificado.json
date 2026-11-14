@@ -1,0 +1,75 @@
+{
+  "audit_completed": "2026-11-14",
+  "native_pose_samples": 22,
+  "grid_samples": 125,
+  "solver_failures": 0,
+  "max_mechanical_center_displacement_mm": 2.56470448619e-11,
+  "max_center_to_rotational_axis_distance_mm": 2.33030093219e-11,
+  "barrel_point_offset_from_center_mm": 8.36551218215,
+  "selected_point_displacements": {
+    "yaw_30": {
+      "P_displacement_mm": 4.33030774957,
+      "S_displacement_mm": 0.77645713529,
+      "O_displacement_mm": 2.0205603457e-11
+    },
+    "pitch_30": {
+      "P_displacement_mm": 4.33030774956,
+      "S_displacement_mm": 0.776457135309,
+      "O_displacement_mm": 1.76833107342e-11
+    },
+    "roll_30": {
+      "P_displacement_mm": 1.47969973691e-11,
+      "S_displacement_mm": 1.89011570672e-11,
+      "O_displacement_mm": 1.8901952906e-11
+    },
+    "combined_30": {
+      "P_displacement_mm": 5.91531039211,
+      "S_displacement_mm": 1.06066017177,
+      "O_displacement_mm": 1.67558147233e-11
+    }
+  },
+  "poses_with_other_body_collisions": 20,
+  "other_collision_pairs": [
+    [
+      "Servo MG996R:1",
+      "Servo MG996R:3"
+    ],
+    [
+      "Servo MG996R:3",
+      "base:1"
+    ]
+  ],
+  "body_collision_pose_names": [
+    "grid_-30_-60_-30",
+    "grid_-30_-60_-60",
+    "grid_-30_-60_0",
+    "grid_-30_-60_30",
+    "grid_-30_-60_60",
+    "grid_-60_-60_-30",
+    "grid_-60_-60_-60",
+    "grid_-60_-60_0",
+    "grid_-60_-60_30",
+    "grid_-60_-60_60",
+    "grid_30_-60_-30",
+    "grid_30_-60_-60",
+    "grid_30_-60_0",
+    "grid_30_-60_30",
+    "grid_30_-60_60",
+    "grid_60_-60_-30",
+    "grid_60_-60_-60",
+    "grid_60_-60_0",
+    "grid_60_-60_30",
+    "grid_60_-60_60"
+  ],
+  "central_27_samples_no_other_body_collision": true,
+  "hub_contact_exclusion": "Only Servo MG996R:i with Pieza6:i; user reports smaller physical shaft; dimensions unmeasured",
+  "servo_shaft_model_diameter_mm": 7.18403099414,
+  "pieza6_nominal_central_bore_diameter_mm": 5.5,
+  "physical_entrance_pupil_located": false,
+  "physical_servo_dimensions_measured": false,
+  "mechanical_parts_modified_by_audit": false,
+  "servo_copy_added_construction_axis_only": true,
+  "live_axes_bound_to_shaft_cylinders_verified_after_rotation": true,
+  "R1_all_saved_CAD_hashes_preserved": true,
+  "bolts_wires_and_continuous_sweep_in_grid_collision_check": false
+}
