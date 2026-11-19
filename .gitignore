@@ -1,13 +1,19 @@
+# Productos y estado local de Vivado y Vitis
 .Xil/
-sim_build/
-*.jou
-*.log
-*.wdb
-*.dcp
-*.str
-dfx_runtime.txt
+*.runs/
 *.cache/
 *.hw/
-*.runs/
-*.ip_user_files/
-Top/bitstreams/.jobs/
+*.sim/
+*.jou
+*.wdb
+*.dcp
+*.bit
+*.xsa
+
+# Resultados de herramientas y respaldos locales
+__pycache__/
+node_modules/
+OldVersions/
+*.bak
+*.tmp
+Thumbs.db

@@ -1,0 +1,32 @@
+#-----------------------------------------------------------
+# xsim v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Thu Nov 19 12:52:51 2026
+# Process ID         : 13064
+# Current directory  : tmp/timing_lectura_grupos_20261119/simulacion
+# Command line       : xsim.exe -log uart.log -mode tcl -source {xsim.dir/uart/xsim_script.tcl}
+# Log file           : tmp/timing_lectura_grupos_20261119/simulacion/uart.log
+# Journal file       : tmp/timing_lectura_grupos_20261119/simulacion\xsim.jou
+# Running On         : Alexa
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26300
+# Processor Detail   : AMD Ryzen 5 5600X 6-Core Processor             
+# CPU Frequency      : 3693 MHz
+# CPU Physical cores : 6
+# CPU Logical cores  : 12
+# Host memory        : 34264 MB
+# Swap memory        : 12884 MB
+# Total Virtual      : 47149 MB
+# Available Virtual  : 22758 MB
+#-----------------------------------------------------------
+source xsim.dir/uart/xsim_script.tcl
+# xsim {uart} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+Note: Dos pares STY1/STC1 recibidos
+Time: 13521580 ns  Iteration: 0  Process: /tb_captura_centroides_uart/line__114  File: Tesis_centroides_Arty/tests/tb_captura_centroides_uart.vhd
+$finish called at time : 13521580 ns
+exit
+INFO: [Common 17-206] Exiting xsim at Thu Nov 19 12:52:56 2026...

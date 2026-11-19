@@ -1,0 +1,9 @@
+{
+  "estado": "SIMULATED_UNCALIBRATED",
+  "camara": {"ancho": 320, "alto": 240, "fov_horizontal_deg": 25.0, "cx": 160.0, "cy": 120.0, "fx": null, "fy": null, "k1": 0.0, "k2": 0.0},
+  "detector": {"umbral": 45, "area_min": 2, "area_max": 500, "max_estrellas": 64},
+  "banco": {"distancia_mm": 250.0, "ancho_mm": 596.736, "alto_mm": 335.664, "radio_mm": 1000.0, "ancho_px": 2560, "alto_px": 1440, "radio_punto_px": 8},
+  "seleccion": {"ar_deg": 83.8, "dec_deg": -5.4, "magnitud_max": 5.0, "separacion_min_px": 6.0, "min_estrellas": 5, "max_estrellas": 16, "buscar_sector": true, "paso_ar_deg": 30, "paso_dec_deg": 20},
+  "identificacion": {"tolerancia_deg": 0.18, "min_coincidencias": 5},
+  "calibracion": {"repeticiones": 30, "radios_monitor_px": [2,4,6,8,10,12], "niveles": [64,96,128,160,192,224], "separaciones_monitor_px": [4,8,12,16,24,32,48], "posiciones": [[0.5,0.5],[0.25,0.25],[0.75,0.25],[0.25,0.75],[0.75,0.75]], "error_match_px": 3.0}
+}

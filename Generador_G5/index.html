@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador de cielo - Odyssey G5</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="screenCanvas" width="2560" height="1440" aria-label="Cielo rotado para el monitor Odyssey G5"></canvas>
+  <canvas id="guideCanvas" width="2560" height="1440" aria-label="Guías de constelaciones y huella de cámara"></canvas>
+  <aside id="controlPanel" class="panel" aria-label="Controles del simulador">
+    <header class="panel-header">
+      <div><p class="eyebrow">CÁMARA FIJA · CIELO VARIABLE</p><h1>Odyssey G5 · banco de captura</h1></div>
+      <button id="closePanelButton" class="icon-button" type="button" title="Cerrar · M para volver" aria-label="Cerrar controles">×</button>
+    </header>
+    <div id="panelBody" class="panel-body">
+      <p class="shortcut"><kbd>M</kbd> oculta/muestra todo el menú y las guías · <kbd>F</kbd> pantalla completa</p>
+      <section>
+        <h2>Cielo de referencia</h2>
+        <p class="hint">Estado cero: Orión y regiones vecinas · Vmag ≤ 5,0. Los giros cambian las estrellas visibles en el panel, conservando sus identidades HIP. Exporta la referencia de cada estado antes de asociarla con una captura.</p>
+        <label class="check-field"><input id="showConstellationLines" type="checkbox"><span>Unir estrellas de constelaciones</span></label>
+        <label class="check-field"><input id="showConstellationNames" type="checkbox"><span>Mostrar nombres de constelaciones</span></label>
+        <label class="check-field"><input id="showLabels" type="checkbox"><span>Mostrar identificadores HIP</span></label>
+        <p class="hint">Estas guías se dibujan aparte y no forman parte del patrón capturable. M las retira antes de capturar.</p>
+      </section>
+      <section>
+        <h2>Movimiento del cielo</h2>
+        <p class="fixed-optics">Cámara inmóvil · valores iniciales <strong>25 cm</strong> y <strong>25°</strong></p>
+        <label class="check-field"><input id="showFovGuide" type="checkbox"><span>Mostrar contorno del FOV sobre la pantalla</span></label>
+        <p class="hint">Los tres giros se aplican al cielo, no a la cámara. El patrón se vuelve a proyectar sobre la pantalla curva. Son controles del estímulo de prueba; no calculan actitud.</p>
+        <div id="poseControls"></div>
+      </section>
+      <section>
+        <details><summary>Configuración del banco virtual</summary>
+          <p class="hint">Distancia desde el centro óptico al centro del G5. Cambiar estos valores crea otra configuración; no implica que estén medidos. La distorsión se aplica en la vista de cámara, sin predeformar el patrón.</p>
+          <div id="modelControls"></div>
+        </details>
+      </section>
+      <section class="preview-section">
+        <div class="section-heading"><h2 id="previewTitle">Vista estimada OV7670</h2><span id="previewFormat">160 × 120 · Y8</span></div>
+        <button id="overviewButton" class="preview-toggle" type="button" aria-pressed="false" aria-controls="cameraPreview sectorPreview">Ver sector completo</button>
+        <canvas id="cameraPreview" width="160" height="120" aria-label="Vista estimada de la cámara"></canvas>
+        <canvas id="sectorPreview" width="2560" height="1440" aria-label="Vista general del sector completo" hidden></canvas>
+        <p id="previewMeta" class="hint" aria-live="polite"></p>
+        <p id="previewHint" class="hint">Modelo geométrico con PSF provisional; no es una captura real. Fuera del panel se representa negro. Las guías nunca entran en esta vista.</p>
+      </section>
+      <section class="status-card" aria-live="polite">
+        <div><span>Campo físico del panel</span><strong id="screenCoverage">—</strong></div>
+        <div><span>FOV vertical 4:3</span><strong id="verticalFov">—</strong></div>
+        <div><span>Huella FOV ideal (k=0)</span><strong id="fovFootprint">—</strong></div>
+        <div><span>Estrellas en pantalla</span><strong id="screenStarCount">—</strong></div>
+        <div><span>Centros de estrellas en FOV</span><strong id="cameraStarCount">—</strong></div>
+        <div><span>Constelaciones con trazos visibles</span><strong id="constellationCount">—</strong></div>
+      </section>
+      <section>
+        <details><summary>Monitor G5 y calidad de salida</summary>
+          <p class="hint">Patrón 2560 × 1440; G5 nominal 596,736 × 335,664 mm y 1000R horizontal. No cambies escalado, brillo ni color del monitor entre capturas.</p>
+          <p id="qualityStatus" class="hint"></p>
+          <p class="hint">Usa QHD, pantalla completa y SDR. La salida 1:1 es estimada; debe comprobarse en el monitor.</p>
+        </details>
+      </section>
+      <section>
+        <details><summary>Guía rápida de uso</summary>
+          <ol class="manual">
+            <li>Abre en el G5 a 2560 × 1440 y pulsa F. El estado cero reproduce la referencia nominal de Orión.</li>
+            <li>Activa líneas, nombres o HIP solo para reconocer estrellas; no aparecen en la captura al pulsar M.</li>
+            <li>Coloca el centro óptico a 25 cm del centro del panel. El FOV nominal usado es 25°.</li>
+            <li>Cambia los giros del cielo. El patrón y la vista estimada se actualizan; la cámara permanece fija.</li>
+            <li>Pulsa M para quitar menú, líneas, nombres y contorno. Vuelve a pulsar M para regresar.</li>
+            <li>Exporta JSON, CSV y PNG del mismo estado. Mantén el cielo inmóvil durante la captura física y guarda su identificador con la imagen recibida.</li>
+          </ol>
+          <p class="hint">Esta etapa prepara estímulos y referencias para pruebas de cámara. Las guías son una ayuda visual humana.</p>
+          <a href="README.md" target="_blank" rel="noopener">Manual y limitaciones del modelo</a>
+        </details>
+      </section>
+      <div class="actions">
+        <button id="fullscreenButton" type="button">Pantalla completa</button>
+        <button id="exportButton" type="button">Exportar estado JSON</button>
+        <button id="exportCsvButton" type="button">Exportar estrellas CSV</button>
+        <button id="exportPngButton" type="button">Exportar patrón PNG</button>
+        <button id="resetButton" type="button">Restaurar cielo a cero</button>
+      </div>
+      <p class="hint">Catálogo: ESA Hipparcos. Trazos: equipo de Stellarium, CC BY-SA. <a href="data/CONSTELLATIONS_LICENSE.md" target="_blank" rel="noopener">Fuente y atribución</a>.</p>
+    </div>
+  </aside>
+  <script src="data/hipparcos_vmag_le_7.js"></script>
+  <script src="data/constellations.js"></script>
+  <script src="geometry.js"></script>
+  <script src="engine.js"></script>
+  <script src="fixed_scene.js"></script>
+  <script src="rotating_scene.js"></script>
+  <script src="simulator.js"></script>
+</body>
+</html>

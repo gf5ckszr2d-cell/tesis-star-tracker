@@ -1,168 +1,38 @@
-# tesis-star-tracker
+# Star Tracker en FPGA
 
-Repositorio de tesis para un prototipo de star tracker en FPGA. El alcance actual no incluye todavia deteccion de estrellas, centroides ni determinacion de actitud; esta etapa valida la configuracion de la camara OV7670, la captura de luminancia `Y`, el almacenamiento de un frame en BRAM y el envio por UART hacia la PC.
+Esta tesis desarrolla y valida un rastreador estelar en FPGA, desde la captura hasta el cálculo de un cuaternión. La demostración se hará en un banco controlado. Un Samsung Odyssey G5 muestra un cielo de referencia y una cámara OV7670, montada en un mecanismo de tres grados de libertad con servos MG90S, observa el patrón. La Arty Z7-10 se usa para las pruebas actuales de integración. La Nexys A7-100T es la plataforma prevista para la implementación final.
 
-## Estado oficial
+## Los cinco módulos de la tesis
 
-- FPGA objetivo: Digilent Nexys A7-100T.
-- Camara: OV7670.
-- Lenguaje RTL: VHDL.
-- Simulacion oficial: Vivado/XSim mediante scripts TCL.
-- No usar GHDL en este repositorio.
-- Resolucion actual: QQVGA `160x120`.
-- Formato de entrada de camara: YUV `4:2:2`.
-- Top global oficial: `Top/rtl/star_tracker_top.vhd`.
-- Proyecto Vivado oficial: `Top/vivado_projects/star_tracker_top/star_tracker_top.xpr`.
-- Bitstream oficial: `Top/bitstreams/star_tracker_top_nexys.bit`.
-
-Flujo validado:
-
-```text
-init SCCB/I2C -> OV7670 -> XCLK/PCLK -> captura Y -> BRAM -> frame_uart_dump -> uart_tx USB
-```
-
-El test global esperado valida paquete UART con `STY1`, ancho `160`, alto `120`, payload `19200` bytes, payload Y correcto y checksum correcto.
-
-## Estructura
-
-```text
-.
-|-- Protocolo de comunicacion/
-|   |-- rtl/
-|   |   |-- i2c_master.vhd
-|   |   `-- uart_tx.vhd
-|   |-- tb/
-|   `-- scripts/
-|-- Configuracion camara/
-|   |-- rtl/
-|   |   |-- ov7670_xclk_gen.vhd
-|   |   |-- ov7670_init_config.vhd
-|   |   |-- ov7670_capture_y_stream.vhd
-|   |   |-- frame_capture_store.vhd
-|   |   |-- framebuffer_y_bram.vhd
-|   |   `-- frame_uart_dump.vhd
-|   |-- tb/
-|   `-- scripts/
-|-- Top/
-|   |-- rtl/star_tracker_top.vhd
-|   |-- tb/tb_star_tracker_top.vhd
-|   |-- constraints/star_tracker_top_nexys.xdc
-|   |-- vivado_projects/
-|   `-- bitstreams/
-|-- Scripts/
-|-- Docs/
-`-- AGENTS.md
-```
-
-## Modulos principales
-
-- `i2c_master`: maestro SCCB/I2C usado para configurar la OV7670.
-- `uart_tx`: transmisor UART 8N1.
-- `ov7670_xclk_gen`: genera `XCLK` de 24 MHz desde el reloj de 100 MHz de la Nexys A7-100T.
-- `ov7670_init_config`: envia la tabla de registros de inicializacion de la OV7670.
-- `ov7670_runtime_config`: permite calibrar contraste, ganancia, exposicion y brillo despues de la inicializacion.
-- `ov7670_capture_y_stream`: capturador FSM en dominio `PCLK`; espera sincronizacion con `VSYNC` antes de capturar y emite solo luminancia `Y` del patron YUV 4:2:2.
-- `frame_capture_store`: arma una captura unica, escribe pixeles en direccion row-major y marca frame listo.
-- `framebuffer_y_bram`: framebuffer dual-clock para `19200` bytes.
-- `frame_uart_dump`: lee la BRAM y genera el paquete binario UART.
-- `star_tracker_top`: integra inicializacion, captura, almacenamiento y envio UART.
-
-## Mapeo Nexys A7-100T y OV7670
-
-El constraint oficial es `Top/constraints/star_tracker_top_nexys.xdc`. La salida UART usa el USB-UART integrado de la Nexys A7-100T; no hay UART por PMOD.
-
-Mapeo fisico ordenado para el header 2x9 de la OV7670:
-
-| Fila OV7670 | Lado izquierdo | Nexys | Lado derecho | Nexys |
-|---:|---|---|---|---|
-| 1 | 3.3V | 3.3V | GND | GND |
-| 2 | SCL | JA1 | SDA | JA7 |
-| 3 | VS | JA2 | HS/HREF | JA8 |
-| 4 | PCLK | JA3 | XCLK | JA9 |
-| 5 | D7 | JA4 | D6 | JA10 |
-| 6 | D5 | JB1 | D4 | JB7 |
-| 7 | D3 | JB2 | D2 | JB8 |
-| 8 | D1 | JB3 | D0 | JB9 |
-| 9 | RESET | JB4 | PWDN | JB10 |
-
-Entradas/salidas de usuario:
-
-- `start_btn`: inicia la configuracion; despues de una captura y envio completo puede armar una nueva captura.
-- `rst`: reset general activo en alto.
-- `ok`: indica inicializacion/captura/envio completados.
-- `fail`: indica error de inicializacion, captura o almacenamiento.
-- `busy`: indica actividad de init, I2C, captura, dump o UART.
-- `led_read_data[7:0]`: muestra el ultimo byte `Y` capturado.
-
-## Calibracion manual de camara
-
-El bitstream mantiene como base la configuracion validada de la ROM. La calibracion manual es
-opcional y queda bloqueada mientras `SW15=0`; en ese estado, `btn_config` y los switches de
-selector/valor no generan escrituras SCCB/I2C y el flujo de captura funciona como antes.
-
-Con `SW15=1`, `BTND` aplica el valor de `SW7:0` al parametro seleccionado por `SW14:13`:
-
-| `SW14:13` | Parametro | Registro |
+| Módulo | Qué hace | Qué se demostrará |
 |---|---|---|
-| `00` | Contraste | `0x56` |
-| `01` | Ganancia manual | `0x13=0x8B`, luego `0x00` |
-| `10` | Exposicion manual | `0x13=0x8E`, luego `0x10` |
-| `11` | Brillo | `0x55` |
+| 1. Captura | Configura la OV7670 y guarda en BRAM una imagen de luminancia. | Recuperar por UART una foto de 320 × 240 y comprobar dimensiones, contraste y correspondencia con el patrón mostrado. Hay evidencia de captura física en la Arty. |
+| 2. Centroides | Aplica un umbral, agrupa píxeles conectados y calcula el centro ponderado por luminancia. | Comparar el resultado con una referencia calculada a partir de la imagen y medir detecciones, fusiones, error de posición y repetibilidad en el banco. El RTL pasó XSim y el ruteo a 125 MHz. La caracterización física está pendiente. |
+| 3. Catálogo | Prepara las estrellas de referencia y sus vectores unitarios para el campo utilizado. | Verificar que los identificadores, las coordenadas y el patrón del monitor correspondan a la misma escena. Guardar la selección usada por la FPGA. |
+| 4. Identificación | Asocia los centroides observados con las estrellas del catálogo usando relaciones geométricas. | Comparar las correspondencias con los identificadores conocidos del patrón. Registrar aciertos, confusiones y tomas sin identificación. |
+| 5. Actitud | Usa pares de vectores observados y de referencia para calcular el cuaternión mediante TRIAD. | Comparar la actitud estimada con poses de referencia del banco, usando el mismo sistema de ejes y registrando el error angular. |
 
-El reset general restaura el flujo de inicializacion desde la ROM base.
+## Cámara y procesamiento
 
-## Simulacion XSim
+- **OV7670 en QVGA de 320 × 240.** La configuración anterior de 160 × 120 era QQVGA. La previsualización QQVGA de la documentación histórica del generador es independiente de la resolución de captura del proyecto vigente.
+- **YUV 4:2:2.** La FPGA extrae luminancia Y de 8 bits y guarda 76 800 muestras por imagen. El reloj XCLK es de 24 MHz y la lógica de procesamiento en la Arty trabaja a 125 MHz.
+- **Perfil fijo D1-C06.** COM8 `13=88` desactiva exposición, ganancia y balance automáticos. Los registros de exposición son `04=00`, `10=60` y `07=40`. La ganancia usa `00=10` y la extensión nocturna queda desactivada con `3B=00`. La secuencia completa está en [ov7670_init_config.vhd](Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/ov7670_init_config.vhd). Los valores están en hexadecimal.
+- **Perfil inicial del detector.** Umbral `Y ≥ 45`, conectividad de ocho vecinos, área de 2 a 500 píxeles brillantes y hasta 64 resultados. El área y el umbral se ajustarán con las tomas del banco.
+- **UART de pruebas.** En la Arty, la salida de diagnóstico entrega primero la foto `STY1` y luego la lista `STC1` de esa foto. Los criterios de aceptación se definen antes de comparar las coordenadas y los recuentos.
 
-Ejecutar desde Vivado Tcl Shell o desde una terminal con Vivado en `PATH`:
+## Banco de validación
 
-```powershell
-vivado -mode batch -source "Protocolo de comunicacion/scripts/xsim_i2c_master.tcl"
-vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_init_config.tcl"
-vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_xclk_gen.tcl"
-vivado -mode batch -source "Configuracion camara/scripts/xsim_ov7670_capture_y_stream.tcl"
-vivado -mode batch -source "Scripts/xsim_top_uart_full.tcl"
-```
+Se usa el **Samsung Odyssey G5 LS27AG550ELXPE**, de 27 pulgadas, 2560 × 1440 y curvatura 1000R. El banco parte de la resolución nativa en SDR. Durante cada serie se fijan y registran el brillo, el refresco, la distancia, la alineación y el perfil de la cámara. Los 250 mm del generador son la distancia nominal inicial. Se mide la distancia real y se verifica la escala monitor–cámara con puntos de referencia. [Ficha del monitor](https://www.samsung.com/pe/monitors/gaming/odyssey-g5-g55a-27-inch-165hz-1ms-ls27ag550elxpe/)
 
-El test global `Scripts/xsim_top_uart_full.tcl` elabora `Top/tb/tb_star_tracker_top.vhd` y genera `sim_build/xsim_top_uart_full/xsim_top_uart_full.wdb`.
+El generador permite conservar el patrón y las coordenadas de las estrellas mostradas. Con el mecanismo se posiciona la cámara y se deja que se estabilice antes de cada toma. Para usar una pose como referencia de actitud se deben medir los ángulos reales y verificar los ejes del banco. Las órdenes a los servos describen el movimiento solicitado.
 
-## Proyecto Vivado y bitstream
+La prueba de centroides variará tamaño, brillo y separación de las estrellas. Se guardarán el patrón, la foto y la lista UART. Una cruz en la imagen mostrará la posición medida y otra la posición esperada en coordenadas de cámara. Los casos de ajuste y los casos de validación serán distintos.
 
-Para recrear el proyecto oficial:
+## Contenido del repositorio
 
-```powershell
-vivado -mode batch -source "Top/vivado_projects/create_star_tracker_top_project.tcl"
-```
+- [Tesis definitiva](Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.xpr) contiene el proyecto Vivado 2025.2 para la Arty Z7-10, sus fuentes VHDL, el diseño de bloques y las restricciones. Al abrirlo en otro equipo, instala la definición de la placa si hace falta y genera los productos del diseño de bloques.
+- [Bitácora de centroides](Tesis_definitiva/Documentacion_visual/bitacora_centroides/Bitacora.md) conserva las corridas comparadas, los reportes y los diagramas finales. El WNS ruteado pasó de −3.582 ns a **+0.145 ns**, con WHS **+0.027 ns** bajo las restricciones actuales.
+- [Pruebas Arty](pruebas_arty_z7/) contiene las fuentes de la prueba de captura, una toma de referencia y las herramientas del receptor.
+- [Generador G5](Generador_G5/) contiene el generador de estrellas y el [perfil inicial del banco](Generador_G5/configuracion_banco.json).
+- [Mecanismo 3GDL MG90S](Inventor/Mecanismo_3GDL/Mecanismo_original_MG90S_cruz/) contiene el ensamblaje y las piezas de Inventor, junto con los STL de fabricación.
 
-Para generar el bitstream oficial:
-
-```powershell
-vivado -mode batch -source "Top/vivado_projects/build_star_tracker_top_bitstream.tcl"
-```
-
-El resultado se copia a:
-
-```text
-Top/bitstreams/star_tracker_top_nexys.bit
-```
-
-## Formato UART
-
-El frame se transmite por `uart_tx` a `921600` baud, 8N1, como paquete binario:
-
-```text
-0x53 0x54 0x59 0x31    magic "STY1"
-0xA0 0x00              width  = 160
-0x78 0x00              height = 120
-0x00 0x4B 0x00 0x00    payload length = 19200
-19200 bytes            luminancia Y, row-major
-1 byte                 checksum: suma modulo 256 del payload
-```
-
-## Trabajo futuro
-
-- Validacion fisica de camara y UART en placa.
-- Recepcion/visualizacion del frame en PC.
-- Preprocesamiento de imagen.
-- Deteccion de estrellas.
-- Calculo de centroides.
-- Identificacion estelar y estimacion de actitud.

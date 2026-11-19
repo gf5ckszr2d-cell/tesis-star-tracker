@@ -1,0 +1,70 @@
+{
+  "format": "STAR_TRACKER_G5_REFERENCE_SCENE_V1",
+  "status": "SIMULATED_UNCALIBRATED",
+  "source": "Valores iniciales de engine.js (Orion)",
+  "catalogSource": {
+    "catalog": "Hipparcos Main Catalogue I/239/hip_main",
+    "credit": "ESA (1997), The Hipparcos and Tycho Catalogues",
+    "source_url": "https://heasarc.gsfc.nasa.gov/xamin/query?table=hipparcos&fields=hip_number,ra_deg,dec_deg,vmag&constraint=vmag%3C%3D7&format=stream&resultmax=200000",
+    "distribution": "NASA HEASARC Hipparcos table, stream query",
+    "source_sha256": "BCC43E15340DEB4BCB06A87ECC39296BD8F2A6EB2B47A08E27EBA8F97D1F04B7",
+    "upstream_records": 118218,
+    "selected_records": 15537,
+    "magnitude_field": "Johnson V (H5)",
+    "magnitude_limit": 7,
+    "coordinates": "ICRS, epoch J1991.25 (H8/H9)",
+    "generated_at_utc": "2026-09-16T07:21:08+00:00",
+    "record_format": [
+      "HIP",
+      "RA_deg",
+      "Dec_deg",
+      "Vmag"
+    ]
+  },
+  "configuration": {
+    "regionPreset": "orion",
+    "centerRa": 83.8,
+    "centerDec": -5.4,
+    "skyRoll": 0,
+    "magnitudeLimit": 6.5,
+    "screenWidthMm": 596.736,
+    "screenHeightMm": 335.664,
+    "curveRadiusMm": 1000,
+    "cameraDistanceCm": 50,
+    "horizontalFov": 25,
+    "cameraYaw": 0,
+    "cameraPitch": 0,
+    "cameraRoll": 0,
+    "lensK1": 0,
+    "lensK2": 0,
+    "showFovGuide": true,
+    "showLabels": false,
+    "showConstellationLines": false,
+    "showConstellationNames": false,
+    "pixelTest": false,
+    "backgroundLevel": 0,
+    "peakLevel": 255,
+    "starClarity": 80,
+    "starRadiusPx": 5.5,
+    "cameraPsfSigma": 0.55
+  },
+  "compensationSnapshot": {
+    "cameraDistanceCm": 50,
+    "horizontalFov": 25,
+    "cameraYaw": 0,
+    "cameraPitch": 0,
+    "cameraRoll": 0,
+    "lensK1": 0,
+    "lensK2": 0
+  },
+  "dimensionsPx": [
+    2560,
+    1440
+  ],
+  "starCountOnScreen": 642,
+  "imageY8Sha256": "8c054d5b7565b4aea258fc96f9522320b862d0408d2d31a0e0718e2b7c4e777a",
+  "sceneHashFnv32": "1e2fd1fb",
+  "imagePngSha256": "496ba9fba791ba6803e0917d6da9b606f86fd016c93ebb302fe78a6ce29646c8",
+  "catalogCsvSha256": "5f18fa84d694f923203a7967dc36a4c549b2494f6ec4caab365f17a7aa21135d",
+  "note": "Solo estrellas visibles en esta imagen. No es aun una ROM FPGA ni una deteccion garantizada."
+}

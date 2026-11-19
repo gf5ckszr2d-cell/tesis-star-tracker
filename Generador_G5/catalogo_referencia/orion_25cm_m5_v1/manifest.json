@@ -1,0 +1,70 @@
+{
+  "format": "STAR_TRACKER_G5_REFERENCE_SCENE_V1",
+  "status": "SIMULATED_UNCALIBRATED",
+  "source": "Preset de diseno orion_25cm_m5_v1",
+  "catalogSource": {
+    "catalog": "Hipparcos Main Catalogue I/239/hip_main",
+    "credit": "ESA (1997), The Hipparcos and Tycho Catalogues",
+    "source_url": "https://heasarc.gsfc.nasa.gov/xamin/query?table=hipparcos&fields=hip_number,ra_deg,dec_deg,vmag&constraint=vmag%3C%3D7&format=stream&resultmax=200000",
+    "distribution": "NASA HEASARC Hipparcos table, stream query",
+    "source_sha256": "BCC43E15340DEB4BCB06A87ECC39296BD8F2A6EB2B47A08E27EBA8F97D1F04B7",
+    "upstream_records": 118218,
+    "selected_records": 15537,
+    "magnitude_field": "Johnson V (H5)",
+    "magnitude_limit": 7,
+    "coordinates": "ICRS, epoch J1991.25 (H8/H9)",
+    "generated_at_utc": "2026-09-16T07:21:08+00:00",
+    "record_format": [
+      "HIP",
+      "RA_deg",
+      "Dec_deg",
+      "Vmag"
+    ]
+  },
+  "configuration": {
+    "regionPreset": "orion",
+    "centerRa": 83.8,
+    "centerDec": -5.4,
+    "skyRoll": 0,
+    "magnitudeLimit": 5,
+    "screenWidthMm": 596.736,
+    "screenHeightMm": 335.664,
+    "curveRadiusMm": 1000,
+    "cameraDistanceCm": 25,
+    "horizontalFov": 25,
+    "cameraYaw": 0,
+    "cameraPitch": 0,
+    "cameraRoll": 0,
+    "lensK1": 0,
+    "lensK2": 0,
+    "showFovGuide": true,
+    "showLabels": false,
+    "showConstellationLines": false,
+    "showConstellationNames": false,
+    "pixelTest": false,
+    "backgroundLevel": 0,
+    "peakLevel": 255,
+    "starClarity": 100,
+    "starRadiusPx": 8,
+    "cameraPsfSigma": 0.55
+  },
+  "compensationSnapshot": {
+    "cameraDistanceCm": 25,
+    "horizontalFov": 25,
+    "cameraYaw": 0,
+    "cameraPitch": 0,
+    "cameraRoll": 0,
+    "lensK1": 0,
+    "lensK2": 0
+  },
+  "dimensionsPx": [
+    2560,
+    1440
+  ],
+  "starCountOnScreen": 294,
+  "imageY8Sha256": "13202f2ebe61a48d77d5e278b4b54af9ef90fb1008c035fb6edac6ff75324f33",
+  "sceneHashFnv32": "c682b617",
+  "imagePngSha256": "d97711e31111f488df8907794df0eba625c922c4e22a9484cdf784c2c3a5a84c",
+  "catalogCsvSha256": "3fdfb714d1df836d82e8bc1f9de2dad7c211a6a720a7aafe901e4ea525b202b2",
+  "note": "Solo estrellas visibles en esta imagen. No es aun una ROM FPGA ni una deteccion garantizada."
+}
