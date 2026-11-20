@@ -6,9 +6,9 @@ Esta tesis propone una arquitectura FPGA con comportamiento temporal determinist
 
 Los cinco pasos se conservan como guía para diseñar y explicar el recorrido de los datos dentro de una arquitectura completa. El alcance acordado el 19/11/2026 se centra en demostrar su comportamiento temporal determinista. Los resultados funcionales del banco aportarán evidencia de funcionamiento en las condiciones elegidas.
 
-Para el ensayo inicial se usa una sola familia de fuentes sintéticas. El **[patrón estelar de referencia](Generador_G5/patron_sintetico.html)** contiene 48 puntos de igual forma y brillo, distribuidos aleatoriamente dentro de una división de 8 columnas × 6 filas. La semilla conserva sus posiciones. Una tabla guarda sus identificadores y coordenadas; esta referencia se define para el banco y no requiere un catálogo astronómico.
+Para el ensayo inicial se usa una sola familia de fuentes sintéticas. El **[patrón estelar de referencia](Generador_G5/patron_sintetico.html)** vigente contiene ocho estrellas dentro del FOV central nominal de 25° horizontales a 250 mm y otras cuarenta distribuidas alrededor. La distribución fija v2 usa semilla 20261119, sin sectores obligatorios ni un recorte ajustable. Su referencia XY empieza en la esquina inferior izquierda. Esta referencia se define para el banco y no requiere un catálogo astronómico.
 
-El generador permite explorar recortes digitales 4:3 e inicia con ocho centros dentro del recorte. La cantidad que registre la OV7670 depende del encuadre y la respuesta física y se comprobará con capturas. El matching será el siguiente paso después de revisar el patrón. La prueba física y la demostración de la cota temporal siguen pendientes.
+El generador muestra una única huella central calculada sobre la pantalla curva. El monitor mantiene su resolución y sus dimensiones fijas. La primera fase prepara la tabla geométrica y una ROM; la comparación posterior de sus XY con los centroides se hará visualmente en PC. No se añade matching ni se integra todavía la ROM, la salida UART o una evaluación de errores. La captura física y la demostración de la cota temporal siguen pendientes.
 
 ## Cámara y procesamiento
 

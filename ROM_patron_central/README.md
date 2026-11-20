@@ -1,5 +1,10 @@
 # ROM del patrón central para la primera prueba
 
+Esta carpeta conserva el código previo de dos entradas para la distribución v1.
+La distribución vigente v2 sitúa ocho estrellas en el FOV de 25° a 250 mm.
+Su ROM de ocho entradas se presenta en la conversación por solicitud del usuario,
+sin guardar otro VHDL, simularlo ni integrarlo. No mezclar los ID entre versiones.
+
 Código independiente, todavía sin instanciar en el proyecto Vivado ni cargar
 en una placa. No añade matching ni modifica captura, centroides o UART.
 

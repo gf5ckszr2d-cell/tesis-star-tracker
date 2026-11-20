@@ -1,57 +1,41 @@
 # Simulador de cielo para Samsung Odyssey G5
 
-## Patrón sintético fijo — ensayo inicial (19/11/2026)
+## Patrón central vigente
 
-Abre **[patron_sintetico.html](patron_sintetico.html)** para el ensayo actual.
-Muestra 48 fuentes idénticas en 8 columnas × 6 filas: una posición aleatoria
-dentro de cada sector, con márgenes. La semilla inicial `20261119` permite
-reproducir las posiciones. No hay animación ni regeneración automática.
-La cuadrícula organiza la distribución; las fuentes no están alineadas en ella.
+`patron_sintetico.html` muestra un único FOV centrado: 25° horizontales y
+250 mm de distancia al centro de la pantalla. El monitor conserva 2560 × 1440
+píxeles, 596,736 × 335,664 mm nominales y radio horizontal 1000 mm. Se mantiene
+el convenio de ancho activo como arco del cálculo anterior. El FOV vertical
+calculado para 320 × 240 es 18,8805°. Son parámetros nominales del banco.
 
-Cada fuente es una gaussiana circular truncada, con diámetro de soporte inicial
-24 px, sigma 4,8 px y pico 255 sobre fondo 0. Tamaño y brillo se ajustan juntos
-para toda la familia y conservan las posiciones. Estos valores son propuestas
-para probar con la cámara, no parámetros calibrados.
+La distribución v2 coloca P01–P08 dentro de esa huella y conserva cuarenta
+fuentes alrededor. Se usa la misma familia gaussiana, diámetro de soporte de
+24 px, pico 255 y semilla 20261119. La selección de posiciones se realiza una
+sola vez de forma reproducible. No hay animación, sectores obligatorios,
+recorte desplazable, buscador de ocho ni controles de ancho del monitor.
 
-La página selecciona un recorte digital 4:3 con ocho centros. Permite moverlo
-y cambiar su ancho sobre el mismo patrón. Ese recorte **no modela la óptica,
-la curvatura del G5 ni el FOV real**, y el conteo no equivale a ocho detecciones.
-El encuadre físico y la exposición deberán verificarse con la cámara. No se
-cambia la resolución ni ningún archivo RTL del proyecto.
+La referencia v2 se identifica como `sintetico48-central8-s20261119-d24-l255-v2`.
+Sus identificadores pertenecen a esta versión y no deben mezclarse con los del
+patrón anterior. El FOV y la distancia no se han ampliado para obtener ocho:
+se ha diseñado la distribución de estrellas dentro de la huella de 25° a 25 cm.
+El contorno se calcula por intersección de los rayos con la superficie curva.
+La vista de cámara usa esa misma geometría y una imagen nominal 320 × 240.
 
-Pulsa **Mostrar patrón en pantalla completa** (o F) en el G5: se muestra solo
-la imagen, sin sectores, números, recorte ni controles. Esc vuelve a los controles.
-Si el navegador rechaza la API de pantalla completa, la presentación ocupa la
-ventana igualmente; F11 permite ocultar la barra del navegador.
-El PNG exportado también contiene exclusivamente el patrón nativo 2560 × 1440.
-JSON y CSV guardan las coordenadas, los identificadores P01–P48 y los parámetros
-del mismo estado. El origen está arriba a la izquierda; x crece a la derecha,
-y hacia abajo. JSON conserva también el recorte seleccionado.
+El origen de la referencia XY digital es el centro del píxel inferior izquierdo,
+X hacia la derecha e Y hacia arriba. Las longitudes físicas se refieren a la
+esquina inferior izquierda del área luminosa: X sigue el arco e Y es la altura.
+El JSON distingue los índices del raster original y las coordenadas de referencia.
 
-Estas posiciones forman el **patrón estelar de referencia** del ensayo; no
-requieren Hipparcos ni constelaciones. El matching queda para el siguiente paso.
-Este cambio corresponde a una herramienta de estímulo en PC; no valida el
-determinismo temporal de la arquitectura FPGA ni modifica el hardware.
+F presenta solo las estrellas a pantalla completa; Esc vuelve. PNG exporta el
+patrón sin guías. JSON y CSV contienen las 48 posiciones y la selección central.
+La captura real y la calibración corresponden a una fase posterior.
 
-Generación reproducible y comprobación desde esta carpeta:
-
-```powershell
-node tests/synthetic_pattern_checks.mjs
-node tools/export_synthetic_pattern.mjs --out patrones/sintetico48_s20261119
-```
-
-El exportador exige una carpeta nueva y escribe PNG, JSON y CSV con SHA-256
-en un manifiesto. Admite `--seed`, `--diameter` y `--level`.
-
-Referencia inicial guardada en `patrones/sintetico48_s20261119/`.
-El [informe geométrico](../Documentacion/Geometria_patron/Informe_geometrico.pdf)
-deriva pantalla → XYZ → píxel esperado. Con 250 mm y el FOV horizontal supuesto
-de 25° solo entran P21 y P28; los ocho del recorte digital no representan una
-captura óptica de ocho. El FOV de la lente exacta todavía no está sustentado.
-Comprobación de software: 48 fuentes e identificadores únicos, posiciones
-reproducibles, separación mayor que el diámetro máximo, ocho centros en el
-recorte inicial `(904, 258, 912, 684)` y conservación del patrón al moverlo.
-La interfaz, la presentación sin guías y la salida PNG se revisaron en Chrome.
+`central_pattern.js` contiene la geometría y la distribución fija v2.
+`synthetic_pattern.js`, las referencias v1 guardadas, el informe geométrico con
+FOV 25° y dos estrellas, y la ROM anterior de dos entradas se conservan como
+antecedentes de la distribución anterior. No describen las posiciones de v2.
+La ROM nueva de ocho se presenta en la conversación, sin crear VHDL nuevo,
+sin simularla, sin evaluar errores y sin integrar UART ni el proyecto de placa.
 
 ## Simulador astronómico anterior
 

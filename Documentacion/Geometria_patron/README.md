@@ -1,5 +1,11 @@
 # Geometría del patrón estelar
 
+Antecedente de la distribución v1: su FOV central nominal contenía dos estrellas.
+La distribución vigente v2 se ha diseñado para ocho estrellas a los mismos 25°
+y 250 mm. Las ecuaciones de geometría se conservan; sus tablas de posiciones e ID
+pertenecen a versiones distintas. La tabla vigente se presenta en la conversación
+y en las exportaciones de `patron_sintetico.html`.
+
 Informe acotado al paso de coordenadas de pantalla a coordenadas físicas y
 píxeles esperados de cámara, en una pose fija. Conserva el patrón de 48 fuentes
 y la semilla `20261119`. No modifica RTL, captura, UART ni identificación.

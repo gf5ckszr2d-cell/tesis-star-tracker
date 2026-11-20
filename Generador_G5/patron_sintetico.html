@@ -10,31 +10,24 @@
   <main>
     <header><div><p class="eyebrow">BANCO DE PRUEBAS · G5</p><h1>Patrón estelar de referencia</h1></div><span class="badge">ALEATORIO FIJO</span></header>
     <div class="layout">
-      <section class="workspace" aria-label="Patrón y encuadre">
-        <div class="caption"><span>Monitor completo · 2560 × 1440</span><span>48 puntos · 8 columnas × 6 filas</span></div>
+      <section class="workspace" aria-label="Patrón y FOV central">
+        <div class="caption"><span>Monitor completo · 2560 × 1440</span><span>48 estrellas · 8 en el FOV central</span></div>
         <div id="stage" class="stage">
           <canvas id="pattern" width="2560" height="1440" aria-label="Patrón fijo de 48 puntos luminosos"></canvas>
-          <canvas id="guides" width="2560" height="1440" aria-label="Sectores y encuadre de prueba"></canvas>
+          <canvas id="guides" width="2560" height="1440" aria-label="Única huella del FOV central"></canvas>
         </div>
-        <div class="legend"><span><i></i> Encuadre digital 4:3</span><label><input id="grid" type="checkbox" checked> Sectores</label><label><input id="labels" type="checkbox"> Identificadores</label></div>
+        <div class="legend"><span><i></i> FOV central · 25° horizontales · distancia 25 cm</span></div>
         <div class="sample">
-          <div><p class="eyebrow">DETALLE DEL ENCUADRE</p><h2><span id="count">8</span> puntos de referencia</h2><p id="visibleIds" class="muted" aria-live="polite"></p><p class="muted">Recorte digital ampliado. La cantidad capturada se comprobará con la cámara.</p></div>
-          <canvas id="preview" width="640" height="480" aria-label="Detalle del encuadre digital seleccionado"></canvas>
+          <div><p class="eyebrow">PRIMERA VISTA CENTRAL</p><h2><span id="count">8</span> estrellas de referencia</h2><p id="visibleIds" class="muted" aria-live="polite"></p><p class="muted">Proyección geométrica nominal de 320 × 240. Origen XY en el píxel inferior izquierdo.</p></div>
+          <canvas id="preview" width="320" height="240" aria-label="Proyección nominal del FOV central"></canvas>
         </div>
         <p id="status" role="status" aria-live="polite"></p>
       </section>
       <aside aria-label="Controles del patrón">
-        <section><h2>Una sola familia de estrellas</h2><p class="muted">Igual tamaño y brillo. Una posición aleatoria dentro de cada sector, conservada por la semilla.</p>
-          <label class="field" for="seed">Semilla<input id="seed" type="number" min="0" max="4294967295" step="1" value="20261119"></label>
-          <button id="generate" type="button">Aplicar semilla</button>
-          <label class="field" for="diameter">Diámetro de soporte <output id="diameterValue">24 px</output><input id="diameter" type="range" min="8" max="64" step="1" value="24"></label>
-          <label class="field" for="level">Brillo de pico <output id="levelValue">255 / 255</output><input id="level" type="range" min="40" max="255" step="1" value="255"></label>
+        <section><h2>Patrón fijo</h2><p class="muted">Ocho estrellas dentro de la huella central y cuarenta distribuidas alrededor. Todas tienen la misma forma, tamaño y brillo.</p>
+          <p class="muted">Semilla: 20261119<br>Diámetro de soporte: 24 px<br>Brillo de pico: 255 / 255</p>
         </section>
-        <section><h2>Explorar un encuadre</h2><p class="muted">Mueve el recorte sobre el mismo patrón. El contorno es una guía digital.</p>
-          <label class="field" for="cropWidth">Ancho en el monitor <output id="cropWidthValue"></output><input id="cropWidth" type="range" min="320" max="1920" step="16"></label>
-          <label class="field" for="cropX">Posición horizontal<input id="cropX" type="range" min="0" step="1"></label>
-          <label class="field" for="cropY">Posición vertical<input id="cropY" type="range" min="0" step="1"></label>
-          <button id="eight" type="button">Buscar encuadre con ocho</button>
+        <section><h2>Geometría fija del banco</h2><p class="muted">Monitor: 2560 × 1440 px<br>Área activa nominal: 596,736 × 335,664 mm<br>Curvatura: 1000R<br>Distancia al centro: 250 mm<br>FOV horizontal nominal: 25°<br>FOV vertical calculado: 18,8805°</p><p class="muted">La distribución se ha diseñado para ocho centros en este FOV. La captura física y la calibración se realizarán después.</p>
         </section>
         <section class="actions"><button id="present" class="primary" type="button">Mostrar patrón en pantalla completa</button><p class="muted">F: presentar · Esc: volver. En presentación se muestra solo el patrón, sin guías. Usa la resolución nativa del G5.</p><div class="exports"><button id="png" type="button">PNG</button><button id="json" type="button">Referencia JSON</button><button id="csv" type="button">CSV</button></div></section>
         <p id="patternId" class="muted identifier"></p>
@@ -43,6 +36,7 @@
     </div>
   </main>
   <script src="synthetic_pattern.js"></script>
+  <script src="central_pattern.js"></script>
   <script src="synthetic_pattern_ui.js"></script>
 </body>
 </html>
