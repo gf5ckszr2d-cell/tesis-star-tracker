@@ -205,6 +205,66 @@
           <Attr Name="UsedIn" Val="simulation" />
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/new/attitude_math_pkg.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/attitude_triad.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/enviar_actitud_uart.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/enviar_matches_uart.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/g5_pair_lookup_pkg.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/g5_ray_lut_pkg.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/g5_star_catalog_pkg.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/normalize4.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/star_identifier.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/unsigned_iterative_divider.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis" />
+          <Attr Name="UsedIn" Val="simulation" />
+        </FileInfo>
+      </File>
       <File Path="$PSRCDIR/sources_1/new/top_star_tracker.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis" />
@@ -399,7 +459,9 @@
         <Step Id="post_place_power_opt_design" />
         <Step Id="phys_opt_design" />
         <Step Id="route_design" />
-        <Step Id="post_route_phys_opt_design" />
+        <Step Id="post_route_phys_opt_design" EnableStepBool="1">
+          <Option Id="Directive">1</Option>
+        </Step>
         <Step Id="write_bitstream" />
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml" />
