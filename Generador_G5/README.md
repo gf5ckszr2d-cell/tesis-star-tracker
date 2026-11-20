@@ -44,6 +44,10 @@ El exportador exige una carpeta nueva y escribe PNG, JSON y CSV con SHA-256
 en un manifiesto. Admite `--seed`, `--diameter` y `--level`.
 
 Referencia inicial guardada en `patrones/sintetico48_s20261119/`.
+El [informe geométrico](../Documentacion/Geometria_patron/Informe_geometrico.pdf)
+deriva pantalla → XYZ → píxel esperado. Con 250 mm y el FOV horizontal supuesto
+de 25° solo entran P21 y P28; los ocho del recorte digital no representan una
+captura óptica de ocho. El FOV de la lente exacta todavía no está sustentado.
 Comprobación de software: 48 fuentes e identificadores únicos, posiciones
 reproducibles, separación mayor que el diámetro máximo, ocho centros en el
 recorte inicial `(904, 258, 912, 684)` y conservación del patrón al moverlo.

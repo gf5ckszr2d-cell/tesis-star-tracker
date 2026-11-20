@@ -20,6 +20,12 @@ El generador permite explorar recortes digitales 4:3 e inicia con ocho centros d
 
 ## Banco de validación
 
+El [informe geométrico del patrón](Documentacion/Geometria_patron/Informe_geometrico.pdf)
+desarrolla la conversión píxel de pantalla → XYZ respecto a la cámara → píxel
+esperado, con vistas superior y lateral. Incluye la comprobación del recorte
+digital anterior y deja identificada la falta de una ficha de FOV de la lente
+exacta. El cálculo usa datos nominales; no registra una validación física.
+
 Se usa el **Samsung Odyssey G5 LS27AG550ELXPE**, de 27 pulgadas, 2560 × 1440 y curvatura 1000R. El banco parte de la resolución nativa en SDR. Durante cada serie se fijan y registran el brillo, el refresco, la distancia, la alineación y el perfil de la cámara. Los 250 mm del generador son la distancia nominal inicial. Se mide la distancia real y se verifica la escala monitor–cámara con puntos de referencia. [Ficha del monitor](https://www.samsung.com/pe/monitors/gaming/odyssey-g5-g55a-27-inch-165hz-1ms-ls27ag550elxpe/)
 
 El generador permite conservar el patrón y las coordenadas de las estrellas mostradas. Con el mecanismo se posiciona la cámara y se deja que se estabilice antes de cada toma. Para usar una pose como referencia de actitud se deben medir los ángulos reales y verificar los ejes del banco. Las órdenes a los servos describen el movimiento solicitado.

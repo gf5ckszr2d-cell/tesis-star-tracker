@@ -1,0 +1,19 @@
+{
+  "screen_width_mm": 596.736,
+  "screen_height_mm": 335.664,
+  "screen_width_convention": "arc",
+  "radius_mm": 1000.0,
+  "distance_mm": 250.0,
+  "screen_width_px": 2560,
+  "screen_height_px": 1440,
+  "image_width_px": 320,
+  "image_height_px": 240,
+  "horizontal_fov_deg": 25.0,
+  "cx_px": 159.5,
+  "cy_px": 119.5,
+  "pose": "centered_aligned",
+  "distortion": "not_calibrated_assumed_zero",
+  "horizontal_fov_source": "Existing project assumption; exact lens FOV not established",
+  "screen_width_source": "Samsung nominal active width; interpretation as arc is a model assumption",
+  "status": "NOMINAL_UNCALIBRATED"
+}
