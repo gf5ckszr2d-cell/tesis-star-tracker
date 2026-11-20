@@ -1,0 +1,19 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="Máquina de estados de normalización", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+IDLE -> SUMSQ [label="start = 1"];
+SUMSQ -> SUM_ADD;
+SUM_ADD -> SUM_ADD [label="queda otro cuadrado"];
+SUM_ADD -> ROOT_TRIAL;
+ROOT_TRIAL -> ROOT_SQUARE;
+ROOT_SQUARE -> ROOT_STEP;
+ROOT_STEP -> ROOT_TRIAL [label="queda bit de raíz"];
+ROOT_STEP -> DIV_START [label="último bit de raíz"];
+DIV_START -> FINISH [label="denominador fuera de rango"];
+DIV_START -> DIV_WAIT [label="denominador válido / div_start"];
+DIV_WAIT -> DIV_WAIT [label="div_done = 0"];
+DIV_WAIT -> DIV_START [label="div_done = 1 y queda componente"];
+DIV_WAIT -> FINISH [label="div_done = 1 y última componente"];
+FINISH -> IDLE [label="/ done"];
+}

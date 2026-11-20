@@ -1,0 +1,13 @@
+digraph { graph [rankdir=LR, label="Flujo de la aritmética de punto fijo", labelloc=t, fontname="Arial", fontsize=23, pad=0.25, nodesep=0.30, ranksep=0.50];
+node [shape=box, style="rounded,filled", fillcolor="#EAF1F8", color="#516579", fontname="Arial", fontsize=13];
+edge [fontname="Arial", fontsize=10, color="#40566C"];
+
+    R [label="Rayo de 48 bits"]; C [label="Separar X, Y y Z"]; S [label="Extender signo a 32 bits"];
+    R -> C -> S;
+    A [label="Dos componentes"]; M [label="Multiplicar a 18 bits por operando"];
+    D [label="Desplazar 15 bits"]; F [label="Producto en escala 32768"];
+    A -> M -> D -> F;
+    V [label="Dos vectores"]; P [label="Productos entre componentes"];
+    X [label="Restar los productos correspondientes"]; O [label="Producto cruzado"];
+    V -> P -> X -> O;
+}

@@ -1,0 +1,15 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="Identificación estelar · pares observados", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+PREP_PAIR_READ -> PREP_PAIR;
+PREP_PAIR -> PREP_PAIR_SQUARE;
+PREP_PAIR_SQUARE -> PREP_PAIR_SUM;
+PREP_PAIR_SUM -> PREP_BIN_INIT;
+PREP_BIN_INIT -> PREP_BIN_LOOKUP;
+PREP_BIN_LOOKUP -> PREP_BIN_COMPARE;
+PREP_BIN_COMPARE -> PREP_BIN_LOOKUP [label="bin_step < 7"];
+PREP_BIN_COMPARE -> PREP_BIN_STORE [label="bin_step = 7"];
+PREP_BIN_STORE -> PREP_PAIR_READ [label="queda otro par"];
+PREP_BIN_STORE -> ANCHOR_START [label="último par"];
+}

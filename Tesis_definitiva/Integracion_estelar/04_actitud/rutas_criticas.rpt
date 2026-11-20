@@ -1,0 +1,672 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.2 (win64) Build 6299465 Fri Nov 14 19:35:11 GMT 2025
+| Date         : Fri Nov 20 13:00:54 2026
+| Command      : report_timing -max_paths 10 -file Tesis_definitiva/Integracion_estelar/04_actitud/rutas_criticas.rpt
+| Design       : design_1_wrapper
+| Device       : 7z010-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Routed
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (VIOLATED) :        -0.017ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/FSM_onehot_estado_reg[6]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[4]/D
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.777ns  (logic 2.055ns (26.425%)  route 5.722ns (73.575%))
+  Logic Levels:           9  (LUT3=1 LUT5=1 LUT6=5 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.146ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.670ns = ( 10.670 - 8.000 )
+    Source Clock Delay      (SCD):    2.946ns
+    Clock Pessimism Removal (CPR):    0.130ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.638     2.946    design_1_i/top_star_tracker_0/U0/clk
+    SLICE_X22Y75         FDRE                                         r  design_1_i/top_star_tracker_0/U0/FSM_onehot_estado_reg[6]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X22Y75         FDRE (Prop_fdre_C_Q)         0.456     3.402 r  design_1_i/top_star_tracker_0/U0/FSM_onehot_estado_reg[6]/Q
+                         net (fo=103, routed)         1.308     4.710    design_1_i/top_star_tracker_0/U0/u_identificador/Q[3]
+    SLICE_X27Y83         LUT3 (Prop_lut3_I1_O)        0.150     4.860 r  design_1_i/top_star_tracker_0/U0/u_identificador/pending_star[intensity][21]_i_33/O
+                         net (fo=160, routed)         1.524     6.384    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/byte_registro_reg[5]_i_23_1
+    SLICE_X41Y78         LUT6 (Prop_lut6_I4_O)        0.326     6.710 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][4]_i_25/O
+                         net (fo=1, routed)           0.000     6.710    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][4]_i_25_n_0
+    SLICE_X41Y78         MUXF7 (Prop_muxf7_I1_O)      0.217     6.927 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][4]_i_11/O
+                         net (fo=1, routed)           0.000     6.927    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][4]_i_11_n_0
+    SLICE_X41Y78         MUXF8 (Prop_muxf8_I1_O)      0.094     7.021 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][4]_i_4/O
+                         net (fo=1, routed)           0.906     7.927    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][4]_i_4_n_0
+    SLICE_X35Y78         LUT6 (Prop_lut6_I3_O)        0.316     8.243 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][4]_i_1/O
+                         net (fo=2, routed)           0.871     9.114    design_1_i/top_star_tracker_0/U0/lista_uart/intensidad_estrella[3]
+    SLICE_X25Y78         LUT6 (Prop_lut6_I4_O)        0.124     9.238 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[4]_i_8/O
+                         net (fo=1, routed)           0.151     9.389    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[4]_i_8_n_0
+    SLICE_X25Y78         LUT6 (Prop_lut6_I5_O)        0.124     9.513 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[4]_i_4/O
+                         net (fo=1, routed)           0.472     9.985    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[4]_i_4_n_0
+    SLICE_X18Y78         LUT5 (Prop_lut5_I2_O)        0.124    10.109 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[4]_i_2/O
+                         net (fo=1, routed)           0.490    10.599    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[4]_i_2_n_0
+    SLICE_X18Y78         LUT6 (Prop_lut6_I3_O)        0.124    10.723 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[4]_i_1/O
+                         net (fo=1, routed)           0.000    10.723    design_1_i/top_star_tracker_0/U0/lista_uart/byte_siguiente[4]
+    SLICE_X18Y78         FDRE                                         r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[4]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.478    10.670    design_1_i/top_star_tracker_0/U0/lista_uart/clk
+    SLICE_X18Y78         FDRE                                         r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[4]/C
+                         clock pessimism              0.130    10.800
+                         clock uncertainty           -0.125    10.675
+    SLICE_X18Y78         FDRE (Setup_fdre_C_D)        0.031    10.706    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[4]
+  -------------------------------------------------------------------
+                         required time                         10.706
+                         arrival time                         -10.723
+  -------------------------------------------------------------------
+                         slack                                 -0.017
+
+Slack (VIOLATED) :        -0.012ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/FSM_onehot_estado_reg[6]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[5]/D
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.772ns  (logic 2.093ns (26.931%)  route 5.679ns (73.069%))
+  Logic Levels:           9  (LUT3=1 LUT5=1 LUT6=5 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.146ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.670ns = ( 10.670 - 8.000 )
+    Source Clock Delay      (SCD):    2.946ns
+    Clock Pessimism Removal (CPR):    0.130ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.638     2.946    design_1_i/top_star_tracker_0/U0/clk
+    SLICE_X22Y75         FDRE                                         r  design_1_i/top_star_tracker_0/U0/FSM_onehot_estado_reg[6]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X22Y75         FDRE (Prop_fdre_C_Q)         0.456     3.402 r  design_1_i/top_star_tracker_0/U0/FSM_onehot_estado_reg[6]/Q
+                         net (fo=103, routed)         1.308     4.710    design_1_i/top_star_tracker_0/U0/u_identificador/Q[3]
+    SLICE_X27Y83         LUT3 (Prop_lut3_I1_O)        0.150     4.860 r  design_1_i/top_star_tracker_0/U0/u_identificador/pending_star[intensity][21]_i_33/O
+                         net (fo=160, routed)         1.497     6.357    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/byte_registro_reg[5]_i_23_1
+    SLICE_X41Y76         LUT6 (Prop_lut6_I4_O)        0.326     6.683 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][21]_i_29/O
+                         net (fo=1, routed)           0.000     6.683    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][21]_i_29_n_0
+    SLICE_X41Y76         MUXF7 (Prop_muxf7_I1_O)      0.245     6.928 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][21]_i_13/O
+                         net (fo=1, routed)           0.000     6.928    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][21]_i_13_n_0
+    SLICE_X41Y76         MUXF8 (Prop_muxf8_I0_O)      0.104     7.032 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][21]_i_5/O
+                         net (fo=1, routed)           1.004     8.037    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][21]_i_5_n_0
+    SLICE_X25Y77         LUT6 (Prop_lut6_I5_O)        0.316     8.353 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][21]_i_1/O
+                         net (fo=2, routed)           0.438     8.791    design_1_i/top_star_tracker_0/U0/lista_uart/intensidad_estrella[18]
+    SLICE_X24Y77         LUT6 (Prop_lut6_I3_O)        0.124     8.915 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[5]_i_8/O
+                         net (fo=1, routed)           0.583     9.498    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[5]_i_8_n_0
+    SLICE_X23Y78         LUT6 (Prop_lut6_I5_O)        0.124     9.622 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[5]_i_4/O
+                         net (fo=1, routed)           0.403    10.025    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[5]_i_4_n_0
+    SLICE_X23Y79         LUT5 (Prop_lut5_I2_O)        0.124    10.149 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[5]_i_2/O
+                         net (fo=1, routed)           0.445    10.594    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[5]_i_2_n_0
+    SLICE_X21Y80         LUT6 (Prop_lut6_I5_O)        0.124    10.718 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[5]_i_1/O
+                         net (fo=1, routed)           0.000    10.718    design_1_i/top_star_tracker_0/U0/lista_uart/byte_siguiente[5]
+    SLICE_X21Y80         FDRE                                         r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[5]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.478    10.670    design_1_i/top_star_tracker_0/U0/lista_uart/clk
+    SLICE_X21Y80         FDRE                                         r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[5]/C
+                         clock pessimism              0.130    10.800
+                         clock uncertainty           -0.125    10.675
+    SLICE_X21Y80         FDRE (Setup_fdre_C_D)        0.031    10.706    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[5]
+  -------------------------------------------------------------------
+                         required time                         10.706
+                         arrival time                         -10.718
+  -------------------------------------------------------------------
+                         slack                                 -0.012
+
+Slack (MET) :             0.088ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/u_identificador/anchor_bin_reg_reg_rep[1]__1/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/u_identificador/state_reg[5]/D
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.591ns  (logic 2.164ns (28.506%)  route 5.427ns (71.494%))
+  Logic Levels:           10  (CARRY4=3 LUT2=1 LUT4=2 LUT5=1 LUT6=3)
+  Clock Path Skew:        -0.149ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.692ns = ( 10.693 - 8.000 )
+    Source Clock Delay      (SCD):    2.971ns
+    Clock Pessimism Removal (CPR):    0.130ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.663     2.971    design_1_i/top_star_tracker_0/U0/u_identificador/clk
+    SLICE_X30Y31         FDRE                                         r  design_1_i/top_star_tracker_0/U0/u_identificador/anchor_bin_reg_reg_rep[1]__1/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X30Y31         FDRE (Prop_fdre_C_Q)         0.518     3.489 f  design_1_i/top_star_tracker_0/U0/u_identificador/anchor_bin_reg_reg_rep[1]__1/Q
+                         net (fo=31, routed)          0.841     4.330    design_1_i/top_star_tracker_0/U0/u_identificador/anchor_bin_reg_reg_rep[1]__1_n_0
+    SLICE_X29Y29         LUT2 (Prop_lut2_I0_O)        0.124     4.454 r  design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_50/O
+                         net (fo=1, routed)           0.403     4.857    design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_50_n_0
+    SLICE_X29Y29         LUT6 (Prop_lut6_I2_O)        0.124     4.981 r  design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_33/O
+                         net (fo=10, routed)          0.700     5.681    design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_33_n_0
+    SLICE_X26Y27         LUT5 (Prop_lut5_I0_O)        0.124     5.805 r  design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_47/O
+                         net (fo=2, routed)           0.717     6.522    design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_47_n_0
+    SLICE_X26Y30         LUT4 (Prop_lut4_I3_O)        0.124     6.646 r  design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_31/O
+                         net (fo=1, routed)           0.000     6.646    design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_31_n_0
+    SLICE_X26Y30         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     7.196 r  design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b_reg[5]_i_16/CO[3]
+                         net (fo=1, routed)           0.000     7.196    design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b_reg[5]_i_16_n_0
+    SLICE_X26Y31         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.310 r  design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b_reg[5]_i_6/CO[3]
+                         net (fo=1, routed)           0.000     7.310    design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b_reg[5]_i_6_n_0
+    SLICE_X26Y32         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.424 f  design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b_reg[5]_i_4/CO[3]
+                         net (fo=1, routed)           0.731     8.155    design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b_reg[5]_i_4_n_0
+    SLICE_X26Y33         LUT4 (Prop_lut4_I2_O)        0.124     8.279 f  design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_3/O
+                         net (fo=4, routed)           0.962     9.241    design_1_i/top_star_tracker_0/U0/u_identificador/catalog_b[5]_i_3_n_0
+    SLICE_X18Y40         LUT6 (Prop_lut6_I1_O)        0.124     9.365 r  design_1_i/top_star_tracker_0/U0/u_identificador/state[5]_i_12/O
+                         net (fo=2, routed)           0.599     9.965    design_1_i/top_star_tracker_0/U0/u_identificador/state[5]_i_12_n_0
+    SLICE_X18Y44         LUT6 (Prop_lut6_I2_O)        0.124    10.089 r  design_1_i/top_star_tracker_0/U0/u_identificador/state[5]_i_3/O
+                         net (fo=1, routed)           0.474    10.562    design_1_i/top_star_tracker_0/U0/u_identificador/state__0[5]
+    SLICE_X17Y44         FDRE                                         r  design_1_i/top_star_tracker_0/U0/u_identificador/state_reg[5]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.500    10.692    design_1_i/top_star_tracker_0/U0/u_identificador/clk
+    SLICE_X17Y44         FDRE                                         r  design_1_i/top_star_tracker_0/U0/u_identificador/state_reg[5]/C
+                         clock pessimism              0.130    10.822
+                         clock uncertainty           -0.125    10.697
+    SLICE_X17Y44         FDRE (Setup_fdre_C_D)       -0.047    10.650    design_1_i/top_star_tracker_0/U0/u_identificador/state_reg[5]
+  -------------------------------------------------------------------
+                         required time                         10.650
+                         arrival time                         -10.562
+  -------------------------------------------------------------------
+                         slack                                  0.088
+
+Slack (MET) :             0.102ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/lista_uart/indice_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[2]/D
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.748ns  (logic 2.165ns (27.943%)  route 5.583ns (72.057%))
+  Logic Levels:           9  (LUT3=1 LUT5=1 LUT6=5 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.054ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.670ns = ( 10.670 - 8.000 )
+    Source Clock Delay      (SCD):    2.954ns
+    Clock Pessimism Removal (CPR):    0.230ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.646     2.954    design_1_i/top_star_tracker_0/U0/lista_uart/clk
+    SLICE_X18Y77         FDRE                                         r  design_1_i/top_star_tracker_0/U0/lista_uart/indice_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X18Y77         FDRE (Prop_fdre_C_Q)         0.419     3.373 r  design_1_i/top_star_tracker_0/U0/lista_uart/indice_reg[1]/Q
+                         net (fo=19, routed)          1.111     4.484    design_1_i/top_star_tracker_0/U0/u_identificador/pending_star_reg[intensity][24]_0[1]
+    SLICE_X26Y76         LUT3 (Prop_lut3_I2_O)        0.291     4.775 r  design_1_i/top_star_tracker_0/U0/u_identificador/pending_star[intensity][19]_i_32/O
+                         net (fo=160, routed)         1.501     6.276    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/byte_registro_reg[3]_i_23_0
+    SLICE_X39Y70         LUT6 (Prop_lut6_I2_O)        0.332     6.608 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][18]_i_17/O
+                         net (fo=1, routed)           0.000     6.608    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][18]_i_17_n_0
+    SLICE_X39Y70         MUXF7 (Prop_muxf7_I1_O)      0.217     6.825 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][18]_i_7/O
+                         net (fo=1, routed)           0.000     6.825    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][18]_i_7_n_0
+    SLICE_X39Y70         MUXF8 (Prop_muxf8_I1_O)      0.094     6.919 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][18]_i_2/O
+                         net (fo=1, routed)           0.879     7.797    design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star_reg[intensity][18]_i_2_n_0
+    SLICE_X35Y73         LUT6 (Prop_lut6_I0_O)        0.316     8.113 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/guardar/pending_star[intensity][18]_i_1/O
+                         net (fo=2, routed)           0.619     8.732    design_1_i/top_star_tracker_0/U0/lista_uart/intensidad_estrella[15]
+    SLICE_X28Y73         LUT6 (Prop_lut6_I3_O)        0.124     8.856 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[2]_i_8/O
+                         net (fo=1, routed)           0.467     9.323    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[2]_i_8_n_0
+    SLICE_X29Y77         LUT6 (Prop_lut6_I5_O)        0.124     9.447 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[2]_i_4/O
+                         net (fo=1, routed)           0.569    10.016    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[2]_i_4_n_0
+    SLICE_X21Y77         LUT5 (Prop_lut5_I2_O)        0.124    10.140 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[2]_i_2/O
+                         net (fo=1, routed)           0.438    10.578    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[2]_i_2_n_0
+    SLICE_X21Y80         LUT6 (Prop_lut6_I5_O)        0.124    10.702 r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro[2]_i_1/O
+                         net (fo=1, routed)           0.000    10.702    design_1_i/top_star_tracker_0/U0/lista_uart/byte_siguiente[2]
+    SLICE_X21Y80         FDRE                                         r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[2]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.478    10.670    design_1_i/top_star_tracker_0/U0/lista_uart/clk
+    SLICE_X21Y80         FDRE                                         r  design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[2]/C
+                         clock pessimism              0.230    10.900
+                         clock uncertainty           -0.125    10.775
+    SLICE_X21Y80         FDRE (Setup_fdre_C_D)        0.029    10.804    design_1_i/top_star_tracker_0/U0/lista_uart/byte_registro_reg[2]
+  -------------------------------------------------------------------
+                         required time                         10.804
+                         arrival time                         -10.702
+  -------------------------------------------------------------------
+                         slack                                  0.102
+
+Slack (MET) :             0.125ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/quotient_reg_reg[5]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/u_actitud/ARG__0/B[17]
+                            (rising edge-triggered cell DSP48E1 clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.201ns  (logic 3.228ns (44.825%)  route 3.973ns (55.175%))
+  Logic Levels:           10  (CARRY4=7 LUT2=2 LUT4=1)
+  Clock Path Skew:        -0.099ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.775ns = ( 10.775 - 8.000 )
+    Source Clock Delay      (SCD):    2.990ns
+    Clock Pessimism Removal (CPR):    0.116ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.682     2.990    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/clk
+    SLICE_X6Y49          FDRE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/quotient_reg_reg[5]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X6Y49          FDRE (Prop_fdre_C_Q)         0.478     3.468 f  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/quotient_reg_reg[5]/Q
+                         net (fo=4, routed)           0.744     4.212    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/quotient[5]
+    SLICE_X7Y48          LUT2 (Prop_lut2_I0_O)        0.301     4.513 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o[0][17]_i_19/O
+                         net (fo=1, routed)           0.000     4.513    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o[0][17]_i_19_n_0
+    SLICE_X7Y48          CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     5.063 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][17]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     5.063    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][17]_i_3_n_0
+    SLICE_X7Y49          CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     5.177 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][17]_i_2/CO[3]
+                         net (fo=36, routed)          1.214     6.391    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][17]_i_2_n_0
+    SLICE_X6Y48          LUT2 (Prop_lut2_I0_O)        0.146     6.537 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o[0][4]_i_3/O
+                         net (fo=1, routed)           0.339     6.876    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o[0][4]_i_3_n_0
+    SLICE_X8Y48          CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.799     7.675 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.675    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][4]_i_2_n_0
+    SLICE_X8Y49          CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     7.792 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][8]_i_2/CO[3]
+                         net (fo=1, routed)           0.001     7.793    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][8]_i_2_n_0
+    SLICE_X8Y50          CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     7.910 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.910    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][12]_i_2_n_0
+    SLICE_X8Y51          CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     8.027 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][16]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.027    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][16]_i_2_n_0
+    SLICE_X8Y52          CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.157     8.184 f  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][31]_i_6/CO[1]
+                         net (fo=1, routed)           0.557     8.741    design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o_reg[0][31]_i_6_n_2
+    SLICE_X7Y52          LUT4 (Prop_lut4_I3_O)        0.332     9.073 r  design_1_i/top_star_tracker_0/U0/u_actitud/u_norm/u_div/o[0][31]_i_2/O
+                         net (fo=29, routed)          1.119    10.191    design_1_i/top_star_tracker_0/U0/u_actitud/o[0]_486[31]
+    DSP48_X0Y24          DSP48E1                                      r  design_1_i/top_star_tracker_0/U0/u_actitud/ARG__0/B[17]
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.583    10.775    design_1_i/top_star_tracker_0/U0/u_actitud/clk
+    DSP48_X0Y24          DSP48E1                                      r  design_1_i/top_star_tracker_0/U0/u_actitud/ARG__0/CLK
+                         clock pessimism              0.116    10.891
+                         clock uncertainty           -0.125    10.766
+    DSP48_X0Y24          DSP48E1 (Setup_dsp48e1_CLK_B[17])
+                                                     -0.450    10.316    design_1_i/top_star_tracker_0/U0/u_actitud/ARG__0
+  -------------------------------------------------------------------
+                         required time                         10.316
+                         arrival time                         -10.191
+  -------------------------------------------------------------------
+                         slack                                  0.125
+
+Slack (MET) :             0.129ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][21]/S
+                            (rising edge-triggered cell FDSE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.256ns  (logic 4.236ns (58.376%)  route 3.020ns (41.624%))
+  Logic Levels:           2  (DSP48E1=1 LUT3=1)
+  Clock Path Skew:        -0.060ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.698ns = ( 10.698 - 8.000 )
+    Source Clock Delay      (SCD):    2.989ns
+    Clock Pessimism Removal (CPR):    0.230ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.681     2.989    design_1_i/top_star_tracker_0/U0/u_actitud/clk
+    SLICE_X11Y3          FDRE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X11Y3          FDRE (Prop_fdre_C_Q)         0.456     3.445 r  design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/Q
+                         net (fo=3, routed)           1.215     4.660    design_1_i/top_star_tracker_0/U0/u_actitud/cross_b[1]_509[8]
+    DSP48_X0Y8           DSP48E1 (Prop_dsp48e1_B[8]_P[35])
+                                                      3.656     8.316 r  design_1_i/top_star_tracker_0/U0/u_actitud/ARG__12/P[35]
+                         net (fo=1, routed)           1.153     9.470    design_1_i/top_star_tracker_0/U0/u_actitud/in590
+    SLICE_X9Y11          LUT3 (Prop_lut3_I0_O)        0.124     9.594 r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2[0][31]_i_1/O
+                         net (fo=12, routed)          0.652    10.245    design_1_i/top_star_tracker_0/U0/u_actitud/xprod2[0][31]_i_1_n_0
+    SLICE_X9Y8           FDSE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][21]/S
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.506    10.698    design_1_i/top_star_tracker_0/U0/u_actitud/clk
+    SLICE_X9Y8           FDSE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][21]/C
+                         clock pessimism              0.230    10.929
+                         clock uncertainty           -0.125    10.804
+    SLICE_X9Y8           FDSE (Setup_fdse_C_S)       -0.429    10.375    design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][21]
+  -------------------------------------------------------------------
+                         required time                         10.375
+                         arrival time                         -10.245
+  -------------------------------------------------------------------
+                         slack                                  0.129
+
+Slack (MET) :             0.129ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][22]/S
+                            (rising edge-triggered cell FDSE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.256ns  (logic 4.236ns (58.376%)  route 3.020ns (41.624%))
+  Logic Levels:           2  (DSP48E1=1 LUT3=1)
+  Clock Path Skew:        -0.060ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.698ns = ( 10.698 - 8.000 )
+    Source Clock Delay      (SCD):    2.989ns
+    Clock Pessimism Removal (CPR):    0.230ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.681     2.989    design_1_i/top_star_tracker_0/U0/u_actitud/clk
+    SLICE_X11Y3          FDRE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X11Y3          FDRE (Prop_fdre_C_Q)         0.456     3.445 r  design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/Q
+                         net (fo=3, routed)           1.215     4.660    design_1_i/top_star_tracker_0/U0/u_actitud/cross_b[1]_509[8]
+    DSP48_X0Y8           DSP48E1 (Prop_dsp48e1_B[8]_P[35])
+                                                      3.656     8.316 r  design_1_i/top_star_tracker_0/U0/u_actitud/ARG__12/P[35]
+                         net (fo=1, routed)           1.153     9.470    design_1_i/top_star_tracker_0/U0/u_actitud/in590
+    SLICE_X9Y11          LUT3 (Prop_lut3_I0_O)        0.124     9.594 r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2[0][31]_i_1/O
+                         net (fo=12, routed)          0.652    10.245    design_1_i/top_star_tracker_0/U0/u_actitud/xprod2[0][31]_i_1_n_0
+    SLICE_X9Y8           FDSE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][22]/S
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.506    10.698    design_1_i/top_star_tracker_0/U0/u_actitud/clk
+    SLICE_X9Y8           FDSE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][22]/C
+                         clock pessimism              0.230    10.929
+                         clock uncertainty           -0.125    10.804
+    SLICE_X9Y8           FDSE (Setup_fdse_C_S)       -0.429    10.375    design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][22]
+  -------------------------------------------------------------------
+                         required time                         10.375
+                         arrival time                         -10.245
+  -------------------------------------------------------------------
+                         slack                                  0.129
+
+Slack (MET) :             0.129ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][25]/S
+                            (rising edge-triggered cell FDSE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.256ns  (logic 4.236ns (58.376%)  route 3.020ns (41.624%))
+  Logic Levels:           2  (DSP48E1=1 LUT3=1)
+  Clock Path Skew:        -0.060ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.698ns = ( 10.698 - 8.000 )
+    Source Clock Delay      (SCD):    2.989ns
+    Clock Pessimism Removal (CPR):    0.230ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.681     2.989    design_1_i/top_star_tracker_0/U0/u_actitud/clk
+    SLICE_X11Y3          FDRE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X11Y3          FDRE (Prop_fdre_C_Q)         0.456     3.445 r  design_1_i/top_star_tracker_0/U0/u_actitud/cross_b_reg[1][8]/Q
+                         net (fo=3, routed)           1.215     4.660    design_1_i/top_star_tracker_0/U0/u_actitud/cross_b[1]_509[8]
+    DSP48_X0Y8           DSP48E1 (Prop_dsp48e1_B[8]_P[35])
+                                                      3.656     8.316 r  design_1_i/top_star_tracker_0/U0/u_actitud/ARG__12/P[35]
+                         net (fo=1, routed)           1.153     9.470    design_1_i/top_star_tracker_0/U0/u_actitud/in590
+    SLICE_X9Y11          LUT3 (Prop_lut3_I0_O)        0.124     9.594 r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2[0][31]_i_1/O
+                         net (fo=12, routed)          0.652    10.245    design_1_i/top_star_tracker_0/U0/u_actitud/xprod2[0][31]_i_1_n_0
+    SLICE_X9Y8           FDSE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][25]/S
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.506    10.698    design_1_i/top_star_tracker_0/U0/u_actitud/clk
+    SLICE_X9Y8           FDSE                                         r  design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][25]/C
+                         clock pessimism              0.230    10.929
+                         clock uncertainty           -0.125    10.804
+    SLICE_X9Y8           FDSE (Setup_fdse_C_S)       -0.429    10.375    design_1_i/top_star_tracker_0/U0/u_actitud/xprod2_reg[0][25]
+  -------------------------------------------------------------------
+                         required time                         10.375
+                         arrival time                         -10.245
+  -------------------------------------------------------------------
+                         slack                                  0.129
+
+Slack (MET) :             0.135ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/revision_reg_rep[0]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos_reg[37][0]/R
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.167ns  (logic 1.459ns (20.358%)  route 5.708ns (79.642%))
+  Logic Levels:           7  (LUT4=1 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.144ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.677ns = ( 10.677 - 8.000 )
+    Source Clock Delay      (SCD):    3.051ns
+    Clock Pessimism Removal (CPR):    0.230ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.743     3.051    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/clk
+    SLICE_X40Y54         FDRE                                         r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/revision_reg_rep[0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X40Y54         FDRE (Prop_fdre_C_Q)         0.419     3.470 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/revision_reg_rep[0]/Q
+                         net (fo=15, routed)          1.113     4.583    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/padres_reg_r3_64_127_0_2/ADDRC0
+    SLICE_X38Y53         RAMD64E (Prop_ramd64e_RADR0_O)
+                                                      0.296     4.879 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/padres_reg_r3_64_127_0_2/RAMC/O
+                         net (fo=1, routed)           0.718     5.597    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/padres_reg_r3_64_127_0_2_n_2
+    SLICE_X36Y51         LUT4 (Prop_lut4_I3_O)        0.124     5.721 f  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_12/O
+                         net (fo=1, routed)           0.690     6.410    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_12_n_0
+    SLICE_X37Y55         LUT6 (Prop_lut6_I5_O)        0.124     6.534 f  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_6/O
+                         net (fo=1, routed)           0.433     6.968    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_6_n_0
+    SLICE_X37Y55         LUT6 (Prop_lut6_I4_O)        0.124     7.092 f  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_3/O
+                         net (fo=2, routed)           0.559     7.651    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_3_n_0
+    SLICE_X37Y58         LUT6 (Prop_lut6_I0_O)        0.124     7.775 f  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[0][6]_i_9/O
+                         net (fo=1, routed)           0.294     8.069    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[0][6]_i_9_n_0
+    SLICE_X37Y59         LUT6 (Prop_lut6_I0_O)        0.124     8.193 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[0][6]_i_6/O
+                         net (fo=128, routed)         1.111     9.304    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[0][6]_i_6_n_0
+    SLICE_X32Y62         LUT6 (Prop_lut6_I4_O)        0.124     9.428 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[37][6]_i_1/O
+                         net (fo=7, routed)           0.790    10.218    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[37][6]_i_1_n_0
+    SLICE_X33Y64         FDRE                                         r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos_reg[37][0]/R
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.485    10.677    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/clk
+    SLICE_X33Y64         FDRE                                         r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos_reg[37][0]/C
+                         clock pessimism              0.230    10.907
+                         clock uncertainty           -0.125    10.782
+    SLICE_X33Y64         FDRE (Setup_fdre_C_R)       -0.429    10.353    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos_reg[37][0]
+  -------------------------------------------------------------------
+                         required time                         10.353
+                         arrival time                         -10.218
+  -------------------------------------------------------------------
+                         slack                                  0.135
+
+Slack (MET) :             0.135ns  (required time - arrival time)
+  Source:                 design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/revision_reg_rep[0]/C
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos_reg[37][1]/R
+                            (rising edge-triggered cell FDRE clocked by clk_fpga_0  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_fpga_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_fpga_0 rise@8.000ns - clk_fpga_0 rise@0.000ns)
+  Data Path Delay:        7.167ns  (logic 1.459ns (20.358%)  route 5.708ns (79.642%))
+  Logic Levels:           7  (LUT4=1 LUT6=5 RAMD64E=1)
+  Clock Path Skew:        -0.144ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    2.677ns = ( 10.677 - 8.000 )
+    Source Clock Delay      (SCD):    3.051ns
+    Clock Pessimism Removal (CPR):    0.230ns
+  Clock Uncertainty:      0.125ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.240ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_fpga_0 rise edge)
+                                                      0.000     0.000 r
+    PS7_X0Y0             PS7                          0.000     0.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.207     1.207    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.101     1.308 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.743     3.051    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/clk
+    SLICE_X40Y54         FDRE                                         r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/revision_reg_rep[0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X40Y54         FDRE (Prop_fdre_C_Q)         0.419     3.470 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/revision_reg_rep[0]/Q
+                         net (fo=15, routed)          1.113     4.583    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/padres_reg_r3_64_127_0_2/ADDRC0
+    SLICE_X38Y53         RAMD64E (Prop_ramd64e_RADR0_O)
+                                                      0.296     4.879 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/padres_reg_r3_64_127_0_2/RAMC/O
+                         net (fo=1, routed)           0.718     5.597    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/padres_reg_r3_64_127_0_2_n_2
+    SLICE_X36Y51         LUT4 (Prop_lut4_I3_O)        0.124     5.721 f  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_12/O
+                         net (fo=1, routed)           0.690     6.410    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_12_n_0
+    SLICE_X37Y55         LUT6 (Prop_lut6_I5_O)        0.124     6.534 f  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_6/O
+                         net (fo=1, routed)           0.433     6.968    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_6_n_0
+    SLICE_X37Y55         LUT6 (Prop_lut6_I4_O)        0.124     7.092 f  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_3/O
+                         net (fo=2, routed)           0.559     7.651    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/cantidad[6]_i_3_n_0
+    SLICE_X37Y58         LUT6 (Prop_lut6_I0_O)        0.124     7.775 f  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[0][6]_i_9/O
+                         net (fo=1, routed)           0.294     8.069    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[0][6]_i_9_n_0
+    SLICE_X37Y59         LUT6 (Prop_lut6_I0_O)        0.124     8.193 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[0][6]_i_6/O
+                         net (fo=128, routed)         1.111     9.304    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[0][6]_i_6_n_0
+    SLICE_X32Y62         LUT6 (Prop_lut6_I4_O)        0.124     9.428 r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[37][6]_i_1/O
+                         net (fo=7, routed)           0.790    10.218    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos[37][6]_i_1_n_0
+    SLICE_X33Y64         FDRE                                         r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos_reg[37][1]/R
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_fpga_0 rise edge)
+                                                      8.000     8.000 r
+    PS7_X0Y0             PS7                          0.000     8.000 r  design_1_i/processing_system7_0/inst/PS7_i/FCLKCLK[0]
+                         net (fo=1, routed)           1.101     9.101    design_1_i/processing_system7_0/inst/FCLK_CLK_unbuffered[0]
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.192 r  design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG/O
+                         net (fo=14206, routed)       1.485    10.677    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/clk
+    SLICE_X33Y64         FDRE                                         r  design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos_reg[37][1]/C
+                         clock pessimism              0.230    10.907
+                         clock uncertainty           -0.125    10.782
+    SLICE_X33Y64         FDRE (Setup_fdre_C_R)       -0.429    10.353    design_1_i/top_star_tracker_0/U0/sistema/centroides/agrupar/mapa_grupos_reg[37][1]
+  -------------------------------------------------------------------
+                         required time                         10.353
+                         arrival time                         -10.218
+  -------------------------------------------------------------------
+                         slack                                  0.135

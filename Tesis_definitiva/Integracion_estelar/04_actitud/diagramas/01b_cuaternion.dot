@@ -1,0 +1,22 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="TRIAD · bases y cuaternión", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+NORM_START -> FINISH [label="best < 1000000"];
+NORM_START -> CROSS_MUL [label="fase 2 o 3"];
+CROSS_MUL -> CROSS_SUB;
+CROSS_SUB -> NORM_WAIT [label="cross_to_norm = 1 / norm_start_s"];
+NORM_START -> NORM_WAIT [label="fase 0, 1 o 4 / norm_start_s"];
+NORM_WAIT -> NORM_WAIT [label="norm_done = 0"];
+NORM_WAIT -> FINISH [label="norm_done = 1 y norm_valid = 0"];
+NORM_WAIT -> NORM_START [label="norm_done y norm_valid y fase < 3"];
+NORM_WAIT -> MATRIX_BUILD [label="norm_done y norm_valid y fase 3"];
+MATRIX_BUILD -> MATRIX_SUM;
+MATRIX_SUM -> MATRIX_BUILD [label="queda otra celda"];
+MATRIX_SUM -> QUAT_TRACE [label="última celda"];
+QUAT_TRACE -> QUAT_CANDIDATES;
+QUAT_CANDIDATES -> QUAT_SELECT;
+QUAT_SELECT -> QUAT_BUILD;
+QUAT_BUILD -> NORM_START [label="fase = 4"];
+NORM_WAIT -> CHECK_RESIDUAL [label="norm_done y norm_valid y fase 4"];
+}

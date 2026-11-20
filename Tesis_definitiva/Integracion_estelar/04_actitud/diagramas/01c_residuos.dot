@@ -1,0 +1,13 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="TRIAD · verificación de residuos", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+CHECK_RESIDUAL -> RES_SUM;
+RES_SUM -> RES_DIFF;
+RES_DIFF -> RES_SQUARE;
+RES_SQUARE -> RES_TOTAL;
+RES_TOTAL -> RES_DECIDE;
+RES_DECIDE -> CHECK_RESIDUAL [label="queda otro rayo"];
+RES_DECIDE -> FINISH [label="último rayo"];
+FINISH -> IDLE [label="/ done, valid, quaternion"];
+}

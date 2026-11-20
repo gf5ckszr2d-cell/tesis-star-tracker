@@ -1,0 +1,15 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="TRIAD · selección de la pareja", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+IDLE -> IDLE [label="match_valid = 1 y count < 8 / guardar pareja de rayos"];
+IDLE -> FINISH [label="solve = 1 y resultado insuficiente"];
+IDLE -> PAIR_SCAN [label="solve = 1 y count ≥ 5 e identification_ok = 1"];
+PAIR_SCAN -> CROSS_MUL;
+CROSS_MUL -> CROSS_SUB;
+CROSS_SUB -> PAIR_SQUARE [label="cross_to_norm = 0"];
+PAIR_SQUARE -> PAIR_SUM;
+PAIR_SUM -> PAIR_DECIDE;
+PAIR_DECIDE -> PAIR_SCAN [label="queda otra pareja"];
+PAIR_DECIDE -> NORM_START [label="última pareja"];
+}

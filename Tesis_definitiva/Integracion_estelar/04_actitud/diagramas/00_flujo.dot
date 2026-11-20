@@ -1,0 +1,5 @@
+digraph { graph [rankdir=LR, label="Determinación de actitud", labelloc=t, fontname="Arial", fontsize=23, pad=0.25, nodesep=0.30, ranksep=0.50];
+node [shape=box, style="rounded,filled", fillcolor="#EAF1F8", color="#516579", fontname="Arial", fontsize=13];
+edge [fontname="Arial", fontsize=10, color="#40566C"];
+M [label="Coincidencias + rayos"]; A [label="TRIAD"]; Q [label="Cuaternión w, x, y, z"]; U [label="UART STQ2"]; M -> A -> Q -> U; R [label="ROM: 48 rayos"]; R -> A; N [label="Normalización + división"]; A -> N; N -> A;
+}

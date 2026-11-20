@@ -1,0 +1,45 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.2 (win64) Build 6299465 Fri Nov 14 19:35:11 GMT 2025
+| Date         : Fri Nov 20 13:00:55 2026
+| Command      : report_cdc -details -file Tesis_definitiva/Integracion_estelar/04_actitud/cdc.rpt
+| Design       : design_1_wrapper
+| Device       : 7z010-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+CDC Report
+
+ID     Severity  Count  Description
+-----  --------  -----  -------------------------------------------------------
+CDC-3  Info          6  1-bit synchronized with ASYNC_REG property
+CDC-9  Info          1  Asynchronous reset synchronized with ASYNC_REG property
+
+Source Clock: input port clock
+Destination Clock: clk_fpga_0
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                 Depth  Exception   Source (From)  Destination (To)
+---  -----  --------  ------------------------------------------  -----  ----------  -------------  --------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  reset_btn      design_1_i/rst_ps7_0_100M/U0/EXT_LPF/ACTIVE_HIGH_AUX.ACT_HI_AUX/syncstages_ff_reg[0]/D
+  2  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  False Path  start          design_1_i/top_star_tracker_0/U0/sistema/camara/sincronizar_start/etapa_1_reg/D
+
+Source Clock: reloj_pclk
+Destination Clock: clk_fpga_0
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                 Depth  Exception   Source (From)                                                                                  Destination (To)
+---  -----  --------  ------------------------------------------  -----  ----------  ---------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property      2  False Path  design_1_i/top_star_tracker_0/U0/sistema/camara/guardar_captura/cambio_imagen_lista_reg_reg/C  design_1_i/top_star_tracker_0/U0/sistema/camara/sincronizar_imagen_lista/etapa_1_reg/D
+
+Source Clock: clk_fpga_0
+Destination Clock: reloj_pclk
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                              Depth  Exception   Source (From)                                                         Destination (To)
+---  -----  --------  -------------------------------------------------------  -----  ----------  --------------------------------------------------------------------  ---------------------------------------------------------------------------------------
+  1  CDC-9  Info      Asynchronous reset synchronized with ASYNC_REG property      2  False Path  design_1_i/rst_ps7_0_100M/U0/PR_OUT_DFF[0].FDRE_PER/C                 design_1_i/top_star_tracker_0/U0/sistema/camara/reinicio_meta_reg/PRE
+  2  CDC-3  Info      1-bit synchronized with ASYNC_REG property                   2  False Path  design_1_i/top_star_tracker_0/U0/sistema/camara/configurada_reg/C     design_1_i/top_star_tracker_0/U0/sistema/camara/sincronizar_configurada/etapa_1_reg/D
+  3  CDC-3  Info      1-bit synchronized with ASYNC_REG property                   2  False Path  design_1_i/top_star_tracker_0/U0/sistema/cambio_fin_lectura_reg/C     design_1_i/top_star_tracker_0/U0/sistema/camara/sincronizar_fin_envio/etapa_1_reg/D
+  4  CDC-3  Info      1-bit synchronized with ASYNC_REG property                   2  False Path  design_1_i/top_star_tracker_0/U0/sistema/camara/cambio_captura_reg/C  design_1_i/top_star_tracker_0/U0/sistema/camara/sincronizar_orden_captura/etapa_1_reg/D

@@ -1,0 +1,140 @@
+#-----------------------------------------------------------
+# Vivado v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Fri Nov 20 12:48:55 2026
+# Process ID         : 20248
+# Current directory  : .
+# Command line       : vivado.exe -mode batch -journal Tesis_definitiva\Integracion_estelar\04_actitud/xsim.jou -log Tesis_definitiva\Integracion_estelar\04_actitud/xsim_actitud.log -source Tesis_definitiva/Integracion_estelar/verificar_identificacion.tcl -tclargs Tesis_definitiva\Integracion_estelar\04_actitud actitud
+# Log file           : Tesis_definitiva/Integracion_estelar/04_actitud/xsim_actitud.log
+# Journal file       : Tesis_definitiva\Integracion_estelar\04_actitud/xsim.jou
+# Running On         : Alexa
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26300
+# Processor Detail   : AMD Ryzen 5 5600X 6-Core Processor
+# CPU Frequency      : 3693 MHz
+# CPU Physical cores : 6
+# CPU Logical cores  : 12
+# Host memory        : 34264 MB
+# Swap memory        : 12446 MB
+# Total Virtual      : 46711 MB
+# Available Virtual  : 19035 MB
+#-----------------------------------------------------------
+source Tesis_definitiva/Integracion_estelar/verificar_identificacion.tcl
+# set here [file normalize [file dirname [info script]]]
+# set evidencia [file normalize [lindex $argv 0]]
+# set fase [lindex $argv 1]
+# set rtl [file join [file dirname $here] Tesis_definitiva Tesis_definitiva.srcs sources_1 new]
+# set sim [file join $evidencia sim]
+# file mkdir $sim
+# cd $sim
+# set bin [file join $::env(XILINX_VIVADO) bin]
+# proc ejecutar {programa args} {
+#     global bin
+#     set command [list cmd /c [file join $bin ${programa}.bat] {*}$args]
+#     if {[catch {exec {*}$command 2>@1} result]} {puts $result; error $command}
+#     puts $result
+#     return $result
+# }
+# set fuentes {g5_star_catalog_pkg g5_pair_lookup_pkg g5_ray_lut_pkg star_identifier}
+# set banco tb_identificacion
+# set marca PASS_IDENTIFICACION_CENTRAL
+# if {$fase eq "actitud"} {
+#     lappend fuentes attitude_math_pkg unsigned_iterative_divider normalize4 attitude_triad enviar_actitud_uart
+#     set banco tb_actitud
+#     set marca PASS_ACTITUD_UART
+# }
+# foreach name $fuentes {
+#     ejecutar xvhdl --2008 [file join $rtl ${name}.vhd]
+# }
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/g5_star_catalog_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/g5_pair_lookup_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/g5_ray_lut_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/star_identifier.vhd" into library work
+INFO: [VRFC 10-3107] analyzing entity 'star_identifier'
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/attitude_math_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/unsigned_iterative_divider.vhd" into library work
+INFO: [VRFC 10-3107] analyzing entity 'unsigned_iterative_divider'
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/normalize4.vhd" into library work
+INFO: [VRFC 10-3107] analyzing entity 'normalize4'
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/attitude_triad.vhd" into library work
+INFO: [VRFC 10-3107] analyzing entity 'attitude_triad'
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/enviar_actitud_uart.vhd" into library work
+INFO: [VRFC 10-3107] analyzing entity 'enviar_actitud_uart'
+# ejecutar xvhdl --2008 [file join $sim escenas_pkg.vhd] [file join $here ${banco}.vhd]
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Integracion_estelar/04_actitud/sim/escenas_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Integracion_estelar/tb_actitud.vhd" into library work
+INFO: [VRFC 10-3107] analyzing entity 'tb_actitud'
+# ejecutar xelab work.$banco -s prueba
+Vivado Simulator v2025.2
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/AMDDesignTools/2025.2/Vivado/bin/unwrapped/win64.o/xelab.exe work.tb_actitud -s prueba
+Multi-threading is on. Using 10 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package std.env
+Compiling package work.escenas_pkg
+Compiling package work.attitude_math_pkg
+Compiling package work.g5_star_catalog_pkg
+Compiling package work.g5_pair_lookup_pkg
+Compiling package work.g5_ray_lut_pkg
+Compiling architecture rtl of entity work.star_identifier [star_identifier_default]
+Compiling architecture rtl of entity work.unsigned_iterative_divider [\unsigned_iterative_divider(nume...]
+Compiling architecture rtl of entity work.normalize4 [normalize4_default]
+Compiling architecture rtl of entity work.attitude_triad [attitude_triad_default]
+Compiling architecture rtl of entity work.enviar_actitud_uart [enviar_actitud_uart_default]
+Compiling architecture prueba of entity work.tb_actitud
+Built simulation snapshot prueba
+# set fh [open sim.tcl w]
+# puts $fh {run all}
+# puts $fh {quit}
+# close $fh
+
+****** xsim v2025.2 (64-bit)
+  **** SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+  **** IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+  **** SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+  **** Start of session at: Fri Nov 20 12:49:32 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/prueba/xsim_script.tcl
+# xsim {prueba} -autoloadwcfg -tclbatch {sim.tcl}
+Time resolution is 1 ps
+source sim.tcl
+## run all
+Note: CASO 0 MATCHES 8 CICLOS_ID 14446 CICLOS_Q 1369 Q 32768 0 0 1
+Time: 127413 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: CASO 1 MATCHES 8 CICLOS_ID 14446 CICLOS_Q 1369 Q 32667 0 0 2569
+Time: 254829 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: CASO 2 MATCHES 8 CICLOS_ID 14446 CICLOS_Q 1369 Q 32716 -49 1142 -1427
+Time: 382245 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: CASO 3 MATCHES 6 CICLOS_ID 12522 CICLOS_Q 1279 Q 29678 3907 -13214 1740
+Time: 493549 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: CASO 4 MATCHES 6 CICLOS_ID 15619 CICLOS_Q 1279 Q 30022 6380 11224 -2385
+Time: 629629 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: CASO 5 MATCHES 6 CICLOS_ID 9488 CICLOS_Q 1279 Q 32688 0 -2286 -1
+Time: 716661 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: CASO 6 MATCHES 5 CICLOS_ID 24715 CICLOS_Q 1243 Q 32523 0 -3993 1
+Time: 925221 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: CASO 7 MATCHES 7 CICLOS_ID 11968 CICLOS_Q 1321 Q 32622 385 -1114 -2846
+Time: 1032429 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: CASO 8 MATCHES 0 CICLOS_ID 28 CICLOS_Q 2 Q 0 0 0 0
+Time: 1033565 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+Note: PASS_ACTITUD_UART
+Time: 1033580 ns  Iteration: 0  Process: /tb_actitud/line__75  File: Tesis_definitiva/Integracion_estelar/tb_actitud.vhd
+$finish called at time : 1033580 ns
+## quit
+INFO: [Common 17-206] Exiting xsim at Fri Nov 20 12:49:34 2026...
+# set res [ejecutar xsim prueba -tclbatch sim.tcl]
+# if {![string match *$marca* $res]} {error "Simulation failed: $marca"}
+INFO: [Common 17-206] Exiting Vivado at Fri Nov 20 12:49:35 2026...

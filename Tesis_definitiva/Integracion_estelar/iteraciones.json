@@ -1,0 +1,35 @@
+[
+  {
+    "carpeta": "01_identificacion",
+    "nombre": "Identificación · primera implementación",
+    "cambio": "Carga inicial con lectura, comparación de intensidades e inserción en el mismo estado. Durante la preparación se retiró una llamada innecesaria de refresco y se corrigió un nombre de instancia duplicado. Los registros de esos dos intentos quedan junto a los resultados.",
+    "evidencia": "Ruta de setup dentro de clk_fpga_0. Sale del índice de lectura de centroides y llega a la habilitación de escritura de la lista ordenada. Vivado mide 11,828 ns de retardo de datos. Esta ruta motivó separar lectura, comparación y escritura.",
+    "diagramas": ["00_flujo", "01a_carga", "01b_rayos", "01c_pares", "01d_hipotesis", "01e_candidatos", "02_normalizacion", "03_estrellas", "04_pares", "05_uart"]
+  },
+  {
+    "carpeta": "02_carga_registrada",
+    "nombre": "Identificación · carga registrada",
+    "cambio": "La lectura se captura en pending_star. La comparación recorre los puestos de uno en uno y la inserción se hace en otro ciclo. Las cuerdas y los intervalos observados se escriben una sola vez por pareja en una memoria distribuida de lectura registrada.",
+    "evidencia": "La comparación funcional repite las vistas con cinco a ocho estrellas, dos de ellas fuera del centro. Con nueve centroides conserva los ocho más luminosos. Los siete destinos con setup negativo pertenecen a la consolidación de centroides. La peor ruta sale de la BRAM de grupos y llega a mapa_grupos.",
+    "diagramas": ["01a_carga"]
+  },
+  {
+    "carpeta": "03_posruteo",
+    "nombre": "Identificación · optimización posruteo",
+    "cambio": "Vivado optimiza el checkpoint de la carga registrada con AggressiveExplore. La revisión reutiliza las mismas fuentes y los mismos diagramas.",
+    "evidencia": "Los siete destinos de setup quedaron dentro de la restricción. Vivado completó el ruteo sin errores de conexión. Con este resultado se habilitó la integración de TRIAD."
+  },
+  {
+    "carpeta": "04_actitud",
+    "nombre": "Actitud · primera implementación",
+    "cambio": "Se añade TRIAD, aritmética de punto fijo, normalización, división iterativa y un emisor STQ2 en el mismo UART. La matriz de actitud se calcula una celda por vez con tres multiplicadores reutilizados.",
+    "evidencia": "XSim compara las componentes con la rotación geométrica y comprueba los 27 bytes de STQ2. El ruteo deja dos destinos de setup con margen negativo, desde el estado de control del top hasta el registro de byte del emisor UART de centroides.",
+    "diagramas": ["00_flujo", "01a_seleccion", "01b_cuaternion", "01c_residuos", "02a_normalizar", "03_dividir", "04_uart", "05_top", "06_operaciones"]
+  },
+  {
+    "carpeta": "05_actitud_posruteo",
+    "nombre": "Actitud · optimización posruteo",
+    "cambio": "AggressiveExplore optimiza el ruteo de las rutas críticas del UART. Las fuentes de la cadena y sus diagramas corresponden a la revisión anterior.",
+    "evidencia": "El diseño completo reporta cero destinos de setup y hold fallidos a 125 MHz y cero errores de ruteo. La etapa posruteo quedó habilitada en impl_1. El Timing Summary abierto desde esa implementación reproduce +0,055 ns de setup y +0,017 ns de hold."
+  }
+]

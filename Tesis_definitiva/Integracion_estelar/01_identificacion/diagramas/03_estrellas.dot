@@ -1,0 +1,5 @@
+digraph { graph [rankdir=LR, label="Flujo de la ROM de estrellas", labelloc=t, fontname="Arial", fontsize=23, pad=0.25, nodesep=0.30, ranksep=0.50];
+node [shape=box, style="rounded,filled", fillcolor="#EAF1F8", color="#516579", fontname="Arial", fontsize=13];
+edge [fontname="Arial", fontsize=10, color="#40566C"];
+A [label="Índice de referencia"]; B [label="G5_STAR_CATALOG"]; C [label="Dirección XYZ en Q1.15"]; A -> B -> C; D [label="Índice P01 a P08"]; E [label="G5_CENTRAL_XY"]; F [label="XY nominal de cámara"]; D -> E -> F;
+}

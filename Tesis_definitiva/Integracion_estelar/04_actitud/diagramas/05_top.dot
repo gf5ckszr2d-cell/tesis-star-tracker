@@ -1,0 +1,12 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="Máquina de estados del flujo integrado", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+ESPERAR_RESULTADO -> IDENTIFICAR [label="resultado_listo = 1 / comenzar_foto"];
+IDENTIFICAR -> RESOLVER_ACTITUD [label="fin_id = 1"];
+RESOLVER_ACTITUD -> ENVIAR_IMAGEN [label="fin_actitud = 1 / enviar_foto"];
+ENVIAR_IMAGEN -> ENVIAR_CENTROIDES [label="fin_foto = 1 / inicio_lista"];
+ENVIAR_CENTROIDES -> ENVIAR_MATCHES [label="fin_lista = 1 / inicio_matches"];
+ENVIAR_MATCHES -> ENVIAR_ACTITUD [label="fin_uart_matches = 1 / inicio_actitud_uart"];
+ENVIAR_ACTITUD -> ESPERAR_RESULTADO [label="fin_actitud_uart = 1 / liberar_imagen"];
+}

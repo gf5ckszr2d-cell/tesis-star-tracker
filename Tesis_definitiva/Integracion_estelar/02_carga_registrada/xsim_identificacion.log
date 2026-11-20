@@ -1,0 +1,130 @@
+#-----------------------------------------------------------
+# Vivado v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Fri Nov 20 12:35:55 2026
+# Process ID         : 4204
+# Current directory  : .
+# Command line       : vivado.exe -mode batch -journal Tesis_definitiva\Integracion_estelar\02_carga_registrada/xsim.jou -log Tesis_definitiva\Integracion_estelar\02_carga_registrada/xsim_identificacion.log -source Tesis_definitiva/Integracion_estelar/verificar_identificacion.tcl -tclargs Tesis_definitiva\Integracion_estelar\02_carga_registrada identificacion
+# Log file           : Tesis_definitiva/Integracion_estelar/02_carga_registrada/xsim_identificacion.log
+# Journal file       : Tesis_definitiva\Integracion_estelar\02_carga_registrada/xsim.jou
+# Running On         : Alexa
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26300
+# Processor Detail   : AMD Ryzen 5 5600X 6-Core Processor
+# CPU Frequency      : 3693 MHz
+# CPU Physical cores : 6
+# CPU Logical cores  : 12
+# Host memory        : 34264 MB
+# Swap memory        : 12446 MB
+# Total Virtual      : 46711 MB
+# Available Virtual  : 19230 MB
+#-----------------------------------------------------------
+source Tesis_definitiva/Integracion_estelar/verificar_identificacion.tcl
+# set here [file normalize [file dirname [info script]]]
+# set evidencia [file normalize [lindex $argv 0]]
+# set fase [lindex $argv 1]
+# set rtl [file join [file dirname $here] Tesis_definitiva Tesis_definitiva.srcs sources_1 new]
+# set sim [file join $evidencia sim]
+# file mkdir $sim
+# cd $sim
+# set bin [file join $::env(XILINX_VIVADO) bin]
+# proc ejecutar {programa args} {
+#     global bin
+#     set command [list cmd /c [file join $bin ${programa}.bat] {*}$args]
+#     if {[catch {exec {*}$command 2>@1} result]} {puts $result; error $command}
+#     puts $result
+#     return $result
+# }
+# set fuentes {g5_star_catalog_pkg g5_pair_lookup_pkg g5_ray_lut_pkg star_identifier}
+# set banco tb_identificacion
+# set marca PASS_IDENTIFICACION_CENTRAL
+# if {$fase eq "actitud"} {
+#     lappend fuentes attitude_math_pkg unsigned_iterative_divider normalize4 attitude_triad enviar_actitud_uart
+#     set banco tb_actitud
+#     set marca PASS_ACTITUD_UART
+# }
+# foreach name $fuentes {
+#     ejecutar xvhdl --2008 [file join $rtl ${name}.vhd]
+# }
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/g5_star_catalog_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/g5_pair_lookup_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/g5_ray_lut_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Tesis_definitiva/Tesis_definitiva.srcs/sources_1/new/star_identifier.vhd" into library work
+INFO: [VRFC 10-3107] analyzing entity 'star_identifier'
+# ejecutar xvhdl --2008 [file join $sim escenas_pkg.vhd] [file join $here ${banco}.vhd]
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Integracion_estelar/02_carga_registrada/sim/escenas_pkg.vhd" into library work
+INFO: [VRFC 10-163] Analyzing VHDL file "Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd" into library work
+INFO: [VRFC 10-3107] analyzing entity 'tb_identificacion'
+# ejecutar xelab work.$banco -s prueba
+Vivado Simulator v2025.2
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/AMDDesignTools/2025.2/Vivado/bin/unwrapped/win64.o/xelab.exe work.tb_identificacion -s prueba
+Multi-threading is on. Using 10 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package std.env
+Compiling package work.escenas_pkg
+Compiling package work.g5_star_catalog_pkg
+Compiling package work.g5_pair_lookup_pkg
+Compiling package work.g5_ray_lut_pkg
+Compiling architecture rtl of entity work.star_identifier [star_identifier_default]
+Compiling architecture prueba of entity work.tb_identificacion
+Built simulation snapshot prueba
+# set fh [open sim.tcl w]
+# puts $fh {run all}
+# puts $fh {quit}
+# close $fh
+
+****** xsim v2025.2 (64-bit)
+  **** SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+  **** IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+  **** SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+  **** Start of session at: Fri Nov 20 12:36:11 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/prueba/xsim_script.tcl
+# xsim {prueba} -autoloadwcfg -tclbatch {sim.tcl}
+Time resolution is 1 ps
+source sim.tcl
+## run all
+Note: CASO 0 coincidencias 8 ciclos 14446
+Time: 115581 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 1 coincidencias 8 ciclos 14446
+Time: 231165 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 2 coincidencias 8 ciclos 14446
+Time: 346749 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 3 coincidencias 6 ciclos 12522
+Time: 446941 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 4 coincidencias 6 ciclos 15619
+Time: 571909 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 5 coincidencias 6 ciclos 9488
+Time: 647829 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 6 coincidencias 5 ciclos 24715
+Time: 845565 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 7 coincidencias 7 ciclos 11968
+Time: 941325 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 8 coincidencias 8 ciclos 14466
+Time: 1057069 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 9 coincidencias 0 ciclos 28
+Time: 1057309 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: CASO 10 coincidencias 0 ciclos 2
+Time: 1057341 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+Note: PASS_IDENTIFICACION_CENTRAL
+Time: 1057356 ns  Iteration: 0  Process: /tb_identificacion/line__48  File: Tesis_definitiva/Integracion_estelar/tb_identificacion.vhd
+$finish called at time : 1057356 ns
+## quit
+INFO: [Common 17-206] Exiting xsim at Fri Nov 20 12:36:13 2026...
+# set res [ejecutar xsim prueba -tclbatch sim.tcl]
+# if {![string match *$marca* $res]} {error "Simulation failed: $marca"}
+INFO: [Common 17-206] Exiting Vivado at Fri Nov 20 12:36:14 2026...

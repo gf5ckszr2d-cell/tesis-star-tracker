@@ -1,0 +1,19 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="Identificación estelar · evaluación de candidatos", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+HYP_STAR -> CAND_START [label="centroide sin asignar"];
+CAND_START -> HYP_STAR [label="candidatos agotados"];
+CAND_START -> CAND_START [label="ID ya asignado"];
+CAND_START -> CAND_FETCH [label="ID libre"];
+CAND_FETCH -> CAND_START [label="chequeos agotados"];
+CAND_FETCH -> CAND_FETCH [label="centroide sin asignación previa"];
+CAND_FETCH -> CAND_CHECK [label="centroide con asignación previa"];
+CAND_CHECK -> CAND_SQUARE;
+CAND_SQUARE -> CAND_SUM;
+CAND_SUM -> CAND_DIFF;
+CAND_DIFF -> CAND_TOLERANCE;
+CAND_TOLERANCE -> CAND_DECIDE;
+CAND_DECIDE -> CAND_START [label="diferencia > tolerancia"];
+CAND_DECIDE -> CAND_FETCH [label="diferencia ≤ tolerancia"];
+}

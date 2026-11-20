@@ -1,0 +1,5 @@
+digraph { graph [rankdir=TB, label="Flujo de la división secuencial", labelloc=t, fontname="Arial", fontsize=23, pad=0.25, nodesep=0.30, ranksep=0.50];
+node [shape=box, style="rounded,filled", fillcolor="#EAF1F8", color="#516579", fontname="Arial", fontsize=13];
+edge [fontname="Arial", fontsize=10, color="#40566C"];
+A [label="Cargar numerador y denominador"]; B [label="Desplazar resto y recibir siguiente bit"]; C [label="¿Resto ≥ denominador?",shape=diamond]; D [label="Restar denominador y marcar bit"]; E [label="¿Último bit?",shape=diamond]; F [label="Entregar cociente"]; A -> B -> C; C -> D [label="sí"]; C -> E [label="no"]; D -> E; E -> B [label="no"]; E -> F [label="sí"];
+}

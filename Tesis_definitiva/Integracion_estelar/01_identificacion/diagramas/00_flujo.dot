@@ -1,0 +1,5 @@
+digraph { graph [rankdir=LR, label="Identificación estelar por pares", labelloc=t, fontname="Arial", fontsize=23, pad=0.25, nodesep=0.30, ranksep=0.50];
+node [shape=box, style="rounded,filled", fillcolor="#EAF1F8", color="#516579", fontname="Arial", fontsize=13];
+edge [fontname="Arial", fontsize=10, color="#40566C"];
+A [label="Lista de centroides"]; B [label="Controlador de identificación"]; C [label="Índice observado y referencia"]; U [label="UART STM1"]; A -> B -> C -> U; L [label="Tabla inversa de raíz"]; R [label="ROM de rayos"]; P [label="ROM de parejas"]; L -> B; R -> B; P -> B;
+}

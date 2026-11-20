@@ -1,0 +1,23 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="Identificación estelar · búsqueda y emisión", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+ANCHOR_START -> PAIR_FETCH;
+PAIR_FETCH -> PAIR_CHECK [label="quedan parejas"];
+PAIR_FETCH -> EMIT [label="parejas agotadas / success si hay ≥ 5 coincidencias"];
+PAIR_CHECK -> PAIR_DECIDE;
+PAIR_DECIDE -> HYP_START [label="pareja compatible"];
+PAIR_DECIDE -> PAIR_NEXT [label="pareja incompatible"];
+HYP_START -> HYP_STAR;
+HYP_STAR -> HYP_STAR [label="centroide de anclaje"];
+HYP_STAR -> CAND_START [label="centroide sin asignar"];
+CAND_START -> HYP_STAR [label="candidatos agotados"];
+HYP_STAR -> HYP_SCORE [label="centroides agotados"];
+HYP_SCORE -> HYP_START [label="falta probar orientación inversa"];
+HYP_SCORE -> PAIR_NEXT [label="ambas orientaciones evaluadas"];
+PAIR_NEXT -> PAIR_FETCH;
+EMIT -> EMIT [label="índice con coincidencia / match_valid, índices, rayo"];
+EMIT -> EMIT [label="índice sin coincidencia"];
+EMIT -> FINISH [label="índices agotados"];
+FINISH -> IDLE [label="/ done"];
+}

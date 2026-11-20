@@ -1,0 +1,73 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+package g5_star_catalog_pkg is
+constant CFG_CX_Q8 : integer := 40832;
+constant CFG_CY_Q8 : integer := 30592;
+constant CFG_SCALE_X : integer := 11623;
+constant CFG_SCALE_Y : integer := 11623;
+constant CFG_MIN_IDENTIFIED : positive := 5;
+constant G5_STAR_COUNT : positive := 48;
+type ray_rom_t is array(0 to G5_STAR_COUNT-1) of std_logic_vector(47 downto 0);
+constant G5_STAR_CATALOG : ray_rom_t := (
+  0 => x"EEB0F69A7E7A",
+  1 => x"F8CBFB2D7FB5",
+  2 => x"03FDF79B7FAA",
+  3 => x"145CF9737E33",
+  4 => x"EF7804CD7ED6",
+  5 => x"FC0207357FBC",
+  6 => x"058A06F77FB1",
+  7 => x"144B0C2E7DCB",
+  8 => x"A697CD544C4D",
+  9 => x"B3BECEE35A50",
+  10 => x"CAFEC5CB64ED",
+  11 => x"F7A3C3FC70C0",
+  12 => x"1475BD616B5D",
+  13 => x"3450C3EC6431",
+  14 => x"466BC74E5A9D",
+  15 => x"5FBCD4D1492C",
+  16 => x"9CA3E5B54C49",
+  17 => x"AEFFD9A75B63",
+  18 => x"D107D98870AF",
+  19 => x"F520D3717780",
+  20 => x"085BD4DF783A",
+  21 => x"3B45DC106B9B",
+  22 => x"4DF9DA5D5E46",
+  23 => x"6249DD754A5F",
+  24 => x"9E95F2E251FD",
+  25 => x"B3E6EE80656C",
+  26 => x"CA3AF3AD7380",
+  27 => x"48EFF2F96861",
+  28 => x"60C8F28E52B0",
+  29 => x"9FD705B6544A",
+  30 => x"B44511A165AE",
+  31 => x"4D1B0FA564F7",
+  32 => x"5EFA056755A4",
+  33 => x"A31B1A3B5410",
+  34 => x"B21023CA5F05",
+  35 => x"D37D2BA06FCD",
+  36 => x"E7C22B9775E2",
+  37 => x"18DF2A49763A",
+  38 => x"4B932342611B",
+  39 => x"5A56225B53ED",
+  40 => x"A9B836844D40",
+  41 => x"B629327C5B8F",
+  42 => x"CB03352067B4",
+  43 => x"EF823F786DED",
+  44 => x"11D33CF76F21",
+  45 => x"33FD36B36763",
+  46 => x"41D4398D5D7C",
+  47 => x"5AE4351748D4"
+);
+type xy_rom_t is array(0 to 7) of std_logic_vector(33 downto 0);
+constant G5_CENTRAL_XY : xy_rom_t := (
+  0 => "0001111001011010101010110100011111",
+  1 => "0011101101100011001001001011000100",
+  2 => "0101101100000110001010011011110010",
+  3 => "1000100111110110101001110011111000",
+  4 => "0010000010111001000101110000110000",
+  5 => "0100010001111010000100111011001000",
+  6 => "0101111101100110000101000000100000",
+  7 => "1000100111110110100011000110100000"
+);
+end package;

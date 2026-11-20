@@ -1,0 +1,5 @@
+digraph { graph [rankdir=LR, label="Flujo de la tabla inversa de raíz", labelloc=t, fontname="Arial", fontsize=23, pad=0.25, nodesep=0.30, ranksep=0.50];
+node [shape=box, style="rounded,filled", fillcolor="#EAF1F8", color="#516579", fontname="Arial", fontsize=13];
+edge [fontname="Arial", fontsize=10, color="#40566C"];
+A [label="Radio tangente al cuadrado"]; B [label="Índice de 0 a 511"]; C [label="G5_INV_SQRT"]; D [label="Factor de normalización"]; A -> B -> C -> D;
+}

@@ -1,0 +1,14 @@
+digraph {
+graph [rankdir=TB, labelloc=t, label="Identificación estelar · carga de centroides", fontname=Arial, fontsize=22, pad=0.28];
+node [shape=circle, style=filled, fillcolor="#EAF1F8", color="#516579", fontname=Arial, fontsize=10];
+edge [fontname=Arial, color="#40566C", fontsize=10];
+IDLE -> IDLE [label="sin flanco de list_ready"];
+IDLE -> FINISH [label="flanco de list_ready y lista vacía o desbordada"];
+IDLE -> LOAD_REQ [label="flanco de list_ready y lista disponible"];
+LOAD_REQ -> LOAD_WAIT [label="/ rd_index"];
+LOAD_WAIT -> LOAD_TAKE;
+LOAD_TAKE -> LOAD_REQ [label="quedan centroides"];
+LOAD_TAKE -> FINISH [label="último centroide y muestra insuficiente"];
+LOAD_TAKE -> PREP_DIFF [label="último centroide y muestra suficiente"];
+FINISH -> IDLE [label="/ done"];
+}
