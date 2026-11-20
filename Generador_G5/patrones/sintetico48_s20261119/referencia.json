@@ -1,0 +1,369 @@
+{
+  "format": "PATRON_ESTELAR_SINTETICO_V1",
+  "algorithm": "mulberry32-stratified-v1",
+  "patternId": "sintetico48-s20261119-d24-l255",
+  "width": 2560,
+  "height": 1440,
+  "columns": 8,
+  "rows": 6,
+  "settings": {
+    "seed": 20261119,
+    "diameter": 24,
+    "level": 255
+  },
+  "stars": [
+    {
+      "id": "P01",
+      "row": 1,
+      "column": 1,
+      "x": 176,
+      "y": 101
+    },
+    {
+      "id": "P02",
+      "row": 1,
+      "column": 2,
+      "x": 438,
+      "y": 181
+    },
+    {
+      "id": "P03",
+      "row": 1,
+      "column": 3,
+      "x": 733,
+      "y": 121
+    },
+    {
+      "id": "P04",
+      "row": 1,
+      "column": 4,
+      "x": 1200,
+      "y": 149
+    },
+    {
+      "id": "P05",
+      "row": 1,
+      "column": 5,
+      "x": 1483,
+      "y": 57
+    },
+    {
+      "id": "P06",
+      "row": 1,
+      "column": 6,
+      "x": 1823,
+      "y": 97
+    },
+    {
+      "id": "P07",
+      "row": 1,
+      "column": 7,
+      "x": 2062,
+      "y": 93
+    },
+    {
+      "id": "P08",
+      "row": 1,
+      "column": 8,
+      "x": 2480,
+      "y": 185
+    },
+    {
+      "id": "P09",
+      "row": 2,
+      "column": 1,
+      "x": 83,
+      "y": 407
+    },
+    {
+      "id": "P10",
+      "row": 2,
+      "column": 2,
+      "x": 402,
+      "y": 307
+    },
+    {
+      "id": "P11",
+      "row": 2,
+      "column": 3,
+      "x": 841,
+      "y": 361
+    },
+    {
+      "id": "P12",
+      "row": 2,
+      "column": 4,
+      "x": 1182,
+      "y": 320
+    },
+    {
+      "id": "P13",
+      "row": 2,
+      "column": 5,
+      "x": 1354,
+      "y": 335
+    },
+    {
+      "id": "P14",
+      "row": 2,
+      "column": 6,
+      "x": 1851,
+      "y": 374
+    },
+    {
+      "id": "P15",
+      "row": 2,
+      "column": 7,
+      "x": 2106,
+      "y": 323
+    },
+    {
+      "id": "P16",
+      "row": 2,
+      "column": 8,
+      "x": 2489,
+      "y": 300
+    },
+    {
+      "id": "P17",
+      "row": 3,
+      "column": 1,
+      "x": 164,
+      "y": 571
+    },
+    {
+      "id": "P18",
+      "row": 3,
+      "column": 2,
+      "x": 521,
+      "y": 546
+    },
+    {
+      "id": "P19",
+      "row": 3,
+      "column": 3,
+      "x": 792,
+      "y": 608
+    },
+    {
+      "id": "P20",
+      "row": 3,
+      "column": 4,
+      "x": 1189,
+      "y": 529
+    },
+    {
+      "id": "P21",
+      "row": 3,
+      "column": 5,
+      "x": 1433,
+      "y": 636
+    },
+    {
+      "id": "P22",
+      "row": 3,
+      "column": 6,
+      "x": 1746,
+      "y": 631
+    },
+    {
+      "id": "P23",
+      "row": 3,
+      "column": 7,
+      "x": 1991,
+      "y": 593
+    },
+    {
+      "id": "P24",
+      "row": 3,
+      "column": 8,
+      "x": 2382,
+      "y": 568
+    },
+    {
+      "id": "P25",
+      "row": 4,
+      "column": 1,
+      "x": 199,
+      "y": 783
+    },
+    {
+      "id": "P26",
+      "row": 4,
+      "column": 2,
+      "x": 526,
+      "y": 894
+    },
+    {
+      "id": "P27",
+      "row": 4,
+      "column": 3,
+      "x": 872,
+      "y": 777
+    },
+    {
+      "id": "P28",
+      "row": 4,
+      "column": 4,
+      "x": 1200,
+      "y": 802
+    },
+    {
+      "id": "P29",
+      "row": 4,
+      "column": 5,
+      "x": 1523,
+      "y": 909
+    },
+    {
+      "id": "P30",
+      "row": 4,
+      "column": 6,
+      "x": 1683,
+      "y": 862
+    },
+    {
+      "id": "P31",
+      "row": 4,
+      "column": 7,
+      "x": 2050,
+      "y": 875
+    },
+    {
+      "id": "P32",
+      "row": 4,
+      "column": 8,
+      "x": 2336,
+      "y": 779
+    },
+    {
+      "id": "P33",
+      "row": 5,
+      "column": 1,
+      "x": 226,
+      "y": 1014
+    },
+    {
+      "id": "P34",
+      "row": 5,
+      "column": 2,
+      "x": 459,
+      "y": 1094
+    },
+    {
+      "id": "P35",
+      "row": 5,
+      "column": 3,
+      "x": 860,
+      "y": 1130
+    },
+    {
+      "id": "P36",
+      "row": 5,
+      "column": 4,
+      "x": 1060,
+      "y": 1114
+    },
+    {
+      "id": "P37",
+      "row": 5,
+      "column": 5,
+      "x": 1504,
+      "y": 1101
+    },
+    {
+      "id": "P38",
+      "row": 5,
+      "column": 6,
+      "x": 1684,
+      "y": 1013
+    },
+    {
+      "id": "P39",
+      "row": 5,
+      "column": 7,
+      "x": 2063,
+      "y": 1083
+    },
+    {
+      "id": "P40",
+      "row": 5,
+      "column": 8,
+      "x": 2311,
+      "y": 1108
+    },
+    {
+      "id": "P41",
+      "row": 6,
+      "column": 1,
+      "x": 217,
+      "y": 1384
+    },
+    {
+      "id": "P42",
+      "row": 6,
+      "column": 2,
+      "x": 471,
+      "y": 1269
+    },
+    {
+      "id": "P43",
+      "row": 6,
+      "column": 3,
+      "x": 747,
+      "y": 1252
+    },
+    {
+      "id": "P44",
+      "row": 6,
+      "column": 4,
+      "x": 1119,
+      "y": 1337
+    },
+    {
+      "id": "P45",
+      "row": 6,
+      "column": 5,
+      "x": 1451,
+      "y": 1306
+    },
+    {
+      "id": "P46",
+      "row": 6,
+      "column": 6,
+      "x": 1804,
+      "y": 1270
+    },
+    {
+      "id": "P47",
+      "row": 6,
+      "column": 7,
+      "x": 1996,
+      "y": 1343
+    },
+    {
+      "id": "P48",
+      "row": 6,
+      "column": 8,
+      "x": 2438,
+      "y": 1388
+    }
+  ],
+  "coordinateSystem": "Monitor pixels; origin top-left; x right; y down; centers at integer pixel indices",
+  "source": {
+    "family": "Identical circular truncated Gaussian",
+    "diameterPx": 24,
+    "sigmaPx": 4.8,
+    "peakY8": 255,
+    "backgroundY8": 0
+  },
+  "preview": {
+    "x": 904,
+    "y": 258,
+    "width": 912,
+    "height": 684,
+    "centersInside": 8,
+    "meaning": "Digital 4:3 crop only. Not an optical camera model or a physical detection count."
+  },
+  "status": "SYNTHETIC_UNCALIBRATED"
+}

@@ -1,16 +1,14 @@
 # Star Tracker en FPGA
 
-Esta tesis desarrolla y valida un rastreador estelar en FPGA, desde la captura hasta el cálculo de un cuaternión. La demostración se hará en un banco controlado. Un Samsung Odyssey G5 muestra un cielo de referencia y una cámara OV7670, montada en un mecanismo de tres grados de libertad con servos MG90S, observa el patrón. La Arty Z7-10 se usa para las pruebas actuales de integración. La Nexys A7-100T es la plataforma prevista para la implementación final.
+Esta tesis propone una arquitectura FPGA con comportamiento temporal determinista bajo condiciones de operación definidas. La evidencia central será el conteo de ciclos y una cota temporal justificada para ese dominio de entrada, contrastada con las pruebas del banco. Un Samsung Odyssey G5 muestra un patrón estelar de referencia y una cámara OV7670 observa la escena. La Arty Z7-10 se usa para las pruebas actuales; la Nexys A7-100T es la plataforma prevista para la implementación final.
 
-## Los cinco módulos de la tesis
+## Una arquitectura y un patrón de referencia
 
-| Módulo | Qué hace | Qué se demostrará |
-|---|---|---|
-| 1. Captura | Configura la OV7670 y guarda en BRAM una imagen de luminancia. | Recuperar por UART una foto de 320 × 240 y comprobar dimensiones, contraste y correspondencia con el patrón mostrado. Hay evidencia de captura física en la Arty. |
-| 2. Centroides | Aplica un umbral, agrupa píxeles conectados y calcula el centro ponderado por luminancia. | Comparar el resultado con una referencia calculada a partir de la imagen y medir detecciones, fusiones, error de posición y repetibilidad en el banco. El RTL pasó XSim y el ruteo a 125 MHz. La caracterización física está pendiente. |
-| 3. Catálogo | Prepara las estrellas de referencia y sus vectores unitarios para el campo utilizado. | Verificar que los identificadores, las coordenadas y el patrón del monitor correspondan a la misma escena. Guardar la selección usada por la FPGA. |
-| 4. Identificación | Asocia los centroides observados con las estrellas del catálogo usando relaciones geométricas. | Comparar las correspondencias con los identificadores conocidos del patrón. Registrar aciertos, confusiones y tomas sin identificación. |
-| 5. Actitud | Usa pares de vectores observados y de referencia para calcular el cuaternión mediante TRIAD. | Comparar la actitud estimada con poses de referencia del banco, usando el mismo sistema de ejes y registrando el error angular. |
+Los cinco pasos se conservan como guía para diseñar y explicar el recorrido de los datos dentro de una arquitectura completa. El alcance acordado el 19/11/2026 se centra en demostrar su comportamiento temporal determinista. Los resultados funcionales del banco aportarán evidencia de funcionamiento en las condiciones elegidas.
+
+Para el ensayo inicial se usa una sola familia de fuentes sintéticas. El **[patrón estelar de referencia](Generador_G5/patron_sintetico.html)** contiene 48 puntos de igual forma y brillo, distribuidos aleatoriamente dentro de una división de 8 columnas × 6 filas. La semilla conserva sus posiciones. Una tabla guarda sus identificadores y coordenadas; esta referencia se define para el banco y no requiere un catálogo astronómico.
+
+El generador permite explorar recortes digitales 4:3 e inicia con ocho centros dentro del recorte. La cantidad que registre la OV7670 depende del encuadre y la respuesta física y se comprobará con capturas. El matching será el siguiente paso después de revisar el patrón. La prueba física y la demostración de la cota temporal siguen pendientes.
 
 ## Cámara y procesamiento
 

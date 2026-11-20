@@ -1,5 +1,56 @@
 # Simulador de cielo para Samsung Odyssey G5
 
+## Patrón sintético fijo — ensayo inicial (19/11/2026)
+
+Abre **[patron_sintetico.html](patron_sintetico.html)** para el ensayo actual.
+Muestra 48 fuentes idénticas en 8 columnas × 6 filas: una posición aleatoria
+dentro de cada sector, con márgenes. La semilla inicial `20261119` permite
+reproducir las posiciones. No hay animación ni regeneración automática.
+La cuadrícula organiza la distribución; las fuentes no están alineadas en ella.
+
+Cada fuente es una gaussiana circular truncada, con diámetro de soporte inicial
+24 px, sigma 4,8 px y pico 255 sobre fondo 0. Tamaño y brillo se ajustan juntos
+para toda la familia y conservan las posiciones. Estos valores son propuestas
+para probar con la cámara, no parámetros calibrados.
+
+La página selecciona un recorte digital 4:3 con ocho centros. Permite moverlo
+y cambiar su ancho sobre el mismo patrón. Ese recorte **no modela la óptica,
+la curvatura del G5 ni el FOV real**, y el conteo no equivale a ocho detecciones.
+El encuadre físico y la exposición deberán verificarse con la cámara. No se
+cambia la resolución ni ningún archivo RTL del proyecto.
+
+Pulsa **Mostrar patrón en pantalla completa** (o F) en el G5: se muestra solo
+la imagen, sin sectores, números, recorte ni controles. Esc vuelve a los controles.
+Si el navegador rechaza la API de pantalla completa, la presentación ocupa la
+ventana igualmente; F11 permite ocultar la barra del navegador.
+El PNG exportado también contiene exclusivamente el patrón nativo 2560 × 1440.
+JSON y CSV guardan las coordenadas, los identificadores P01–P48 y los parámetros
+del mismo estado. El origen está arriba a la izquierda; x crece a la derecha,
+y hacia abajo. JSON conserva también el recorte seleccionado.
+
+Estas posiciones forman el **patrón estelar de referencia** del ensayo; no
+requieren Hipparcos ni constelaciones. El matching queda para el siguiente paso.
+Este cambio corresponde a una herramienta de estímulo en PC; no valida el
+determinismo temporal de la arquitectura FPGA ni modifica el hardware.
+
+Generación reproducible y comprobación desde esta carpeta:
+
+```powershell
+node tests/synthetic_pattern_checks.mjs
+node tools/export_synthetic_pattern.mjs --out patrones/sintetico48_s20261119
+```
+
+El exportador exige una carpeta nueva y escribe PNG, JSON y CSV con SHA-256
+en un manifiesto. Admite `--seed`, `--diameter` y `--level`.
+
+Referencia inicial guardada en `patrones/sintetico48_s20261119/`.
+Comprobación de software: 48 fuentes e identificadores únicos, posiciones
+reproducibles, separación mayor que el diámetro máximo, ocho centros en el
+recorte inicial `(904, 258, 912, 684)` y conservación del patrón al moverlo.
+La interfaz, la presentación sin guías y la salida PNG se revisaron en Chrome.
+
+## Simulador astronómico anterior
+
 Banco óptico auxiliar para el G5 LS27AG550ELXPE. Funciona offline abriendo `index.html`;
 no necesita instalar paquetes. La cámara permanece fija y los controles rotan el
 cielo tridimensional antes de proyectarlo sobre el panel QHD. Estima una captura

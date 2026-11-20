@@ -1,0 +1,4 @@
+# Preserve reference bytes so the manifest hashes survive checkout on Windows.
+*.json -text
+*.csv -text
+*.png binary
